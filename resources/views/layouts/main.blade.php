@@ -45,7 +45,7 @@
                     <!-- menu profile quick info -->
                     <div class="profile clearfix">
                         <div class="profile_pic">
-                            <img src="images/img.jpg" alt="..." class="img-circle profile_img">
+                            <img src="/images/img.jpg" alt="..." class="img-circle profile_img">
                         </div>
                         <div class="profile_info">
                             <span>Welcome,</span>
@@ -59,7 +59,6 @@
                     <!-- sidebar menu -->
                     <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                         <div class="menu_section">
-                            <h3>General</h3>
                             <ul class="nav side-menu">
                                 <li><a href="{{ route('main') }}"><i class="fa fa-home"></i> Рабочий стол </a>
                                 </li>
@@ -109,11 +108,10 @@
                             </ul>
                         </div>
                         <div class="menu_section">
-                            <h3>Live On</h3>
                             <ul class="nav side-menu">
                                 <li><a><i class="fa fa-address-book"></i> Справочники <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="form_wizards.html">Валюты</a></li>
+                                        <li><a href="{{ route('currency') }}">Валюты</a></li>
                                         <li><a href="form_upload.html">Банки</a></li>
                                         <li><a href="profile.html">Договоры</a></li>
                                         <li><a href="profile.html">Счета расчетов с контрагентами</a></li>
@@ -174,7 +172,7 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="images/img.jpg" alt="">John Doe
+                                    <img src="/images/img.jpg" alt="">John Doe
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -228,6 +226,7 @@
                     <!-- /top tiles -->
             @endsection
             @yield('tile_widget')
+
     @yield('content')
 
         @section('footer')
