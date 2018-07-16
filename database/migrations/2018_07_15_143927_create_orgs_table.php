@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFirmTable extends Migration
+class CreateOrgsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateFirmTable extends Migration
      */
     public function up()
     {
-        Schema::create('firm', function (Blueprint $table) {
+        Schema::create('orgs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title',100)->unique();
-            $table->string('address',150)->nullable();
-            $table->string('director',100);
-            $table->string('acct',30)->nullable();
+            $table->string('name',90)->unique();
+            $table->string('full_name',180)->unique();
+            $table->string('inn',12)->nullable();
+            $table->string('kpp',9)->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateFirmTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('firm');
+        Schema::dropIfExists('orgs');
     }
 }

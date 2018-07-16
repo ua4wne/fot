@@ -14,7 +14,7 @@
     <!-- page content -->
     @if (session('status'))
         <div class="row">
-            <div class="alert alert-success modal-dialog">
+            <div class="alert alert-success panel-remove">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
                 {{ session('status') }}
             </div>
@@ -34,7 +34,7 @@
                         <th>Симв. код</th>
                         <th>Курс</th>
                         <th>Кратность</th>
-                        <th>Удалить</th>
+                        <th>Действия</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -43,17 +43,19 @@
 
                         <tr>
 
-                            <td>{!! Html::link(route('currencyEdit',['currency'=>$curr->id]),$curr->name,['alt'=>$curr->name]) !!}</td>
+                            <th>{!! Html::link(route('currencyEdit',['currency'=>$curr->id]),$curr->name,['alt'=>$curr->name]) !!}</th>
                             <td>{{ $curr->dcode }}</td>
                             <td>{{ $curr->scode }}</td>
                             <td>{{ $curr->cource }}</td>
                             <td>{{ $curr->multi }}</td>
 
-                            <td>
-                                {!! Form::open(['url'=>route('currencyEdit',['currency'=>$curr->id]), 'class'=>'form-horizontal','method' => 'POST']) !!}
-
+                            <td style="width:110px;">
+                                {!! Form::open(['url'=>route('currencyEdit',['currency'=>$curr->id]), 'class'=>'form-horizontal','method' => 'POST','onsubmit' => 'return confirmDelete()']) !!}
                                 {{ method_field('DELETE') }}
-                                {!! Form::button('Удалить',['class'=>'btn btn-danger','type'=>'submit']) !!}
+                                <div class="form-group" role="group">
+                                    <a href="{{route('currencyEdit',['currency'=>$curr->id])}}"><button class="btn btn-success btn-sm" type="button"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button></a>
+                                    {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger btn-sm','type'=>'submit']) !!}
+                                </div>
                                 {!! Form::close() !!}
                             </td>
                         </tr>
@@ -66,4 +68,8 @@
         </div>
     </div>
     <!-- /page content -->
+@endsection
+
+@section('user_script')
+    @include('confirm')
 @endsection

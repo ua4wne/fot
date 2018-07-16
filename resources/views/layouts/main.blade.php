@@ -60,8 +60,7 @@
                     <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                         <div class="menu_section">
                             <ul class="nav side-menu">
-                                <li><a href="{{ route('main') }}"><i class="fa fa-home"></i> Рабочий стол </a>
-                                </li>
+                                <li><a href="{{ route('main') }}"><i class="fa fa-home"></i> Рабочий стол </a></li>
                                 <li><a><i class="fa fa-university"></i> Банк и касса <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="form.html">Банковские выписки</a></li>
@@ -81,15 +80,7 @@
                                         <li><a href="tables_dynamic.html">Физические лица</a></li>
                                     </ul>
                                 </li>
-                                <li><a><i class="fa fa-sitemap"></i> Организации <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="chartjs.html">Chart JS</a></li>
-                                        <li><a href="chartjs2.html">Chart JS2</a></li>
-                                        <li><a href="morisjs.html">Moris JS</a></li>
-                                        <li><a href="echarts.html">ECharts</a></li>
-                                        <li><a href="other_charts.html">Other Charts</a></li>
-                                    </ul>
-                                </li>
+                                <li><a href="{{ route('organizations') }}"><i class="fa fa-sitemap"></i> Организации </a></li>
                                 <li><a><i class="fa fa-address-card"></i>Контрагенты <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
@@ -112,7 +103,7 @@
                                 <li><a><i class="fa fa-address-book"></i> Справочники <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('currency') }}">Валюты</a></li>
-                                        <li><a href="form_upload.html">Банки</a></li>
+                                        <li><a href="{{ route('banks') }}">Банки</a></li>
                                         <li><a href="profile.html">Договоры</a></li>
                                         <li><a href="profile.html">Счета расчетов с контрагентами</a></li>
                                     </ul>
@@ -282,6 +273,7 @@
 <!-- Custom Theme Scripts -->
 <script src="/js/custom.min.js"></script>
 @show
-
+    @section('user_script')
+    @show
 </body>
 </html>

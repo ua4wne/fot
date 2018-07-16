@@ -18,13 +18,7 @@
         <h1 class="text-center">{{ $data['name'] }}</h1>
         {!! Form::open(['url' => route('currencyEdit',['currency'=>$data['id']]),'class'=>'form-horizontal','method'=>'POST']) !!}
 
-        <div class="form-group">
-            {!! Form::label('name','Название валюты:',['class' => 'col-xs-2 control-label'])   !!}
-            <div class="col-xs-8">
-                {!! Form::text('name',$data['name'],['class' => 'form-control','placeholder'=>'Введите название', 'disabled'=>'disabled'])!!}
-                {!! $errors->first('name', '<p class="text-danger">:message</p>') !!}
-            </div>
-        </div>
+        {!! Form::hidden('name',$data['name'],['class' => 'form-control','placeholder'=>'Введите название'])!!}
 
         <div class="form-group">
             {!! Form::label('dcode','Цифр. код:',['class' => 'col-xs-2 control-label'])   !!}

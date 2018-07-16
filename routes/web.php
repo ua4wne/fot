@@ -37,3 +37,24 @@ Route::group(['prefix'=>'currency'], function(){
     Route::match(['get','post','delete'],'/edit/{currency}',['uses'=>'References\CurrencyController@edit','as'=>'currencyEdit']);
 });
 
+//bank/ группа обработки роутов справочника banks
+Route::group(['prefix'=>'banks'], function(){
+    Route::get('/',['uses'=>'References\BankController@index','as'=>'banks']);
+
+    //currency/add
+    Route::match(['get','post'],'/add',['uses'=>'References\BankController@create','as'=>'bankAdd']);
+
+    //currency/edit
+    Route::match(['get','post','delete'],'/edit/{bank}',['uses'=>'References\BankController@edit','as'=>'bankEdit']);
+});
+
+//organization/ группа обработки роутов organization
+Route::group(['prefix'=>'organization'], function(){
+    Route::get('/',['uses'=>'OrganizationController@index','as'=>'organizations']);
+
+    //currency/add
+    Route::match(['get','post'],'/add',['uses'=>'OrganizationController@create','as'=>'orgAdd']);
+
+    //currency/edit
+    Route::match(['get','post','delete'],'/edit/{org}',['uses'=>'OrganizationController@edit','as'=>'orgEdit']);
+});
