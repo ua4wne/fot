@@ -10,4 +10,9 @@ class Organisation extends Model
     protected $table = 'orgs';
 
     protected $fillable = ['name', 'full_name', 'inn', 'kpp'];
+
+    public function division()
+    {
+        return $this->hasMany('App\Models\Division');
+    }
 }

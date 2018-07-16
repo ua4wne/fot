@@ -80,7 +80,13 @@
                                         <li><a href="tables_dynamic.html">Физические лица</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="{{ route('organizations') }}"><i class="fa fa-sitemap"></i> Организации </a></li>
+                                <li><a><i class="fa fa-sitemap"></i> Наши юр. лица <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="{{ route('organizations') }}">Организации</a></li>
+                                        <li><a href="tables.html">Подразделения</a></li>
+                                        <li><a href="tables_dynamic.html">Банковские счета</a></li>
+                                    </ul>
+                                </li>
                                 <li><a><i class="fa fa-address-card"></i>Контрагенты <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>

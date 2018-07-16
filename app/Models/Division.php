@@ -10,4 +10,9 @@ class Division extends Model
     protected $table = 'divisions';
 
     protected $fillable = ['name', 'org_id'];
+
+    public function organization()
+    {
+        return $this->hasOne('App\Models\Organisation');
+    }
 }

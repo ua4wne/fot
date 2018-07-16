@@ -8,7 +8,7 @@
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb">
         <li><a href="{{ route('main') }}">Рабочий стол</a></li>
-        <li class="active">Банки</li>
+        <li class="active">Организации</li>
     </ul>
     <!-- END BREADCRUMB -->
     <!-- page content -->
@@ -22,43 +22,34 @@
     @endif
     <div class="row">
         <h2 class="text-center">{{ $head }}</h2>
-        @if($banks)
-            <a href="{{route('bankAdd')}}">
+        @if($orgs)
+            <a href="{{route('orgAdd')}}">
                 <button type="button" class="btn btn-primary btn-rounded">Новая запись</button>
             </a>
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th>Наименование</th>
-                    <th>БИК</th>
-                    <th>SWIFT</th>
-                    <th>Корр. счет</th>
-                    <th>Город</th>
-                    <th>Адрес</th>
-                    <th>Телефоны</th>
-                    <th>Страна</th>
+                    <th>Название</th>
+                    <th>Полное наименование</th>
+                    <th>ИНН</th>
+                    <th>КПП</th>
                     <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                @foreach($banks as $k => $bank)
+                @foreach($orgs as $k => $org)
 
                     <tr>
-                        <th>{!! Html::link(route('bankEdit',['bank'=>$bank->id]),$bank->name,['alt'=>$bank->name]) !!}</th>
-                        <td>{{ $bank->bik }}</td>
-                        <td>{{ $bank->swift }}</td>
-                        <td>{{ $bank->account }}</td>
-                        <td>{{ $bank->city }}</td>
-                        <td>{{ $bank->address }}</td>
-                        <td>{{ $bank->phone }}</td>
-                        <td>{{ $bank->country }}</td>
-
+                        <th>{!! Html::link(route('orgEdit',['org'=>$org->id]),$org->name,['alt'=>$org->name]) !!}</th>
+                        <td>{{ $org->full_name }}</td>
+                        <td>{{ $org->inn }}</td>
+                        <td>{{ $org->kpp }}</td>
                         <td style="width:110px;">
-                            {!! Form::open(['url'=>route('bankEdit',['bank'=>$bank->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}
+                            {!! Form::open(['url'=>route('orgEdit',['org'=>$org->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}
                             {{ method_field('DELETE') }}
                             <div class="form-group" role="group">
-                                <a href="{{route('bankEdit',['bank'=>$bank->id])}}"><button class="btn btn-success btn-sm" type="button"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button></a>
+                                <a href="{{route('orgEdit',['org'=>$org->id])}}"><button class="btn btn-success btn-sm" type="button"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button></a>
                                 {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit']) !!}
                             </div>
                             {!! Form::close() !!}
@@ -68,7 +59,7 @@
                 @endforeach
                 </tbody>
             </table>
-            {{ $banks->links() }}
+            {{ $orgs->links() }}
         @endif
     </div>
     </div>
