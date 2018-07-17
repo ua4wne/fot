@@ -83,7 +83,7 @@
                                 <li><a><i class="fa fa-sitemap"></i> Наши юр. лица <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('organizations') }}">Организации</a></li>
-                                        <li><a href="tables.html">Подразделения</a></li>
+                                        <li><a href="{{ route('divisions') }}">Подразделения</a></li>
                                         <li><a href="tables_dynamic.html">Банковские счета</a></li>
                                     </ul>
                                 </li>

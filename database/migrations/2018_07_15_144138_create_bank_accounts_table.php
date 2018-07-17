@@ -21,6 +21,7 @@ class CreateBankAccountsTable extends Migration
             $table->string('currency',5);
             $table->dateTime('date_open')->nullable();
             $table->dateTime('date_close')->nullable();
+            $table->unsignedTinyInteger('is_main')->default(0);
             $table->timestamps();
         });
     }

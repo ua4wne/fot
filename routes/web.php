@@ -41,10 +41,10 @@ Route::group(['prefix'=>'currency'], function(){
 Route::group(['prefix'=>'banks'], function(){
     Route::get('/',['uses'=>'References\BankController@index','as'=>'banks']);
 
-    //currency/add
+    //banks/add
     Route::match(['get','post'],'/add',['uses'=>'References\BankController@create','as'=>'bankAdd']);
 
-    //currency/edit
+    //banks/edit
     Route::match(['get','post','delete'],'/edit/{bank}',['uses'=>'References\BankController@edit','as'=>'bankEdit']);
 });
 
@@ -52,9 +52,22 @@ Route::group(['prefix'=>'banks'], function(){
 Route::group(['prefix'=>'organization'], function(){
     Route::get('/',['uses'=>'OrganizationController@index','as'=>'organizations']);
 
-    //currency/add
+    //organization/add
     Route::match(['get','post'],'/add',['uses'=>'OrganizationController@create','as'=>'orgAdd']);
 
-    //currency/edit
+    //organization/edit
     Route::match(['get','post','delete'],'/edit/{org}',['uses'=>'OrganizationController@edit','as'=>'orgEdit']);
+});
+
+//organization/ группа обработки роутов organization
+Route::group(['prefix'=>'divisions'], function(){
+    Route::get('/',['uses'=>'DivisionController@index','as'=>'divisions']);
+
+    Route::get('/view/{org}',['uses'=>'DivisionController@view','as'=>'divisionView']);
+
+    //divisions/add
+    Route::match(['get','post'],'/add',['uses'=>'DivisionController@create','as'=>'divisionAdd']);
+
+    //divisions/edit
+    Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'DivisionController@edit','as'=>'divisionEdit']);
 });

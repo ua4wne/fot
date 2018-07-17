@@ -13,6 +13,6 @@ class Division extends Model
 
     public function organization()
     {
-        return $this->hasOne('App\Models\Organisation');
+        return $this->belongsTo('App\Models\Organisation');
     }
 }
