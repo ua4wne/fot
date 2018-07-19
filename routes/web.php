@@ -59,7 +59,7 @@ Route::group(['prefix'=>'organization'], function(){
     Route::match(['get','post','delete'],'/edit/{org}',['uses'=>'OrganizationController@edit','as'=>'orgEdit']);
 });
 
-//organization/ группа обработки роутов organization
+//division/ группа обработки роутов divisions
 Route::group(['prefix'=>'divisions'], function(){
     Route::get('/',['uses'=>'DivisionController@index','as'=>'divisions']);
 
@@ -70,4 +70,17 @@ Route::group(['prefix'=>'divisions'], function(){
 
     //divisions/edit
     Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'DivisionController@edit','as'=>'divisionEdit']);
+});
+
+//bacc/ группа обработки роутов bacc
+Route::group(['prefix'=>'bacc'], function(){
+    Route::get('/',['uses'=>'BAccountsController@index','as'=>'bacc']);
+
+    Route::get('/view/{org}',['uses'=>'BAccountsController@view','as'=>'baccView']);
+
+    //divisions/add
+    Route::match(['get','post'],'/add',['uses'=>'BAccountsController@create','as'=>'baccAdd']);
+
+    //divisions/edit
+    Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'BAccountsController@edit','as'=>'baccEdit']);
 });

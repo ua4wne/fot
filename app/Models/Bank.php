@@ -10,4 +10,9 @@ class Bank extends Model
     protected $table = 'banks';
 
     protected $fillable = ['bik', 'swift', 'name', 'account', 'city', 'address', 'phone', 'country'];
+
+    public function accounts()
+    {
+        return $this->hasMany('App\Models\BankAccount');
+    }
 }

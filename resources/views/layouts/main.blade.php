@@ -84,7 +84,7 @@
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('organizations') }}">Организации</a></li>
                                         <li><a href="{{ route('divisions') }}">Подразделения</a></li>
-                                        <li><a href="tables_dynamic.html">Банковские счета</a></li>
+                                        <li><a href="{{ route('bacc') }}">Банковские счета</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-address-card"></i>Контрагенты <span class="fa fa-chevron-down"></span></a>
