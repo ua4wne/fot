@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
+use App\Models\Division;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Validator;
@@ -10,7 +12,7 @@ class OrganizationController extends Controller
 {
     public function index(){
         if(view()->exists('refs.orgs')){
-            $orgs = Organisation::paginate(15); //all();
+            $orgs = Organisation::paginate(env('PAGINATION_SIZE')); //all();
             $data = [
                 'title' => 'Организации',
                 'head' => 'Справочник организаций',
@@ -92,6 +94,30 @@ class OrganizationController extends Controller
                 'data' => $old
             ];
             return view('refs.org_edit',$data);
+        }
+        abort(404);
+    }
+
+    public function view($id){
+
+        if(view()->exists('refs.org_view')){
+            $org = Organisation::find($id);
+            $divs = $org->divisions;
+            $bacc = $org->bankaccounts;
+            //выбираем все банки
+            $banks = Bank::all();
+            $banksel = array();
+            foreach ($banks as $bank){
+                $banksel[$bank->id] = $bank->name;
+            }
+            $data = [
+                'title' => 'Данные организации '.$org['name'],
+                'org' => $org,
+                'divs' => $divs,
+                'banksel' => $banksel,
+                'baccs' => $bacc
+            ];
+            return view('refs.org_view',$data);
         }
         abort(404);
     }

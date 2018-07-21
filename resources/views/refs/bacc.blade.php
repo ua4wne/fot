@@ -45,13 +45,17 @@
                 @foreach($bacc as $k => $acc)
 
                     <tr>
-                        <td>{{ $acc->org_id }}</td>
-                        <td>{{ $acc->bank_id }}</td>
+                        <td>{{ \App\Models\Organisation::find($acc->org_id)->name }}</td>
+                        <td>{{ \App\Models\Bank::find($acc->bank_id)->name }}</td>
                         <th>{!! Html::link(route('baccEdit',['id'=>$acc->id]),$acc->account,['alt'=>$acc->account]) !!}</th>
                         <td>{{ $acc->currency }}</td>
                         <td>{{ $acc->date_open }}</td>
                         <td>{{ $acc->date_close }}</td>
-                        <td>{{ $acc->is_main }}</td>
+                        @if($acc->is_main)
+                            <td>Да</td>
+                        @else
+                            <td>Нет</td>
+                        @endif
 
                         <td style="width:110px;">
                             {!! Form::open(['url'=>route('baccEdit',['id'=>$acc->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}

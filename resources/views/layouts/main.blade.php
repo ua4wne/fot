@@ -89,8 +89,9 @@
                                 </li>
                                 <li><a><i class="fa fa-address-card"></i>Контрагенты <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
-                                        <li><a href="fixed_footer.html">Fixed Footer</a></li>
+                                        <li><a href="{{ route('groups') }}">Группы контрагентов</a></li>
+                                        <li><a href="fixed_footer.html">Физлица</a></li>
+                                        <li><a href="fixed_footer.html">Юрлица</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-bar-chart-o"></i> Отчеты <span class="fa fa-chevron-down"></span></a>
@@ -279,7 +280,9 @@
 <!-- Custom Theme Scripts -->
 <script src="/js/custom.min.js"></script>
 @show
-    @section('user_script')
-    @show
+
+@section('user_script')
+@show
+
 </body>
 </html>

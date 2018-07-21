@@ -13,6 +13,11 @@ class Organisation extends Model
 
     public function divisions()
     {
-        return $this->hasMany('App\Models\Division');
+        return $this->hasMany('App\Models\Division','org_id','id');
+    }
+
+    public function bankaccounts()
+    {
+        return $this->hasMany('App\Models\BankAccount','org_id','id');
     }
 }

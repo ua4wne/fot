@@ -13,6 +13,11 @@ class BankAccount extends Model
 
     public function bank()
     {
-        return $this->belongsTo('App\Models\Bank');
+        return $this->belongsTo('App\Models\Bank','bank_id','id');
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo('App\Models\Organisation','org_id','id');
     }
 }

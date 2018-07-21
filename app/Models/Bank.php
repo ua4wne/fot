@@ -13,6 +13,6 @@ class Bank extends Model
 
     public function accounts()
     {
-        return $this->hasMany('App\Models\BankAccount');
+        return $this->hasMany('App\Models\BankAccount','bank_id','id');
     }
 }

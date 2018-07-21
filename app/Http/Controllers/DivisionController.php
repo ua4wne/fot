@@ -11,7 +11,7 @@ class DivisionController extends Controller
 {
     public function index(){
         if(view()->exists('refs.division')){
-            $divs = Division::paginate(15); //all();
+            $divs = Division::paginate(env('PAGINATION_SIZE')); //all();
             $data = [
                 'title' => 'Подразделения',
                 'head' => 'Список подразделений',

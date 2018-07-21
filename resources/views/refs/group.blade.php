@@ -8,7 +8,8 @@
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb">
         <li><a href="{{ route('main') }}">Рабочий стол</a></li>
-        <li class="active">Организации</li>
+        <li><a href="{{ route('firms') }}">Контрагенты</a></li>
+        <li class="active">Группы</li>
     </ul>
     <!-- END BREADCRUMB -->
     <!-- page content -->
@@ -22,34 +23,34 @@
     @endif
     <div class="row">
         <h2 class="text-center">{{ $head }}</h2>
-        @if($orgs)
-            <a href="{{route('orgAdd')}}">
-                <button type="button" class="btn btn-primary btn-rounded">Новая запись</button>
+        @if($groups)
+            <a href="{{route('groupAdd')}}">
+                <button type="button" class="btn btn-primary btn-rounded">Новая группа</button>
             </a>
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th>Название</th>
-                    <th>Полное наименование</th>
-                    <th>ИНН</th>
-                    <th>КПП</th>
+                    <th>Родительская группа</th>
+                    <th>Наименование</th>
                     <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                @foreach($orgs as $k => $org)
+                @foreach($groups as $k => $group)
 
                     <tr>
-                        <th>{!! Html::link(route('orgView',['org'=>$org->id]),$org->name,['alt'=>$org->name]) !!}</th>
-                        <td>{{ $org->full_name }}</td>
-                        <td>{{ $org->inn }}</td>
-                        <td>{{ $org->kpp }}</td>
+                        @if(empty(\App\Models\Group::find($group->parent_id)->name))
+                            <td> </td>
+                        @else
+                            <td>{{ \App\Models\Group::find($group->parent_id)->name }}</td>
+                        @endif
+                        <th>{!! Html::link(route('groupView',['id'=>$group->id]),$group->name,['alt'=>$group->name]) !!}</th>
                         <td style="width:110px;">
-                            {!! Form::open(['url'=>route('orgEdit',['org'=>$org->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}
+                            {!! Form::open(['url'=>route('groupEdit',['id'=>$group->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}
                             {{ method_field('DELETE') }}
                             <div class="form-group" role="group">
-                                <a href="{{route('orgEdit',['org'=>$org->id])}}"><button class="btn btn-success btn-sm" type="button"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button></a>
+                                <a href="{{route('groupEdit',['id'=>$group->id])}}"><button class="btn btn-success btn-sm" type="button"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button></a>
                                 {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit']) !!}
                             </div>
                             {!! Form::close() !!}
@@ -59,7 +60,7 @@
                 @endforeach
                 </tbody>
             </table>
-            {{ $orgs->links() }}
+            {{ $groups->links() }}
         @endif
     </div>
     </div>
