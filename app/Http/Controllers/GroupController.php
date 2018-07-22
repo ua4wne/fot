@@ -10,13 +10,15 @@ class GroupController extends Controller
 {
     public function index(){
         if(view()->exists('refs.group')){
-            $groups = Group::orderBy('parent_id', 'asc')->paginate(env('PAGINATION_SIZE')); //all();
+            $parents = Group::where('parent_id',null)->get(); //all();
+            $childs = Group::whereNotNull('parent_id')->get();
             $data = [
                 'title' => 'Группы',
                 'head' => 'Группы контрагентов',
-                'groups' => $groups,
+                'groups' => $parents,
+                'childs' => $childs
             ];
-
+            //dd($childs);
             return view('refs.group',$data);
         }
         abort(404);
@@ -52,7 +54,10 @@ class GroupController extends Controller
             $objects = Group::all();
             $grpsel = array();
             foreach ($objects as $object){
-                $grpsel[$object->id] = $object->name;
+                if($object->parent_id)
+                    $grpsel[$object->id] = '--'.$object->name;
+                else
+                    $grpsel[$object->id] = $object->name;
             }
             $data = [
                 'title' => 'Новая запись',

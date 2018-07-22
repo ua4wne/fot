@@ -30,7 +30,7 @@
         <div class="form-group">
             {!! Form::label('parent_id', 'Родительская группа:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::select('parent_id',$grpsel, old('parent_id'), ['class' => 'form-control','id'=>'parent_id']); !!}
+                {!! Form::select('parent_id',$grpsel, old('parent_id'), ['class' => 'form-control','id'=>'parent_id']) !!}
             </div>
         </div>
         @endif
