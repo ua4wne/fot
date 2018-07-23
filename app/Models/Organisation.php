@@ -11,7 +11,7 @@ class Organisation extends Model
 
     protected $fillable = ['name', 'full_name', 'inn', 'kpp'];
 
-    public function divisions()
+    public function division()
     {
         return $this->hasMany('App\Models\Division','org_id','id');
     }

@@ -92,13 +92,20 @@ Route::group(['prefix'=>'groups'], function(){
     Route::match(['get','post'],'/add',['uses'=>'GroupController@create','as'=>'groupAdd']);
     //group/edit
     Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'GroupController@edit','as'=>'groupEdit']);
+    //groups/ajax/add
+    Route::post('/ajax/add',['uses'=>'Ajax\GroupController@create','as'=>'newGroup']);
+    //groups/ajax/edit
+    Route::post('/ajax/edit',['uses'=>'Ajax\GroupController@edit','as'=>'editGroup']);
+    //groups/ajax/delete
+    Route::post('/ajax/delete',['uses'=>'Ajax\GroupController@delete','as'=>'deleteGroup']);
 });
 
 //firm/ группа обработки роутов group
 Route::group(['prefix'=>'firms'], function(){
     Route::get('/',['uses'=>'FirmController@index','as'=>'firms']);
-    //group/add
-    Route::match(['get','post'],'/add',['uses'=>'GroupController@create','as'=>'firmAdd']);
-    //group/edit
-    Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'GroupController@edit','as'=>'firmEdit']);
+    //firms/add
+    Route::match(['get','post'],'/add',['uses'=>'FirmController@create','as'=>'firmAdd']);
+    //firms/edit
+    Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'FirmController@edit','as'=>'firmEdit']);
+
 });
