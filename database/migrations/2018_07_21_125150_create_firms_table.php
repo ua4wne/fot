@@ -15,7 +15,7 @@ class CreateFirmsTable extends Migration
     {
         Schema::create('firms', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum('type',['Физлицо','Юрлицо']);
+            $table->enum('type',['Физлицо','Юрлицо'])->default('Юрлицо');
             $table->string('name',100);
             $table->string('fio',100)->nullable();
             $table->integer('group_id')->unsigned()->nullable();

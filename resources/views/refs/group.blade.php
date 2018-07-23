@@ -1,5 +1,5 @@
 @extends('layouts.main')
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @section('tile_widget')
 
 @endsection
@@ -29,9 +29,6 @@
             </a>
 
             <div class="x_content">
-                <a href="#">
-                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#newGroup">Новая подгруппа</button>
-                </a>
                 <div class="modal fade" id="newGroup" tabindex="-1" role="dialog" aria-labelledby="newGroup" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -47,7 +44,7 @@
                                 <div class="form-group">
                                     {!! Form::label('name','Название:',['class' => 'col-xs-2 control-label'])   !!}
                                     <div class="col-xs-8">
-                                        {!! Form::text('name',old('name'),['class' => 'form-control','required','placeholder'=>'Введите название подгруппы'])!!}
+                                        {!! Form::text('name',old('name'),['class' => 'form-control','required','placeholder'=>'Введите название подгруппы','id'=>'new_name'])!!}
                                     </div>
                                 </div>
 
@@ -120,6 +117,9 @@
                         @foreach($groups as $k => $group)
                             @if($k==0)
                                 <div class="tab-pane active" id="group{{ $group->id }}">
+                                    <a href="#">
+                                        <button type="button" class="btn btn-link" id="{{ $group->id }}" data-toggle="modal" data-target="#newGroup">Новая подгруппа</button>
+                                    </a>
                                 @if($childs)
                                         <table class="table table-striped table-bordered">
                                             <thead>
@@ -148,6 +148,9 @@
                                 </div>
                             @elseif($k>0)
                                 <div class="tab-pane" id="group{{ $group->id }}">
+                                    <a href="#">
+                                        <button type="button" class="btn btn-link" id="{{ $group->id }}" data-toggle="modal" data-target="#newGroup">Новая подгруппа</button>
+                                    </a>
                                     @if($childs)
                                         <table class="table table-striped table-bordered">
                                             <thead>
@@ -243,7 +246,73 @@
             $('#child_id').val(id);
         });
 
+        $('#add_group').click(function(e){
+            e.preventDefault();
+            var error=0;
+            $("#new_group").find(":input").each(function() {// проверяем каждое поле ввода в форме
+                if($(this).attr("required")=='required'){ //обязательное для заполнения поле формы?
+                    if(!$(this).val()){// если поле пустое
+                        $(this).css('border', '1px solid red');// устанавливаем рамку красного цвета
+                        error=1;// определяем индекс ошибки
+                    }
+                    else{
+                        $(this).css('border', '1px solid green');// устанавливаем рамку зеленого цвета
+                    }
 
+                }
+            })
+            if(error){
+                alert("Необходимо заполнять все доступные поля!");
+                return false;
+            }
+            else{
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('newGroup') }}',
+                    data: $('#new_group').serialize(),
+                    success: function(res){
+                        //alert(res);
+                        if(res=='ERR')
+                            alert('Ошибка записи данных.');
+                        else{
+                            var id = $('#parent_id').val();
+                            $('#'+id).parent().next().append(res);
+                            $('#new_name').val('');
+                        }
+                    }
+                });
+            }
+        });
+
+        $('.btn-link').click(function(){
+            var id = $(this).attr("id");
+            $('#parent_id').val(id);
+        });
+
+        $('.group_delete').click(function(){
+            var id = $(this).parent().parent().parent().attr("id");
+            var x = confirm("Выбранная запись будет удалена. Продолжить (Да/Нет)?");
+            if (x) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('deleteGroup') }}',
+                    data: {'id':id},
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(res){
+                        //alert(res);
+                        if(res=='OK')
+                            $('#'+id).hide();
+                        else
+                            alert('Ошибка удаления данных.');
+                    }
+                });
+            }
+            else {
+                return false;
+            }
+        });
 
     </script>
     @include('confirm')

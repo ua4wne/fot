@@ -100,7 +100,7 @@ Route::group(['prefix'=>'groups'], function(){
     Route::post('/ajax/delete',['uses'=>'Ajax\GroupController@delete','as'=>'deleteGroup']);
 });
 
-//firm/ группа обработки роутов group
+//firms/ группа обработки роутов firms
 Route::group(['prefix'=>'firms'], function(){
     Route::get('/',['uses'=>'FirmController@index','as'=>'firms']);
     //firms/add
