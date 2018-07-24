@@ -23,6 +23,75 @@
         </div>
     @endif
     <div class="row">
+        <div class="modal fade" id="editFirm" tabindex="-1" role="dialog" aria-labelledby="editFirm" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-times-circle fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <h4 class="modal-title">Редактирование</h4>
+                    </div>
+                    <div class="modal-body">
+                        {!! Form::open(['url' => route('editFirm'),'id'=>'edit_firm','class'=>'form-horizontal','method'=>'POST']) !!}
+
+                        <div class="form-group">
+                            <div class="col-xs-8">
+                                {!! Form::hidden('id','',['class' => 'form-control','required'=>'required','id'=>'firm_id']) !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('type', 'Вид контрагента:',['class'=>'col-xs-3 control-label']) !!}
+                            <div class="col-xs-8">
+                                {!! Form::select('type', array('physical' => 'Физическое лицо', 'legal_entity' => 'Юридическое лицо'), 'legal_entity',['class' => 'form-control','id'=>'type']); !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('name','Название:',['class' => 'col-xs-3 control-label'])   !!}
+                            <div class="col-xs-8">
+                                {!! Form::text('name',old('name'),['class' => 'form-control','placeholder'=>'Введите наименование организации','required','id'=>'name'])!!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('full_name','Наименование:',['class' => 'col-xs-3 control-label'])   !!}
+                            <div class="col-xs-8">
+                                {!! Form::text('full_name',old('full_name'),['class' => 'form-control','placeholder'=>'Введите полное наименование организации','id'=>'fname'])!!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('group_id', 'Входит в группу:',['class'=>'col-xs-3 control-label']) !!}
+                            <div class="col-xs-8">
+                                {!! Form::select('group_id', $grpsel, old('group_id'),['class' => 'form-control','id'=>'group_id']); !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('inn','ИНН:',['class' => 'col-xs-3 control-label'])   !!}
+                            <div class="col-xs-8">
+                                {!! Form::text('inn',old('inn'),['class' => 'form-control','placeholder'=>'Введите ИНН','id'=>'inn'])!!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('kpp','КПП:',['class' => 'col-xs-3 control-label'])   !!}
+                            <div class="col-xs-8">
+                                {!! Form::text('kpp',old('kpp'),['class' => 'form-control','placeholder'=>'Введите КПП','id'=>'kpp'])!!}
+                            </div>
+                        </div>
+
+                        {!! Form::close() !!}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary" id="frm_edit">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <h2 class="text-center">{{ $head }}</h2>
         @if($firms)
             <a href="{{route('firmAdd')}}">
@@ -43,21 +112,26 @@
                 <tbody>
                 @foreach($firms as $k => $firm)
 
-                    <tr>
+                    <tr id="{{ $firm->id }}" class="{{ $firm->type }}">
                         <th>{!! Html::link(route('firmEdit',['id'=>$firm->id]),$firm->name,['alt'=>$firm->name]) !!}</th>
                         <td>{{ $firm->full_name }}</td>
-                        <td>{{ \App\Models\Group::find('id',$firm->group_id)->name }}</td>
+                        @if(empty($firm->group_id))
+                            <td></td>
+                        @else
+                            <td>{{ \App\Models\Group::find($firm->group_id)->name }}</td>
+                        @endif
                         <td>{{ $firm->inn }}</td>
                         <td>{{ $firm->kpp }}</td>
-                        <td>{{ \App\Models\BankAccount::find('id',$firm->acc_id)->name }}</td>
+                        @if(empty($firm->acc_id))
+                            <td></td>
+                        @else
+                            <td>{{ \App\Models\BankAccount::find($firm->acc_id)->name }}</td>
+                        @endif
                         <td style="width:110px;">
-                            {!! Form::open(['url'=>route('orgEdit',['org'=>$org->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}
-                            {{ method_field('DELETE') }}
                             <div class="form-group" role="group">
-                                <a href="{{route('orgEdit',['org'=>$org->id])}}"><button class="btn btn-success btn-sm" type="button"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button></a>
-                                {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit']) !!}
+                                <button class="btn btn-success btn-sm firm_edit" type="button" data-toggle="modal" data-target="#editFirm"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
+                                <button class="btn btn-danger btn-sm firm_delete" type="button"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                             </div>
-                            {!! Form::close() !!}
                         </td>
                     </tr>
                 @endforeach
@@ -71,6 +145,81 @@
 @endsection
 
 @section('user_script')
-    <script src="/js/dataTables.min.js"></script>
-    @include('confirm')
+    <script src="/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            var options = {
+                'backdrop' : 'true',
+                'keyboard' : 'true'
+            }
+            $('#basicModal').modal(options);
+        });
+
+        $('#frm_edit').click(function(e){
+            e.preventDefault();
+            var error=0;
+            $("#edit_firm").find(":input").each(function() {// проверяем каждое поле ввода в форме
+                if($(this).attr("required")=='required'){ //обязательное для заполнения поле формы?
+                    if(!$(this).val()){// если поле пустое
+                        $(this).css('border', '1px solid red');// устанавливаем рамку красного цвета
+                        error=1;// определяем индекс ошибки
+                    }
+                    else{
+                        $(this).css('border', '1px solid green');// устанавливаем рамку зеленого цвета
+                    }
+
+                }
+            })
+            if(error){
+                alert("Необходимо заполнять все доступные поля!");
+                return false;
+            }
+            else{
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('editFirm') }}',
+                    data: $('#edit_firm').serialize(),
+                    success: function(res){
+                        //alert(res);
+                        if(res=='ERR')
+                            alert('Ошибка записи данных.');
+                        else{
+                            var obj = jQuery.parseJSON(res);
+                            var id = obj.id;
+                            var name = obj.name;
+                            var fname = obj.fname;
+                            var group = obj.group;
+                            var inn = obj.inn;
+                            var kpp = obj.kpp;
+                            $("#"+id).children('th').text(name);
+                            $("#"+id).children('td').first().text(fname);
+                            $("#"+id).children('td').first().next().text(group);
+                            $("#"+id).children('td').first().next().next().text(inn);
+                            $("#"+id).children('td').first().next().next().next().text(kpp);
+                        }
+                    }
+                });
+            }
+        });
+
+        $('.firm_edit').click(function(){
+            var id = $(this).parent().parent().parent().attr("id");
+            var vid  = $(this).parent().parent().parent().attr("class");
+            var kpp = $(this).parent().parent().prevAll().eq(1).text();
+            var inn = $(this).parent().parent().prevAll().eq(2).text();
+            var group = $(this).parent().parent().prevAll().eq(3).text();
+            var fname = $(this).parent().parent().prevAll().eq(4).text();
+            var name = $(this).parent().parent().prevAll().eq(5).text();
+            $("#group_id :contains("+group+")").attr("selected", "selected");
+            $('#kpp').val(kpp);
+            $('#inn').val(inn);
+            if(vid.indexOf('physical') > -1)
+                $("#type :contains('Физическое лицо')").attr("selected", "selected");
+            else
+                $("#type :contains('Юридическое лицо')").attr("selected", "selected");
+            $('#fname').val(fname);
+            $('#name').val(name);
+            $('#firm_id').val(id);
+        });
+    </script>
 @endsection

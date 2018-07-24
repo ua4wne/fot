@@ -111,5 +111,9 @@ Route::group(['prefix'=>'firms'], function(){
     Route::match(['get','post'],'/add',['uses'=>'FirmController@create','as'=>'firmAdd']);
     //firms/edit
     Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'FirmController@edit','as'=>'firmEdit']);
+    //firms/ajax/edit
+    Route::post('/ajax/edit',['uses'=>'Ajax\FirmController@edit','as'=>'editFirm']);
+    //firms/ajax/delete
+    Route::post('/ajax/delete',['uses'=>'Ajax\FirmController@delete','as'=>'deleteFirm']);
 
 });
