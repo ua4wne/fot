@@ -16,11 +16,12 @@ class CreateFirmsTable extends Migration
         Schema::create('firms', function (Blueprint $table) {
             $table->increments('id');
             $table->enum('type',['Физлицо','Юрлицо'])->default('Юрлицо');
-            $table->string('name',100);
-            $table->string('fio',100)->nullable();
+            $table->string('name',90);
+            $table->string('full_name',180)->nullable();
             $table->integer('group_id')->unsigned()->nullable();
             $table->string('inn',12)->nullable();
             $table->string('kpp',9)->nullable();
+            $table->integer('acc_id')->unsigneg()->nullable();
             $table->timestamps();
         });
     }

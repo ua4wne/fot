@@ -1,5 +1,5 @@
 @extends('layouts.main')
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
 @section('tile_widget')
 
 @endsection

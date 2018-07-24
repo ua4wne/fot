@@ -2,6 +2,7 @@
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -90,8 +91,8 @@
                                 <li><a><i class="fa fa-address-card"></i>Контрагенты <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('groups') }}">Группы контрагентов</a></li>
-                                        <li><a href="fixed_footer.html">Физлица</a></li>
-                                        <li><a href="fixed_footer.html">Юрлица</a></li>
+                                        <li><a href="{{ route('physical') }}">Физлица</a></li>
+                                        <li><a href="{{ route('legal_entity') }}">Юрлица</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-bar-chart-o"></i> Отчеты <span class="fa fa-chevron-down"></span></a>

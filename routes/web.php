@@ -103,6 +103,10 @@ Route::group(['prefix'=>'groups'], function(){
 //firms/ группа обработки роутов firms
 Route::group(['prefix'=>'firms'], function(){
     Route::get('/',['uses'=>'FirmController@index','as'=>'firms']);
+    //firms/physical
+    Route::match(['get','post'],'/physical',['uses'=>'FirmController@physical','as'=>'physical']);
+    //firms/legal_entity
+    Route::match(['get','post'],'/legal_entity',['uses'=>'FirmController@legal','as'=>'legal_entity']);
     //firms/add
     Route::match(['get','post'],'/add',['uses'=>'FirmController@create','as'=>'firmAdd']);
     //firms/edit

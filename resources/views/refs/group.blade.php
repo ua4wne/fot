@@ -1,5 +1,5 @@
 @extends('layouts.main')
-<meta name="csrf-token" content="{{ csrf_token() }}">
+
 @section('tile_widget')
 
 @endsection
@@ -135,8 +135,8 @@
                                             <th>{!! Html::link(route('groupView',['id'=>$child->id]),$child->name,['alt'=>$child->name]) !!}</th>
                                             <td style="width:110px;">
                                                 <div class="form-group" role="group">
-                                                    <button class="btn btn-success btn-sm group_edit" type="button" data-toggle="modal" data-target="#editGroup"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button>
-                                                    <button class="btn btn-danger btn-sm group_delete" type="button"><i class="fa fa-trash fa-lg>" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-success btn-sm group_edit" type="button" data-toggle="modal" data-target="#editGroup"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-danger btn-sm group_delete" type="button"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -166,8 +166,8 @@
                                                         <th>{!! Html::link(route('groupView',['id'=>$child->id]),$child->name,['alt'=>$child->name]) !!}</th>
                                                         <td style="width:110px;">
                                                             <div class="form-group" role="group">
-                                                                <button class="btn btn-success btn-sm group_edit" type="button" data-toggle="modal" data-target="#editGroup"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button>
-                                                                <button class="btn btn-danger btn-sm group_delete" type="button"><i class="fa fa-trash fa-lg>" aria-hidden="true"></i></button>
+                                                                <button class="btn btn-success btn-sm group_edit" type="button" data-toggle="modal" data-target="#editGroup"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
+                                                                <button class="btn btn-danger btn-sm group_delete" type="button"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                                                             </div>
                                                         </td>
                                                     </tr>
