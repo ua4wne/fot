@@ -26,6 +26,11 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::group(['prefix'=>'exchange'], function() {
+    Route::post('import-firm', 'ExcelController@importFirm')->name('importFirm');
+    Route::get('export-firm/{type}', 'ExcelController@exportFirm')->name('exportFirm');
+});
+
 //currency/ группа обработки роутов справочника currency
 Route::group(['prefix'=>'currency'], function(){
     Route::get('/',['uses'=>'References\CurrencyController@index','as'=>'currency']);

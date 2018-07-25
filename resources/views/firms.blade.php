@@ -92,11 +92,63 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="importFirm" tabindex="-1" role="dialog" aria-labelledby="importFirm" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-times-circle fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <h4 class="modal-title">Загрузка данных</h4>
+                    </div>
+                    {!! Form::open(array('route' => 'importFirm','method'=>'POST','files'=>'true')) !!}
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            {!! Form::label('file', 'Файл:',['class'=>'col-xs-2 control-label']) !!}
+                            <div class="col-xs-8">
+                                {!! Form::file('file', ['class' => 'filestyle','data-buttonText'=>'Выберите файл','data-buttonName'=>"btn-primary",'data-placeholder'=>"Файл не выбран"]) !!}
+                                {!! $errors->first('file', '<p class="alert alert-danger">:message</p>') !!}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        {!! Form::submit('Загрузить',['class'=>'btn btn-primary']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
         <h2 class="text-center">{{ $head }}</h2>
         @if($firms)
-            <a href="{{route('firmAdd')}}">
-                <button type="button" class="btn btn-primary btn-rounded">Новый контрагент</button>
-            </a>
+            <div class="x_content">
+                <div class="btn-group">
+                    <a href="#">
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#importFirm"><i class="fa fa-upload fa-fw"></i> Импорт</button>
+                    </a>
+                </div>
+                <div class="btn-group">
+                    <a class="btn btn-success btn-sm" href="#"><i class="fa fa-upload fa-fw"></i> Экспорт</a>
+                    <a class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
+                        <span class="fa fa-caret-down" title="Toggle dropdown menu"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ route('exportFirm',['type'=>'xls']) }}"><i class="fa fa-file-excel-o fa-fw"></i> В файл XLS</a></li>
+                        <li><a href="{{ route('exportFirm',['type'=>'xlsx']) }}"><i class="fa fa-file-excel-o fa-fw"></i> В файл XLSX</a></li>
+                        <li><a href="{{ route('exportFirm',['type'=>'csv']) }}"><i class="fa fa-file-excel-o fa-fw"></i> В файл CSV</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                <a href="{{route('firmAdd')}}">
+                    <button type="button" class="btn btn-primary btn-sm">Новый контрагент</button>
+                </a>
+                </div>
+            </div>
+    </div>
+
+            <div class="x_panel">
             <table id="datatable" class="table table-striped table-bordered">
                 <thead>
                 <tr>
@@ -139,6 +191,7 @@
             </table>
 
         @endif
+            </div>
     </div>
     </div>
     <!-- /page content -->
@@ -221,5 +274,31 @@
             $('#name').val(name);
             $('#firm_id').val(id);
         });
+
+        $('.firm_delete').click(function(){
+            var id = $(this).parent().parent().parent().attr("id");
+            var x = confirm("Выбранная запись будет удалена. Продолжить (Да/Нет)?");
+            if (x) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('deleteFirm') }}',
+                    data: {'id':id},
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(res){
+                        //alert(res);
+                        if(res=='OK')
+                            $('#'+id).hide();
+                        else
+                            alert('Ошибка удаления данных.');
+                    }
+                });
+            }
+            else {
+                return false;
+            }
+        });
+
     </script>
 @endsection

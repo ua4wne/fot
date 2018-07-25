@@ -27,4 +27,17 @@ class FirmController extends Controller
             }
         }
     }
+
+    public function delete(Request $request){
+        if($request->isMethod('post')){
+            $id = $request->input('id');
+            $model = Firm::find($id);
+            if($model->delete()) {
+                return 'OK';
+            }
+            else{
+                return 'ERR';
+            }
+        }
+    }
 }
