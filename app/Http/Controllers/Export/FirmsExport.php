@@ -4,8 +4,10 @@ use App\Models\Firm;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class FirmsExport implements FromCollection, WithHeadings
+class FirmsExport implements FromCollection, WithHeadings, ShouldAutoSize, WithTitle
 {
     use Exportable;
     public function collection()
@@ -27,5 +29,10 @@ class FirmsExport implements FromCollection, WithHeadings
             'create_at',
             'update_at'
         ];
+    }
+
+    public function title(): string
+    {
+        return "Контрагенты";
     }
 }

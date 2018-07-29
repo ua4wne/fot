@@ -12,7 +12,7 @@ class FirmController extends Controller
     public function index(){
         if(view()->exists('firms')){
             //выбираем все группы с parent_id=null
-            $groups = Group::where('parent_id',null)->get();
+            $groups = Group::all();
             $grpsel = array();
             foreach ($groups as $group){
                 $grpsel[$group->id] = $group->name;
@@ -34,7 +34,7 @@ class FirmController extends Controller
     public function physical(){
         if(view()->exists('firms')){
             //выбираем все группы с parent_id=null
-            $groups = Group::where('parent_id',null)->get();
+            $groups = Group::all();
             $grpsel = array();
             foreach ($groups as $group){
                 $grpsel[$group->id] = $group->name;
@@ -56,7 +56,7 @@ class FirmController extends Controller
     public function legal(){
         if(view()->exists('firms')){
             //выбираем все группы с parent_id=null
-            $groups = Group::where('parent_id',null)->get();
+            $groups = Group::all();
             $grpsel = array();
             foreach ($groups as $group){
                 $grpsel[$group->id] = $group->name;
@@ -108,7 +108,7 @@ class FirmController extends Controller
         }
         if(view()->exists('firm_add')){
             //выбираем все группы с parent_id=null
-            $groups = Group::where('parent_id',null)->get();
+            $groups = Group::all();
             $grpsel = array();
             foreach ($groups as $group){
                 $grpsel[$group->id] = $group->name;
