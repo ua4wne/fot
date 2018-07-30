@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Firm;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Validator;
@@ -64,6 +65,34 @@ class GroupController extends Controller
                 'grpsel' => $grpsel
             ];
             return view('refs.group_add', $data);
+        }
+        abort(404);
+    }
+
+    public function view($id){
+        if(view()->exists('refs.group')) {
+            $model = Group::find($id);
+            $group = $model->name;
+            $parent = $model->parent_id;
+            $grpsel = array($id=>$group);
+            if($parent){
+                $main = Group::find($parent)->name;
+                $group = $main.' / '.$group;
+                $objects = Group::where(array('parent_id'=>$parent))->get();
+                $grpsel = array();
+                foreach ($objects as $object){
+                    $grpsel[$object->id] = $object->name;
+                }
+            }
+            //выбираем всех контрагентов группы
+            $firms = Firm::where(array('group_id' => $id))->get();
+            $data = [
+                'title' => $group,
+                'head' => 'Контрагенты группы "' . $group.'"',
+                'firms' => $firms,
+                'grpsel' => $grpsel
+            ];
+            return view('refs.group_firm', $data);
         }
         abort(404);
     }

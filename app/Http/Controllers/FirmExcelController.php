@@ -26,7 +26,7 @@ class FirmExcelController extends Controller
             foreach( $tables as $table ) {
                 $rows = count($table);
                 $name = $table[0][0];
-                $group = Group::where(['name'=>$name,'parent_id'=>null])->get();
+                $group = Group::where(['name'=>$name])->get();
                 $group_id = $group[0]['id'];
                 for($i=1;$i<$rows;$i++){
                     $row = $table[$i];
