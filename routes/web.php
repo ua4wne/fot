@@ -95,6 +95,8 @@ Route::group(['prefix'=>'groups'], function(){
     Route::get('/view/{id}',['uses'=>'GroupController@view','as'=>'groupView']);
     //group/add
     Route::match(['get','post'],'/add',['uses'=>'GroupController@create','as'=>'groupAdd']);
+    //group/firm_add
+    Route::match(['get','post'],'/firm_add/{id}',['uses'=>'GroupController@firm_add','as'=>'groupFirmAdd']);
     //group/edit
     Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'GroupController@edit','as'=>'groupEdit']);
     //groups/ajax/add

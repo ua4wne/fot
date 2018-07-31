@@ -69,8 +69,53 @@ class GroupController extends Controller
         abort(404);
     }
 
+    public function firm_add($id,Request $request){
+
+        if($request->isMethod('post')){
+            $input = $request->except('_token'); //параметр _token нам не нужен
+
+            $messages = [
+                'required' => 'Поле обязательно к заполнению!',
+                'max' => 'Значение поля должно быть не более :max символов!',
+                'integer' => 'Значение поля должно содержать только цифры!'
+            ];
+            $validator = Validator::make($input,[
+                'name' => 'required|max:100',
+                'parent_id' => 'nullable|integer',
+            ],$messages);
+            if($validator->fails()){
+                return redirect()->route('groupAdd')->withErrors($validator)->withInput();
+            }
+
+            $firm = new Firm();
+            $firm->group_id = $id;
+            $firm->fill($input);
+            if($firm->save()){
+                $msg = 'Контрагент '. $input['name'] .' был успешно добавлен!';
+                return redirect('/groups/view/'.$id)->with('status',$msg);
+            }
+        }
+        if(view()->exists('refs.group_firm_add')){
+            //выбираем все группы
+            $object = Group::find($id);
+            $parent = Group::where('id',$object['parent_id'])->first();
+            $grpsel = array();
+            //foreach ($objects as $object){
+                $grpsel[$object['id']] = $object['name'];
+            //}
+            $data = [
+                'title' => 'Новая запись',
+                'grpsel' => $grpsel,
+                'id' => $id,
+                'link' => $parent['name'].' / '.$object['name']
+            ];
+            return view('refs.group_firm_add', $data);
+        }
+        abort(404);
+    }
+
     public function view($id){
-        if(view()->exists('refs.group')) {
+        if(view()->exists('refs.group_firm')) {
             $model = Group::find($id);
             $group = $model->name;
             $parent = $model->parent_id;
@@ -90,7 +135,8 @@ class GroupController extends Controller
                 'title' => $group,
                 'head' => 'Контрагенты группы "' . $group.'"',
                 'firms' => $firms,
-                'grpsel' => $grpsel
+                'grpsel' => $grpsel,
+                'id' => $id
             ];
             return view('refs.group_firm', $data);
         }

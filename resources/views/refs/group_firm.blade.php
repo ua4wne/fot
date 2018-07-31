@@ -95,7 +95,7 @@
         @if($firms)
             <div class="x_content">
                 <div class="btn-group">
-                    <a href="{{route('firmAdd')}}">
+                    <a href="{{route('groupFirmAdd',['id'=>$id])}}">
                         <button type="button" class="btn btn-primary btn-sm">Новый контрагент</button>
                     </a>
                 </div>

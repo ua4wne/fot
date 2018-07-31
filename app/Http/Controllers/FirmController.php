@@ -103,7 +103,7 @@ class FirmController extends Controller
             $firm->fill($input);
             if($firm->save()){
                 $msg = 'Контрагент '. $input['name'] .' был успешно добавлен!';
-                return redirect('/firms')->with('status',$msg);
+                return redirect('/firms/'.$input['type'])->with('status',$msg);
             }
         }
         if(view()->exists('firm_add')){
