@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\References;
 
-use App\Models\Operation;
+use App\Models\Settlement;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
 
-class TypeOperationController extends Controller
+class SettlementController extends Controller
 {
     public function index(){
-        if(view()->exists('refs.oper_type')){
-            $opers = Operation::paginate(env('PAGINATION_SIZE'));
+        if(view()->exists('refs.settlements')){
+            $settls = Settlement::paginate(env('PAGINATION_SIZE'));
             $data = [
-                'title' => 'Виды операций',
-                'head' => 'Виды операций',
-                'opers' => $opers,
+                'title' => 'Виды расчетов',
+                'head' => 'Виды расчетов',
+                'settls' => $settls,
             ];
 
-            return view('refs.oper_type',$data);
+            return view('refs.settlements',$data);
         }
         abort(404);
     }
@@ -34,34 +34,34 @@ class TypeOperationController extends Controller
                 'max' => 'Значение поля должно быть не более :max символов!',
             ];
             $validator = Validator::make($input,[
-                'name' => 'required|unique:operations|max:100',
+                'name' => 'required|unique:settlements|max:100',
             ],$messages);
             if($validator->fails()){
-                return redirect()->route('operationAdd')->withErrors($validator)->withInput();
+                return redirect()->route('settlementAdd')->withErrors($validator)->withInput();
             }
 
-            $oper = new Operation();
-            $oper->fill($input);
-            if($oper->save()){
-                $msg = 'Операция '. $input['name'] .' была успешно добавлена!';
-                return redirect('/operations')->with('status',$msg);
+            $settl = new Settlement();
+            $settl->fill($input);
+            if($settl->save()){
+                $msg = 'Новый вид расчета '. $input['name'] .' был успешно добавлен!';
+                return redirect('/settlements')->with('status',$msg);
             }
         }
-        if(view()->exists('refs.oper_add')){
+        if(view()->exists('refs.settl_add')){
             $data = [
                 'title' => 'Новая запись'
             ];
-            return view('refs.oper_add', $data);
+            return view('refs.settl_add', $data);
         }
         abort(404);
     }
 
     public function edit($id,Request $request){
-        $model = Operation::find($id);
+        $model = Settlement::find($id);
         if($request->isMethod('delete')){
             $model->delete();
-            $msg = 'Операция '. $model->name .' была удалена!';
+            $msg = 'Вид расчета '. $model->name .' был удален!';
         }
-        return redirect('/operations')->with('status',$msg);
+        return redirect('/settlements')->with('status',$msg);
     }
 }

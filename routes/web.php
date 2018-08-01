@@ -29,6 +29,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix'=>'exchange'], function() {
     Route::post('import-firm', 'FirmExcelController@importFirm')->name('importFirm');
     Route::get('export-firm/{type}', 'FirmExcelController@exportFirm')->name('exportFirm');
+    Route::post('import-contract', 'ContractExcelController@importContract')->name('importContract');
+    Route::get('export-contract/{type}', 'ContractExcelController@exportFirm')->name('exportContract');
 });
 
 //currency/ группа обработки роутов справочника currency
@@ -52,10 +54,28 @@ Route::group(['prefix'=>'banks'], function(){
 //operation/ группа обработки роутов справочника operations
 Route::group(['prefix'=>'operations'], function(){
     Route::get('/',['uses'=>'References\TypeOperationController@index','as'=>'operations']);
-    //banks/add
+    //operations/add
     Route::match(['get','post'],'/add',['uses'=>'References\TypeOperationController@create','as'=>'operationAdd']);
-    //banks/edit
+    //operations/edit
     Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'References\TypeOperationController@edit','as'=>'operationEdit']);
+});
+
+//typedocs/ группа обработки роутов справочника typedocs
+Route::group(['prefix'=>'typedocs'], function(){
+    Route::get('/',['uses'=>'References\TypeDocController@index','as'=>'typedocs']);
+    //typedocs/add
+    Route::match(['get','post'],'/add',['uses'=>'References\TypeDocController@create','as'=>'typedocAdd']);
+    //typedocs/edit
+    Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'References\TypeDocController@edit','as'=>'typedocEdit']);
+});
+
+//settlements/ группа обработки роутов справочника settlements
+Route::group(['prefix'=>'settlements'], function(){
+    Route::get('/',['uses'=>'References\SettlementController@index','as'=>'settlements']);
+    //settlements/add
+    Route::match(['get','post'],'/add',['uses'=>'References\SettlementController@create','as'=>'settlementAdd']);
+    //settlements/edit
+    Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'References\SettlementController@edit','as'=>'settlementEdit']);
 });
 
 //organization/ группа обработки роутов organization
@@ -66,6 +86,16 @@ Route::group(['prefix'=>'organization'], function(){
     Route::match(['get','post'],'/add',['uses'=>'OrganizationController@create','as'=>'orgAdd']);
     //organization/edit
     Route::match(['get','post','delete'],'/edit/{org}',['uses'=>'OrganizationController@edit','as'=>'orgEdit']);
+});
+
+//contracts/ группа обработки роутов contracts
+Route::group(['prefix'=>'contracts'], function(){
+    Route::get('/',['uses'=>'ContractController@index','as'=>'contracts']);
+    Route::get('/view/{id}',['uses'=>'ContractController@view','as'=>'contractView']);
+    //contracts/add
+    Route::match(['get','post'],'/add',['uses'=>'ContractController@create','as'=>'contractAdd']);
+    //contract/edit
+    Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'ContractController@edit','as'=>'contractEdit']);
 });
 
 //division/ группа обработки роутов divisions

@@ -15,7 +15,7 @@
     <!-- page content -->
 
     <div class="row">
-        <h1 class="text-center">Новая организация</h1>
+        <h2 class="text-center">Новая организация</h2>
         {!! Form::open(['url' => route('orgAdd'),'class'=>'form-horizontal','method'=>'POST']) !!}
 
         <div class="form-group">

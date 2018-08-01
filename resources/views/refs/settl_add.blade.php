@@ -8,28 +8,21 @@
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb">
         <li><a href="{{ route('main') }}">Рабочий стол</a></li>
-        <li><a href="{{ route('divisions') }}">Подразделения</a></li>
+        <li><a href="{{ route('settlements') }}">Виды расчетов</a></li>
         <li class="active">Новая запись</li>
     </ul>
     <!-- END BREADCRUMB -->
     <!-- page content -->
 
     <div class="row">
-        <h2 class="text-center">Новое подразделение</h2>
-        {!! Form::open(['url' => route('divisionAdd'),'class'=>'form-horizontal','method'=>'POST']) !!}
+        <h2 class="text-center">Новый вид расчета</h2>
+        {!! Form::open(['url' => route('settlementAdd'),'class'=>'form-horizontal','method'=>'POST']) !!}
 
         <div class="form-group">
-            {!! Form::label('name','Название:',['class' => 'col-xs-2 control-label'])   !!}
+            {!! Form::label('name','Наименование:',['class' => 'col-xs-2 control-label'])   !!}
             <div class="col-xs-8">
-                {!! Form::text('name',old('name'),['class' => 'form-control','placeholder'=>'Введите название подразделения'])!!}
+                {!! Form::text('name',old('name'),['class' => 'form-control','placeholder'=>'Введите наименование вида расчета'])!!}
                 {!! $errors->first('name', '<p class="text-danger">:message</p>') !!}
-            </div>
-        </div>
-
-        <div class="form-group">
-            {!! Form::label('org_id', 'Организация:',['class'=>'col-xs-2 control-label']) !!}
-            <div class="col-xs-8">
-                {!! Form::select('org_id',$orgsel, old('org_id'), ['class' => 'form-control']); !!}
             </div>
         </div>
 

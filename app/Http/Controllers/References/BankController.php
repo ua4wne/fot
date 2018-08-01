@@ -11,7 +11,7 @@ class BankController extends Controller
 {
     public function index(){
         if(view()->exists('refs.banks')){
-            $banks = Bank::paginate(15); //all();
+            $banks = Bank::paginate(env('PAGINATION_SIZE')); //all();
             $data = [
                 'title' => 'Банки',
                 'head' => 'Справочник банков',

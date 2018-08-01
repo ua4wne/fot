@@ -15,7 +15,7 @@
 <!-- page content -->
 
 <div class="row">
-    <h1 class="text-center">Новая операция</h1>
+    <h2 class="text-center">Новая операция</h2>
     {!! Form::open(['url' => route('operationAdd'),'class'=>'form-horizontal','method'=>'POST']) !!}
 
     <div class="form-group">

@@ -20,4 +20,9 @@ class Organisation extends Model
     {
         return $this->hasMany('App\Models\BankAccount','org_id','id');
     }
+
+    public function contracts()
+    {
+        return $this->hasMany('App\Models\Contract','org_id','id');
+    }
 }

@@ -16,7 +16,7 @@
     <!-- page content -->
 
     <div class="row">
-        <h1 class="text-center">Новый контрагент</h1>
+        <h2 class="text-center">Новый контрагент</h2>
         {!! Form::open(['url' => route('groupFirmAdd',['id'=>$id]),'class'=>'form-horizontal','method'=>'POST']) !!}
 
         <div class="form-group">
