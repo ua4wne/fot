@@ -112,6 +112,8 @@
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('currency') }}">Валюты</a></li>
                                         <li><a href="{{ route('banks') }}">Банки</a></li>
+                                        <li><a href="{{ route('operations') }}">Вид операции</a></li>
+                                        <li><a href="profile.html">Вид договора</a></li>
                                         <li><a href="profile.html">Договоры</a></li>
                                         <li><a href="profile.html">Счета расчетов с контрагентами</a></li>
                                     </ul>

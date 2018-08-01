@@ -49,6 +49,15 @@ Route::group(['prefix'=>'banks'], function(){
     Route::match(['get','post','delete'],'/edit/{bank}',['uses'=>'References\BankController@edit','as'=>'bankEdit']);
 });
 
+//operation/ группа обработки роутов справочника operations
+Route::group(['prefix'=>'operations'], function(){
+    Route::get('/',['uses'=>'References\TypeOperationController@index','as'=>'operations']);
+    //banks/add
+    Route::match(['get','post'],'/add',['uses'=>'References\TypeOperationController@create','as'=>'operationAdd']);
+    //banks/edit
+    Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'References\TypeOperationController@edit','as'=>'operationEdit']);
+});
+
 //organization/ группа обработки роутов organization
 Route::group(['prefix'=>'organization'], function(){
     Route::get('/',['uses'=>'OrganizationController@index','as'=>'organizations']);
