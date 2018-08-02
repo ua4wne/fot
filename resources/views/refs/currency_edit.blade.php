@@ -15,7 +15,7 @@
     <!-- page content -->
 
     <div class="row">
-        <h1 class="text-center">{{ $data['name'] }}</h1>
+        <h2 class="text-center">{{ $data['name'] }}</h2>
         {!! Form::open(['url' => route('currencyEdit',['currency'=>$data['id']]),'class'=>'form-horizontal','method'=>'POST']) !!}
 
         {!! Form::hidden('name',$data['name'],['class' => 'form-control','placeholder'=>'Введите название'])!!}

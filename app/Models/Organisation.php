@@ -11,7 +11,7 @@ class Organisation extends Model
 
     protected $fillable = ['name', 'full_name', 'inn', 'kpp'];
 
-    public function division()
+    public function divisions()
     {
         return $this->hasMany('App\Models\Division','org_id','id');
     }
@@ -19,5 +19,10 @@ class Organisation extends Model
     public function bankaccounts()
     {
         return $this->hasMany('App\Models\BankAccount','org_id','id');
+    }
+
+    public function contracts()
+    {
+        return $this->hasMany('App\Models\Contract','org_id','id');
     }
 }

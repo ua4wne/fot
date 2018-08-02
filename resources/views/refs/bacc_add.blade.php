@@ -27,7 +27,7 @@
     @endif--}}
 
     <div class="row">
-        <h1 class="text-center">Новый банковский счет</h1>
+        <h2 class="text-center">Новый банковский счет</h2>
         {!! Form::open(['url' => route('baccAdd'),'class'=>'form-horizontal','method'=>'POST']) !!}
 
         <div class="form-group">

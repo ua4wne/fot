@@ -9,5 +9,5 @@ class Firm extends Model
     //указываем имя таблицы
     protected $table = 'firms';
 
-    protected $fillable = ['type', 'name', 'fio', 'group_id', 'inn', 'kpp'];
+    protected $fillable = ['type', 'name', 'full_name', 'group_id', 'inn', 'kpp', 'acc_id'];
 }

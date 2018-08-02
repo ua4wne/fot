@@ -11,7 +11,7 @@ class CurrencyController extends Controller
 {
     public function index(){
         if(view()->exists('refs.currency')){
-            $money = Currency::paginate(15); //all();
+            $money = Currency::paginate(env('PAGINATION_SIZE')); //all();
             $data = [
                 'title' => 'Валюты',
                 'head' => 'Справочник валют',

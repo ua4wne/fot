@@ -15,7 +15,7 @@
     <!-- page content -->
 
     <div class="row">
-        <h1 class="text-center">Новый банк</h1>
+        <h2 class="text-center">Новый банк</h2>
         {!! Form::open(['url' => route('bankAdd'),'class'=>'form-horizontal','method'=>'POST']) !!}
 
         <div class="form-group">
