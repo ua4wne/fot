@@ -17,14 +17,9 @@
 
 Route::middleware(['auth'])->group(function(){
     //Route::get('/', 'MainController@index');
-});
-
 
 Route::get('/', 'MainController@index')->name('main');
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix'=>'exchange'], function() {
     Route::post('import-firm', 'FirmExcelController@importFirm')->name('importFirm');
@@ -163,3 +158,8 @@ Route::group(['prefix'=>'firms'], function(){
     Route::post('/ajax/delete',['uses'=>'Ajax\FirmController@delete','as'=>'deleteFirm']);
 
 });
+});
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
