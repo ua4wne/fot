@@ -46,11 +46,15 @@
                     <!-- menu profile quick info -->
                     <div class="profile clearfix">
                         <div class="profile_pic">
-                            <img src="/images/img.jpg" alt="..." class="img-circle profile_img">
+                            @if(Auth::user()->image)
+                                <img src="{{ Auth::user()->image }}" alt="..." class="img-circle profile_img">
+                            @else
+                                <img src="/images/male.png" alt="..." class="img-circle profile_img">
+                            @endif
                         </div>
                         <div class="profile_info">
-                            <span>Welcome,</span>
-                            <h2>John Doe</h2>
+                            <span>Здравствуйте,</span>
+                            <h2>{{ Auth::user()->name }}</h2>
                         </div>
                     </div>
                     <!-- /menu profile quick info -->
@@ -121,17 +125,7 @@
                                 </li>
                                 <li><a><i class="fa fa-cog"></i> Настройки <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="#level1_1">Level One</a>
-                                        <li><a>Level One<span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li class="sub_menu"><a href="level2.html">Level Two</a>
-                                                </li>
-                                                <li><a href="#level2_1">Level Two</a>
-                                                </li>
-                                                <li><a href="#level2_2">Level Two</a>
-                                                </li>
-                                            </ul>
-                                        </li>
+                                        <li><a href="{{ route('users') }}">Пользователи</a></li>
                                         <li><a href="#level1_2">Level One</a>
                                         </li>
                                     </ul>
@@ -153,7 +147,7 @@
                         <a data-toggle="tooltip" data-placement="top" title="Lock">
                             <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+                        <a data-toggle="tooltip" data-placement="top" title="Logout" href="{{ route('logout') }}">
                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                         </a>
                     </div>
@@ -174,12 +168,17 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="/images/img.jpg" alt="">John Doe
+                                    @if(Auth::user()->image)
+                                        <img src="{{ Auth::user()->image }}" alt="...">
+                                    @else
+                                        <img src="/images/male.png" alt="...">
+                                    @endif
+                                    {{ Auth::user()->login }}
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
                                     <li><a href="javascript:;"> Profile</a></li>
-                                    <li><a href="{{ route('home') }}"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                                    <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                                 </ul>
                             </li>
 

@@ -21,10 +21,8 @@
         </div>
 
     <div class="form-group">
-        <div >
-            {!! Form::button('Войти', ['class' => 'btn btn-primary','type'=>'submit']) !!}
-            <a href="{{ route('firms') }}">Забыли пароль?</a>
-        </div>
+        {!! Form::button('<i class="fa fa-sign-in fa-lg" aria-hidden="true"></i> Войти в систему', ['class' => 'btn btn-default','type'=>'submit']) !!}
+        {!! Form::button('<i class="fa fa-repeat fa-lg" aria-hidden="true"></i> Забыл пароль', ['class' => 'btn pull-right','id'=>'lost']) !!}
     </div>
 
     {!! Form::close() !!}

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+//use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -18,14 +20,14 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    //use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -36,4 +38,43 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    public function username()
+    {
+        return 'login';
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * Обработка попытки аутентификации.
+     *
+     * @return Response
+     */
+    public function login(Request $request)
+    {
+        $data = $request->all();
+        //есть записи в
+        if (Auth::attempt(['login' => $data['login'], 'password' => $data['password'], 'active' => 1])) {
+            // Аутентификация успешна...
+            return redirect()->intended($this->redirectTo);
+        }
+        else{
+            return 'Oooo';
+        }
+    }
+
+    public function logout(){
+        Auth::logout();
+        return redirect()->intended($this->redirectTo);
+    }
+
 }

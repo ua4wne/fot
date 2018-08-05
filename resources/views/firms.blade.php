@@ -165,7 +165,7 @@
                 @foreach($firms as $k => $firm)
 
                     <tr id="{{ $firm->id }}" class="{{ $firm->type }}">
-                        <th>{!! Html::link(route('firmEdit',['id'=>$firm->id]),$firm->name,['alt'=>$firm->name]) !!}</th>
+                        <th>{{ $firm->name }}</th>
                         <td>{{ $firm->full_name }}</td>
                         @if(empty($firm->group_id))
                             <td></td>

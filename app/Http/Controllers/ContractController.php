@@ -17,7 +17,6 @@ class ContractController extends Controller
                 'head' => 'Договоры с контрагентами',
                 'contracts' => $contracts,
             ];
-            //dd($childs);
             return view('contracts',$data);
         }
         abort(404);
