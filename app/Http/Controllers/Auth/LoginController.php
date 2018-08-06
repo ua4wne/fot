@@ -83,8 +83,11 @@ class LoginController extends Controller
         if($user){
             $user->active = 1;
             $user->auth_code = NULL;
-            if($user->save())
-                return redirect()->intended($this->redirectTo)->with(['status' => 'Учетная запись активирована!']);
+            if($user->save()){
+                $msg = 'Учетная запись активирована!';
+                return redirect('/login')->with('status',$msg);
+            }
+                //return redirect()->intended($this->redirectTo);
         }
         abort(404);
     }
