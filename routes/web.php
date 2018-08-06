@@ -12,6 +12,8 @@
 */
 
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+//activate
+Route::get('/activate','Auth\LoginController@activate');
 
 Route::middleware(['auth'])->group(function(){
 

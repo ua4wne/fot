@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 //use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -68,13 +69,24 @@ class LoginController extends Controller
             return redirect()->intended($this->redirectTo);
         }
         else{
-            return 'Oooo';
+            return redirect()->intended($this->redirectTo);
         }
     }
 
     public function logout(){
         Auth::logout();
         return redirect()->intended($this->redirectTo);
+    }
+
+    public function activate(Request $request){
+        $user = User::where(array('id'=>$request->id,'auth_code'=>$request->code))->first();
+        if($user){
+            $user->active = 1;
+            $user->auth_code = NULL;
+            if($user->save())
+                return redirect()->intended($this->redirectTo)->with(['status' => 'Учетная запись активирована!']);
+        }
+        abort(404);
     }
 
 }

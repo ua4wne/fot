@@ -26,7 +26,7 @@
             <a href="{{route('userAdd')}}">
                 <button type="button" class="btn btn-primary btn-rounded">Новая запись</button>
             </a>
-            <table class="table table-bordered">
+            <table id="datatable" class="table table-striped table-bordered">
                 <thead>
                 <tr>
                     <th>Аватар</th>
@@ -42,21 +42,25 @@
                 @foreach($users as $k => $user)
 
                     <tr>
-                        <td>{{ $user->image }}</td>
+                        @if($user->image)
+                            <td><div class="profile_pic user-profile"><img src="{{ $user->image }}" alt="..." class="img-responsive center-block"></div></td>
+                        @else
+                            <td style="width:70px;"><img src="/images/male.png" alt="..." class="img-responsive center-block"></td>
+                        @endif
                         <th>{!! Html::link(route('userEdit',['id'=>$user->id]),$user->name,['alt'=>$user->name]) !!}</th>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->login }}</td>
                         @if($user->active)
-                            <td><i class="fa fa-check-circle-o success fa-lg" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-check-circle-o text-success fa-3x" aria-hidden="true"></i></td>
                         @else
-                            <td><i class="fa fa-ban fa-lg danger" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-ban fa-3x text-danger" aria-hidden="true"></i></td>
                         @endif
                         <td style="width:110px;">
                             {!! Form::open(['url'=>route('userEdit',['id'=>$user->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}
                             {{ method_field('DELETE') }}
                             <div class="form-group" role="group">
-                                <a href="{{route('userEdit',['id'=>$user->id])}}"><button class="btn btn-success btn-sm" type="button"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button></a>
-                                {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit']) !!}
+                                <a href="{{route('userEdit',['id'=>$user->id])}}"><button class="btn btn-success btn-sm" type="button"><i class="fa fa-edit fa-3x>" aria-hidden="true"></i></button></a>
+                                {!! Form::button('<i class="fa fa-trash-o fa-3x>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit']) !!}
                             </div>
                             {!! Form::close() !!}
                         </td>
@@ -73,5 +77,6 @@
 @endsection
 
 @section('user_script')
+    <script src="/js/jquery.dataTables.min.js"></script>
     @include('confirm')
 @endsection
