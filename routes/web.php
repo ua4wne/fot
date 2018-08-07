@@ -166,6 +166,10 @@ Route::middleware(['auth'])->group(function(){
         Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'Options\UserController@edit','as'=>'userEdit']);
         //users/ajax/edit
         Route::post('/ajax/edit',['uses'=>'Ajax\UserController@switchLogin','as'=>'switchLogin']);
+        //users/ajax/edit_login
+        Route::post('/ajax/edit_login',['uses'=>'Ajax\UserController@editLogin','as'=>'editLogin']);
+        //users/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\UserController@delete','as'=>'deleteLogin']);
     });
 });
 

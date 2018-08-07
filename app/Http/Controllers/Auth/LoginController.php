@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Cache;
 
 class LoginController extends Controller
 {
@@ -74,6 +75,7 @@ class LoginController extends Controller
     }
 
     public function logout(){
+        Cache::forget('user-is-online-' . Auth::user()->id);
         Auth::logout();
         return redirect()->intended($this->redirectTo);
     }

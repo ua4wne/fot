@@ -49,21 +49,21 @@
                         <div class="form-group">
                             {!! Form::label('email','E-mail:',['class' => 'col-xs-3 control-label'])   !!}
                             <div class="col-xs-8">
-                                {!! Form::email('email',old('email'),['class' => 'form-control','placeholder'=>'Введите E-mail','id'=>'email'])!!}
+                                {!! Form::email('email',old('email'),['class' => 'form-control','placeholder'=>'Введите E-mail','required','id'=>'email'])!!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('login','Логин:',['class' => 'col-xs-3 control-label'])   !!}
                             <div class="col-xs-8">
-                                {!! Form::email('login',old('login'),['class' => 'form-control','placeholder'=>'Введите логин','id'=>'login'])!!}
+                                {!! Form::text('login',old('login'),['class' => 'form-control','placeholder'=>'Введите логин','required','id'=>'login'])!!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('active', 'Статус:',['class'=>'col-xs-3 control-label']) !!}
                             <div class="col-xs-8">
-                                {!! Form::select('active', array('0'=>'Не активен','1'=>'Активен'), old('active'),['class' => 'form-control','id'=>'active']); !!}
+                                {!! Form::select('active', array('0'=>'Не активен','1'=>'Активен'), old('active'),['class' => 'form-control','required','id'=>'active']); !!}
                             </div>
                         </div>
 
@@ -88,6 +88,7 @@
                     <th>ФИО</th>
                     <th>E-mail</th>
                     <th>Логин</th>
+                    <th>Активность</th>
                     <th>Статус</th>
                     <th>Действия</th>
                 </tr>
@@ -105,6 +106,13 @@
                         <th>{{ $user->name }}</th>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->login }}</td>
+                        <td>
+                            @if($user->isOnline())
+                                <span role="button" class="label label-success">Online</span>
+                            @else
+                                <span role="button" class="label label-danger">Offline</span>
+                            @endif
+                        </td>
                         @if($user->active)
                             <td><span role="button" class="label label-success" id="{{ $user->id }}">Активен</span></td>
                         @else
@@ -137,9 +145,56 @@
 @endsection
 
 @section('user_script')
+
     <script src="/js/jquery.dataTables.min.js"></script>
-    @include('confirm')
+
     <script>
+        $(document).ready(function(){
+            var options = {
+                'backdrop' : 'true',
+                'keyboard' : 'true'
+            }
+            $('#basicModal').modal(options);
+        });
+
+        $('#save').click(function(e){
+            e.preventDefault();
+            var error=0;
+            $("#edit_login").find(":input").each(function() {// проверяем каждое поле ввода в форме
+                if($(this).attr("required")=='required'){ //обязательное для заполнения поле формы?
+                    if(!$(this).val()){// если поле пустое
+                        $(this).css('border', '1px solid red');// устанавливаем рамку красного цвета
+                        error=1;// определяем индекс ошибки
+                    }
+                    else{
+                        $(this).css('border', '1px solid green');// устанавливаем рамку зеленого цвета
+                    }
+
+                }
+            })
+            if(error){
+                alert("Необходимо заполнять все доступные поля!");
+                return false;
+            }
+            else{
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('editLogin') }}',
+                    data: $('#edit_login').serialize(),
+                    success: function(res){
+                        //alert(res);
+                        if(res=='OK')
+                            location.reload(true);
+                        if(res=='ERR')
+                            alert('Ошибка обновления данных.');
+                        else{
+                            alert('Ошибка валидации данных');
+                        }
+                    }
+                });
+            }
+        });
+
         $('.label-success').click(function(){
             var id = $(this).attr("id");
             $.ajax({
@@ -152,8 +207,7 @@
                 success: function(res){
                     //alert(res);
                     if(res=='OK'){
-                        $('#'+id).removeClass('label-success').addClass('label-danger');
-                        $('#'+id).text('Не активен');
+                        location.reload(true);
                     }
                     else
                         alert('Ошибка операции.');
@@ -173,8 +227,7 @@
                 success: function(res){
                     //alert(res);
                     if(res=='OK'){
-                        $('#'+id).removeClass('label-danger').addClass('label-success');
-                        $('#'+id).text('Активен');
+                        location.reload(true);
                     }
                     else
                         alert('Ошибка операции.');
@@ -183,16 +236,48 @@
         });
 
         $('.login_edit').click(function(){
-            var id = $(this).attr("id");
+            var id = $(this).parent().parent().prevAll().eq(0).find('span').attr("id");
             var status = $(this).parent().parent().prevAll().eq(0).text();
             var login = $(this).parent().parent().prevAll().eq(1).text();
             var email = $(this).parent().parent().prevAll().eq(2).text();
             var name = $(this).parent().parent().prevAll().eq(3).text();
-            $("#active :contains("+status+")").attr("selected", "selected");
+            if(id==1){
+                $("#active :contains("+status+")").attr("selected", "selected");
+                $("#active").attr("disabled", true);
+            }
+            else {
+                $("#active").attr("disabled", false);
+                $("#active :contains("+status+")").attr("selected", "selected");
+            }
             $('#email').val(email);
             $('#login').val(login);
             $('#name').val(name);
             $('#login_id').val(id);
+        });
+
+        $('.login_delete').click(function(){
+            var id = $(this).parent().parent().prevAll().eq(0).find('span').attr("id");
+            var x = confirm("Выбраный логин будет удален. Продолжить (Да/Нет)?");
+            if (x) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('deleteLogin') }}',
+                    data: {'id':id},
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(res){
+                        //alert(res);
+                        if(res=='OK')
+                            $('#'+id).parent().parent().hide();
+                        else
+                            alert('Ошибка удаления данных.');
+                    }
+                });
+            }
+            else {
+                return false;
+            }
         });
 
     </script>
