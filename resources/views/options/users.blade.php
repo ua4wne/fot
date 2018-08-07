@@ -238,9 +238,9 @@
         $('.login_edit').click(function(){
             var id = $(this).parent().parent().prevAll().eq(0).find('span').attr("id");
             var status = $(this).parent().parent().prevAll().eq(0).text();
-            var login = $(this).parent().parent().prevAll().eq(1).text();
-            var email = $(this).parent().parent().prevAll().eq(2).text();
-            var name = $(this).parent().parent().prevAll().eq(3).text();
+            var login = $(this).parent().parent().prevAll().eq(2).text();
+            var email = $(this).parent().parent().prevAll().eq(3).text();
+            var name = $(this).parent().parent().prevAll().eq(4).text();
             if(id==1){
                 $("#active :contains("+status+")").attr("selected", "selected");
                 $("#active").attr("disabled", true);

@@ -171,6 +171,24 @@ Route::middleware(['auth'])->group(function(){
         //users/ajax/delete
         Route::post('/ajax/delete',['uses'=>'Ajax\UserController@delete','as'=>'deleteLogin']);
     });
+
+    //roles/ группа обработки роутов roles
+    Route::group(['prefix'=>'roles'], function(){
+        Route::get('/',['uses'=>'Options\RoleController@index','as'=>'roles']);
+        //roles/add
+        Route::match(['get','post'],'/add',['uses'=>'Options\RoleController@create','as'=>'roleAdd']);
+        //roles/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'Options\RoleController@edit','as'=>'roleEdit']);
+    });
+
+    //actions/ группа обработки роутов actions
+    Route::group(['prefix'=>'actions'], function(){
+        Route::get('/',['uses'=>'Options\ActionController@index','as'=>'actions']);
+        //actions/add
+        Route::match(['get','post'],'/add',['uses'=>'Options\ActionController@create','as'=>'actionAdd']);
+        //actions/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'Options\ActionController@edit','as'=>'actionEdit']);
+    });
 });
 
 Auth::routes();

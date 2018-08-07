@@ -126,7 +126,8 @@
                                 <li><a><i class="fa fa-cog"></i> Настройки <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('users') }}">Пользователи</a></li>
-                                        <li><a href="#level1_2">Level One</a>
+                                        <li><a href="{{ route('roles') }}">Роли</a></li>
+                                        <li><a href="{{ route('actions') }}">Разрешения</a></li>
                                         </li>
                                     </ul>
                                 </li>
@@ -177,7 +178,7 @@
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                    <li><a href="javascript:;"> Profile</a></li>
+                                    <li><a href="javascript:;"> Профиль</a></li>
                                     <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                                 </ul>
                             </li>
