@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Options;
 
+use App\Models\Action;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,10 +14,12 @@ class RoleController extends Controller
         if(view()->exists('options.roles')){
             $title='Список ролей';
             $roles = Role::paginate(env('PAGINATION_SIZE')); //all();
+            $actions = Action::all();
             $data = [
                 'title' => $title,
                 'head' => 'Список системных ролей',
                 'roles' => $roles,
+                'actions' => $actions,
             ];
             return view('options.roles',$data);
         }

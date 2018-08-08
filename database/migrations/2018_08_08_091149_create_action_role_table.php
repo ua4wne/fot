@@ -16,7 +16,9 @@ class CreateActionRoleTable extends Migration
         Schema::create('action_role', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('action_id')->unsigned();
+            $table->foreign('action_id')->references('id')->on('actions');
             $table->integer('role_id')->unsigned();
+            $table->foreign('role_id')->references('id')->on('roles');
             $table->timestamps();
         });
     }

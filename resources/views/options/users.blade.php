@@ -101,7 +101,7 @@
                                 @foreach($roles as $role)
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" name="roles[]" value="{{ $role->code }}"> {{ $role->name }}
+                                        <input type="checkbox" name="roles[]" value="{{ $role->code }}" id="{{ $role->code }}"> {{ $role->name }}
                                     </label>
                                 </div>
                                 @endforeach
@@ -324,6 +324,27 @@
             $('#name').val(name);
             $('#role_id').val(id);
             $('#role-title').text('Роли для пользователя '+name);
+            //снимем ранее взведенные чекбоксы
+            $('input:checkbox:checked').each(function(){
+                $(this).prop('checked', false);
+            });
+            $.ajax({
+                async: false,
+                type: 'POST',
+                url: '{{ route('getRole') }}',
+                data: {'id':id},
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(res){
+                    //alert(res);
+                    var arr = jQuery.parseJSON(res);
+                    // переберём массив arr
+                    $.each(arr,function(key,value){
+                        $('#'+value.toString()).prop('checked', true);
+                    });
+                }
+            });
         });
 
         $('.login_delete').click(function(){

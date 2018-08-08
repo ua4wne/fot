@@ -73,4 +73,16 @@ class UserController extends Controller
                 return 'ERR';
         }
     }
+
+    public function getRole(Request $request){
+        if($request->isMethod('post')) {
+            $id = $request->input('id');
+            $roles = User::find($id)->roles;
+            $code = array();
+            foreach ($roles as $role){
+                array_push($code,$role->code);
+            }
+            return json_encode($code);
+        }
+    }
 }
