@@ -170,6 +170,8 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/edit_login',['uses'=>'Ajax\UserController@editLogin','as'=>'editLogin']);
         //users/ajax/delete
         Route::post('/ajax/delete',['uses'=>'Ajax\UserController@delete','as'=>'deleteLogin']);
+        //users/ajax/add_role
+        Route::post('/ajax/add_role',['uses'=>'Ajax\UserController@addRole','as'=>'addRole']);
     });
 
     //roles/ группа обработки роутов roles

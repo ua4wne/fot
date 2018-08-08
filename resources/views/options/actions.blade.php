@@ -32,6 +32,7 @@
                     <tr>
                         <th>Системный код</th>
                         <th>Наименование</th>
+                        <th>Действия</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -39,6 +40,7 @@
                     @foreach($actions as $k => $action)
 
                         <tr>
+                            <td>{{ $action->code }}</td>
                             <td>{{ $action->name }}</td>
 
                             <td style="width:110px;">

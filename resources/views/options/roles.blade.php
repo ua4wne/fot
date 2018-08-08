@@ -30,7 +30,9 @@
                 <table class="table table-bordered">
                     <thead>
                     <tr>
+                        <th>Символьный код</th>
                         <th>Наименование</th>
+                        <th>Действия</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -38,6 +40,7 @@
                     @foreach($roles as $k => $role)
 
                         <tr>
+                            <td>{{ $role->code }}</td>
                             <td>{{ $role->name }}</td>
 
                             <td style="width:110px;">

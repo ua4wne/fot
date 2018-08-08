@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Ajax;
 
+use App\Models\Role;
+use Illuminate\Support\Facades\DB;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -48,6 +50,27 @@ class UserController extends Controller
             else{
                 return 'ERR';
             }
+        }
+    }
+
+    public function addRole(Request $request){
+        if($request->isMethod('post')){
+            $user_id = $request->input('id');
+            DB::table('role_user')->where('user_id', '=', $user_id)->delete(); //удаляем предыдущие роли пользователя
+            $roles = $request->input('roles');
+            if(empty($roles))
+                return 'NO';
+            $values = array();
+            foreach ($roles as $role){
+                $role_id = Role::where('code',$role)->first()->id; //получили ID role
+                $date = date('Y-m-d H:i:s');
+                $val = array('role_id'=>$role_id,'user_id'=>$user_id,'created_at'=>$date,'updated_at'=>$date);
+                array_push($values, $val);
+            }
+            if(DB::table('role_user')->insert($values))
+                return 'OK';
+            else
+                return 'ERR';
         }
     }
 }

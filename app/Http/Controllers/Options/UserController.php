@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Options;
 
+use App\Models\Role;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,10 +17,12 @@ class UserController extends Controller
             $title='Учетные записи';
             //$users = User::all();
             $users = User::paginate(env('PAGINATION_SIZE')); //all();
+            $roles = Role::all();
             $data = [
                 'title' => $title,
                 'head' => 'Учетные записи пользователей',
                 'users' => $users,
+                'roles' => $roles,
             ];
             return view('options.users',$data);
         }
