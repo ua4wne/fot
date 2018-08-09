@@ -10,4 +10,12 @@ class Action extends Model
     protected $table = 'actions';
 
     protected $fillable = ['code','name'];
+
+    /**
+     * Роли, принадлежащие действию.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('App\Models\Role');
+    }
 }

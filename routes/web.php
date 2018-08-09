@@ -183,6 +183,10 @@ Route::middleware(['auth'])->group(function(){
         Route::match(['get','post'],'/add',['uses'=>'Options\RoleController@create','as'=>'roleAdd']);
         //roles/edit
         Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'Options\RoleController@edit','as'=>'roleEdit']);
+        //roles/ajax/get_action
+        Route::post('/ajax/get_action',['uses'=>'Ajax\ActionController@getAction','as'=>'getAction']);
+        //roles/ajax/add_action
+        Route::post('/ajax/add_action',['uses'=>'Ajax\ActionController@addAction','as'=>'addAction']);
     });
 
     //actions/ группа обработки роутов actions

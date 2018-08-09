@@ -58,7 +58,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                            <button type="button" class="btn btn-primary" id="add_role">Сохранить</button>
+                            <button type="button" class="btn btn-primary" id="save">Сохранить</button>
                         </div>
                     </div>
                 </div>
@@ -109,20 +109,39 @@
 @section('user_script')
     @include('confirm')
     <script>
+        $('#save').click(function(e){
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('addAction') }}',
+                data: $('#addActions').serialize(),
+                success: function(res){
+                    //alert(res);
+                    if(res=='OK')
+                        location.reload(true);
+                    if(res=='ERR')
+                        alert('Ошибка обновления данных.');
+                    else{
+                        alert('Не выбрано ни одной роли!');
+                    }
+                }
+            });
+        });
+
         $('.role').click(function(){
             var id = $(this).parent().parent().parent().parent().attr("id");
             var name = $(this).parent().parent().parent().prevAll().eq(0).text();
             $('#name').val(name);
             $('#role_id').val(id);
-            $('#role-title').text('Роли для пользователя '+name);
+            $('#role-title').text('Разрешения для роли '+name);
             //снимем ранее взведенные чекбоксы
             $('input:checkbox:checked').each(function(){
                 $(this).prop('checked', false);
             });
-            /*$.ajax({
+            $.ajax({
                 async: false,
                 type: 'POST',
-                url: '{{ route('getRole') }}',
+                url: '{{ route('getAction') }}',
                 data: {'id':id},
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
@@ -135,7 +154,7 @@
                         $('#'+value.toString()).prop('checked', true);
                     });
                 }
-            });*/
+            });
         });
     </script>
 @endsection

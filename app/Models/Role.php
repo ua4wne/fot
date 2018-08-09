@@ -18,4 +18,12 @@ class Role extends Model
     {
         return $this->belongsToMany('App\User');
     }
+
+    /**
+     * Действия, принадлежащие роли.
+     */
+    public function actions()
+    {
+        return $this->belongsToMany('App\Models\Action');
+    }
 }
