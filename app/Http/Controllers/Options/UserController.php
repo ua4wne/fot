@@ -8,11 +8,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 use Validator;
 
 class UserController extends Controller
 {
     public function index(){
+        if(!User::hasRole('admin')){
+            abort(503);
+        }
         if(view()->exists('options.users')){
             $title='Учетные записи';
             //$users = User::all();
@@ -31,6 +35,9 @@ class UserController extends Controller
 
     public function create(Request $request){
 
+        if(!User::hasRole('admin')){
+            abort(503);
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 

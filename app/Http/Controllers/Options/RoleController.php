@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Options;
 
 use App\Models\Action;
 use App\Models\Role;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
@@ -11,6 +12,9 @@ use Validator;
 class RoleController extends Controller
 {
     public function index(){
+        if(!User::hasRole('admin')){
+            abort(503);
+        }
         if(view()->exists('options.roles')){
             $title='Список ролей';
             $roles = Role::paginate(env('PAGINATION_SIZE')); //all();
@@ -27,7 +31,9 @@ class RoleController extends Controller
     }
 
     public function create(Request $request){
-
+        if(!User::hasRole('admin')){
+            abort(503);
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 
@@ -61,11 +67,34 @@ class RoleController extends Controller
     }
 
     public function edit($id,Request $request){
+        if(!User::hasRole('admin')){
+            abort(503);
+        }
         $model = Role::find($id);
         if($request->isMethod('delete')){
             $model->delete();
             $msg = 'Системная роль '. $model->name .' была удалена!';
         }
         return redirect('/roles')->with('status',$msg);
+    }
+
+    public static function granted($code){
+        // получить id текущего залогиненного юзера
+        $user_id = Auth::id();
+        //получаем все роли текущего юзера
+        $roles = User::find($user_id)->roles;
+        $full = Action::where('code','=','admin')->first()->id; //находим id действия с полными правами
+        if($roles){
+            //проверяем разрешения ролей
+            foreach($roles as $role){
+                //находим действия для роли
+                $actions = Role::find($role->id)->actions;
+                foreach ($actions as $action){
+                    if($action->code=='admin'||$action->code==$code)
+                        return TRUE;
+                }
+            }
+        }
+        return FALSE;
     }
 }

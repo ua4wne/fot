@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="images/favicon.ico" type="image/ico" />
 
-    <title>{{ $title }}</title>
+    <title>{{ $title ?? '' }}</title>
 
     <!-- Bootstrap -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -123,6 +123,7 @@
                                         <li><a href="profile.html">Счета расчетов с контрагентами</a></li>
                                     </ul>
                                 </li>
+                                @if(\App\User::hasRole('admin'))
                                 <li><a><i class="fa fa-cog"></i> Настройки <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('users') }}">Пользователи</a></li>
@@ -131,6 +132,7 @@
                                         </li>
                                     </ul>
                                 </li>
+                                @endif
                             </ul>
                         </div>
 

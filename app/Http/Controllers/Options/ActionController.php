@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Options;
 
 use App\Models\Action;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
@@ -10,6 +11,9 @@ use Validator;
 class ActionController extends Controller
 {
     public function index(){
+        if(!User::hasRole('admin')){
+            abort(503);
+        }
         if(view()->exists('options.actions')){
             $title='Список разрешений';
             $actions = Action::paginate(env('PAGINATION_SIZE')); //all();
@@ -24,7 +28,9 @@ class ActionController extends Controller
     }
 
     public function create(Request $request){
-
+        if(!User::hasRole('admin')){
+            abort(503);
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 
@@ -58,6 +64,9 @@ class ActionController extends Controller
     }
 
     public function edit($id,Request $request){
+        if(!User::hasRole('admin')){
+            abort(503);
+        }
         $model = Action::find($id);
         if($request->isMethod('delete')){
             $model->delete();

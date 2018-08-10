@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -39,5 +40,16 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany('App\Models\Role');
+    }
+
+    public static function hasRole($code){
+        // получить id текущего залогиненного юзера
+        $user_id = Auth::id();
+        $roles = User::find($user_id)->roles;
+        foreach ($roles as $role){
+            if($role->code==$code)
+                return TRUE;
+        }
+        return FALSE;
     }
 }

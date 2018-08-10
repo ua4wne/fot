@@ -13,8 +13,9 @@
     <!-- END BREADCRUMB -->
     <!-- page content -->
     <div class="row">
-        <h1 class="text-center">У Вас нет прав на просмотр страницы!</h1>
-        <img src="/images/ops.jpg" class="img-responsive center-block">
+        <h1 class="text-center">Что-то пошло не так!</h1>
+        <h2 class="text-center">Такой страницы не существует. Попробуйте ввести правильную ссылку.</h2>
+        <img src="/images/404.jpg" class="img-responsive center-block">
     </div>
     </div>
 
