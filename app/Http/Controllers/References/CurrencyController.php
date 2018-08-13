@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\references;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
@@ -24,6 +25,9 @@ class CurrencyController extends Controller
     }
 
     public function create(Request $request){
+        if(!Role::granted('ref_doc_add')){
+            abort(503,'У Вас нет прав на создание записи!');
+        }
 
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
@@ -64,12 +68,17 @@ class CurrencyController extends Controller
     public function edit($id,Request $request){
         $model = Currency::find($id);
         if($request->isMethod('delete')){
+            if(!Role::granted('ref_doc_del')){
+                abort(503,'У Вас нет прав на удаление записи!');
+            }
             //$model = Currency::find($id);
             $model->delete();
             $msg = 'Валюта '. $model->name .' была удалена!';
             return redirect('/currency')->with('status',$msg);
         }
-
+        if(!Role::granted('ref_doc_edit')){
+            abort(503,'У Вас нет прав на редактирование записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
             $messages = [

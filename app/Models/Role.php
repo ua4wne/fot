@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Role extends Model
 {
@@ -25,5 +27,19 @@ class Role extends Model
     public function actions()
     {
         return $this->belongsToMany('App\Models\Action');
+    }
+
+    public static function granted($code){
+        // получить id текущего залогиненного юзера
+        $user_id = Auth::id();
+        $roles = User::find($user_id)->roles;
+        foreach ($roles as $role){
+            $actions = $role->actions;
+            foreach ($actions as $action){
+                if($action->code=='admin' || $action->code==$code)
+                    return TRUE;
+            }
+        }
+        return FALSE;
     }
 }

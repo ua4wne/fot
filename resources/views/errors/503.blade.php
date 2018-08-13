@@ -13,7 +13,11 @@
     <!-- END BREADCRUMB -->
     <!-- page content -->
     <div class="row">
-        <h1 class="text-center">У Вас нет прав на просмотр страницы!</h1>
+        @if(empty($exception->getMessage()))
+            <h1 class="text-center">Доступ к странице запрещен!</h1>
+        @else
+            <h1 class="text-center">{{ $exception->getMessage() }}</h1>
+        @endif
         <img src="/images/ops.jpg" class="img-responsive center-block">
     </div>
     </div>
