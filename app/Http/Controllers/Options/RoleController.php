@@ -8,6 +8,8 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
+use App\Events\AddEventLogs;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -54,6 +56,9 @@ class RoleController extends Controller
             $role->fill($input);
             if($role->save()){
                 $msg = 'Системная роль '. $input['name'] .' была успешно добавлена!';
+                $ip = $request->getClientIp();
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg,$ip));
                 return redirect('/roles')->with('status',$msg);
             }
         }
@@ -74,6 +79,9 @@ class RoleController extends Controller
         if($request->isMethod('delete')){
             $model->delete();
             $msg = 'Системная роль '. $model->name .' была удалена!';
+            $ip = $request->getClientIp();
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg,$ip));
         }
         return redirect('/roles')->with('status',$msg);
     }

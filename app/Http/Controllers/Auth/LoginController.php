@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Cache;
+use App\Events\AddEventLogs;
 
 class LoginController extends Controller
 {
@@ -67,15 +68,26 @@ class LoginController extends Controller
         //есть записи в
         if (Auth::attempt(['login' => $data['login'], 'password' => $data['password'], 'active' => 1])) {
             // Аутентификация успешна...
+            //вызываем event
+            $msg = 'Пользователь вошел в систему '.date('Y-m-d H:i:s');
+            $ip = $request->getClientIp();
+            event(new AddEventLogs('logon',Auth::id(),$msg,$ip));
             return redirect()->intended($this->redirectTo);
         }
         else{
+            //вызываем event
+            $msg = 'Не удачная попытка входа в систему '.date('Y-m-d H:i:s');
+            $ip = $request->getClientIp();
+            event(new AddEventLogs('logon',Auth::id(),$msg,$ip));
             return redirect()->intended($this->redirectTo);
         }
     }
 
     public function logout(){
         Cache::forget('user-is-online-' . Auth::user()->id);
+        //вызываем event
+        $msg = 'Пользователь вышел из системы '.date('Y-m-d H:i:s');
+        event(new AddEventLogs('logoff',Auth::id(),$msg));
         Auth::logout();
         return redirect()->intended($this->redirectTo);
     }
@@ -87,9 +99,12 @@ class LoginController extends Controller
             $user->auth_code = NULL;
             if($user->save()){
                 $msg = 'Учетная запись активирована!';
+                //вызываем event
+                $text = 'Учетная запись была активирована '.date('Y-m-d H:i:s');
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('system',Auth::id(),$text,$ip));
                 return redirect('/login')->with('status',$msg);
             }
-                //return redirect()->intended($this->redirectTo);
         }
         abort(404);
     }

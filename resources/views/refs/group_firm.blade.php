@@ -190,6 +190,8 @@
                         //alert(res);
                         if(res=='ERR')
                             alert('Ошибка записи данных.');
+                        if(res=='NO')
+                            alert('Выполнение операции запрещено!');
                         else{
                             var obj = jQuery.parseJSON(res);
                             var id = obj.id;
@@ -244,7 +246,9 @@
                         //alert(res);
                         if(res=='OK')
                             $('#'+id).hide();
-                        else
+                        if(res=='NO')
+                            alert('Выполнение операции запрещено!');
+                        if(res!='OK'&&res!='NO')
                             alert('Ошибка удаления данных.');
                     }
                 });

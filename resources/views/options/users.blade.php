@@ -230,6 +230,8 @@
                             location.reload(true);
                         if(res=='ERR')
                             alert('Ошибка обновления данных.');
+                        if(res=='NO')
+                            alert('Выполнение операции запрещено!');
                         else{
                             alert('Ошибка валидации данных');
                         }
@@ -250,6 +252,8 @@
                         location.reload(true);
                     if(res=='ERR')
                         alert('Ошибка обновления данных.');
+                    if(res=='NO')
+                        alert('Выполнение операции запрещено!');
                     else{
                         alert('Не выбрано ни одной роли!');
                     }
@@ -272,6 +276,8 @@
                     if(res=='OK'){
                         location.reload(true);
                     }
+                    if(res=='NO')
+                        alert('Выполнение операции запрещено!');
                     else
                         alert('Ошибка операции.');
                 }
@@ -292,6 +298,8 @@
                     if(res=='OK'){
                         location.reload(true);
                     }
+                    if(res=='NO')
+                        alert('Выполнение операции запрещено!');
                     else
                         alert('Ошибка операции.');
                 }
@@ -362,6 +370,8 @@
                         //alert(res);
                         if(res=='OK')
                             $('#'+id).parent().parent().hide();
+                        if(res=='NO')
+                            alert('Выполнение операции запрещено!');
                         else
                             alert('Ошибка удаления данных.');
                     }

@@ -7,6 +7,8 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
+use App\Events\AddEventLogs;
+use Illuminate\Support\Facades\Auth;
 
 class ActionController extends Controller
 {
@@ -51,6 +53,9 @@ class ActionController extends Controller
             $action->fill($input);
             if($action->save()){
                 $msg = 'Разрешение '. $input['name'] .' было успешно добавлено!';
+                $ip = $request->getClientIp();
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg,$ip));
                 return redirect('/actions')->with('status',$msg);
             }
         }
@@ -71,6 +76,9 @@ class ActionController extends Controller
         if($request->isMethod('delete')){
             $model->delete();
             $msg = 'Разрешение '. $model->name .' было удалено!';
+            $ip = $request->getClientIp();
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg,$ip));
         }
         return redirect('/actions')->with('status',$msg);
     }

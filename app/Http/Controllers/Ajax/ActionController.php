@@ -7,6 +7,8 @@ use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Events\AddEventLogs;
+use Illuminate\Support\Facades\Auth;
 
 class ActionController extends Controller
 {
@@ -23,12 +25,19 @@ class ActionController extends Controller
     }
 
     public function addAction(Request $request){
+        $role = Role::find($request->input('id'))->name;
+        if(!User::hasRole('admin')){//вызываем event
+            $msg = 'Попытка создания нового разрешения для роли '.$role;
+            $ip = $request->getClientIp();
+            event(new AddEventLogs('access',Auth::id(),$msg,$ip));
+            return 'NO';
+        }
         if($request->isMethod('post')){
             $role_id = $request->input('id');
-            DB::table('action_role')->where('role_id', '=', $role_id)->delete(); //удаляем предыдущие разрешения для роли
             $actions = $request->input('actions');
             if(empty($actions))
-                return 'NO';
+                return 'EMPTY';
+            DB::table('action_role')->where('role_id', '=', $role_id)->delete(); //удаляем предыдущие разрешения для роли
             $values = array();
             foreach ($actions as $action){
                 $action_id = Action::where('code',$action)->first()->id; //получили ID action
@@ -36,8 +45,12 @@ class ActionController extends Controller
                 $val = array('role_id'=>$role_id,'action_id'=>$action_id,'created_at'=>$date,'updated_at'=>$date);
                 array_push($values, $val);
             }
-            if(DB::table('action_role')->insert($values))
+            if(DB::table('action_role')->insert($values)){
+                $msg = 'Изменены разрешения для роли '.$role;
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('access',Auth::id(),$msg,$ip));
                 return 'OK';
+            }
             else
                 return 'ERR';
         }

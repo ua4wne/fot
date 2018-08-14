@@ -8,6 +8,8 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
+use App\Events\AddEventLogs;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -19,8 +21,21 @@ class UserController extends Controller
                 return 'NOT';
             $user = User::find($id);
             $user->active = $active;
-            if($user->update())
+            if(!User::hasRole('admin')){//вызываем event
+                $msg = 'Попытка изменения учетной записи '.$user->login;
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('access',Auth::id(),$msg,$ip));
+                return 'NO';
+            }
+            if($user->update()){
+                if($active)
+                    $msg = 'Учетная запись '.$user->login.' была включена';
+                else
+                    $msg = 'Учетная запись '.$user->login.' была выключена';
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('access',Auth::id(),$msg,$ip));
                 return 'OK';
+            }
             else
                 return 'ERR';
         }
@@ -33,8 +48,18 @@ class UserController extends Controller
             $user->fill($input);
             if($input['id']==1)
                 $user->active = 1; //первый админ всегда активен!!!
-            if($user->update())
+            if(!User::hasRole('admin')){//вызываем event
+                $msg = 'Попытка изменения учетной записи '.$user->login;
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('access',Auth::id(),$msg,$ip));
+                return 'NO';
+            }
+            if($user->update()){
+                $msg = 'Учетная запись '.$user->login.' была изменена!';
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('access',Auth::id(),$msg,$ip));
                 return 'OK';
+            }
             else
                 return 'ERR';
         }
@@ -44,7 +69,16 @@ class UserController extends Controller
         if($request->isMethod('post')){
             $id = $request->input('id');
             $model = User::find($id);
+            if(!User::hasRole('admin')){//вызываем event
+                $msg = 'Попытка удаления учетной записи '.$model->login;
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('access',Auth::id(),$msg,$ip));
+                return 'NO';
+            }
             if($model->delete()) {
+                $msg = 'Учетная запись '.$model->login.' была удалена!';
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('access',Auth::id(),$msg,$ip));
                 return 'OK';
             }
             else{
@@ -56,10 +90,17 @@ class UserController extends Controller
     public function addRole(Request $request){
         if($request->isMethod('post')){
             $user_id = $request->input('id');
-            DB::table('role_user')->where('user_id', '=', $user_id)->delete(); //удаляем предыдущие роли пользователя
+            $login = User::find($user_id)->login;
+            if(!User::hasRole('admin')){//вызываем event
+                $msg = 'Попытка изменения ролей учетной записи '.$login;
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('access',Auth::id(),$msg,$ip));
+                return 'NO';
+            }
             $roles = $request->input('roles');
             if(empty($roles))
-                return 'NO';
+                return 'EMPTY';
+            DB::table('role_user')->where('user_id', '=', $user_id)->delete(); //удаляем предыдущие роли пользователя
             $values = array();
             foreach ($roles as $role){
                 $role_id = Role::where('code',$role)->first()->id; //получили ID role
@@ -67,8 +108,12 @@ class UserController extends Controller
                 $val = array('role_id'=>$role_id,'user_id'=>$user_id,'created_at'=>$date,'updated_at'=>$date);
                 array_push($values, $val);
             }
-            if(DB::table('role_user')->insert($values))
+            if(DB::table('role_user')->insert($values)){
+                $msg = 'Изменены роли для учетной записи '.$login;
+                $ip = $request->getClientIp();
+                event(new AddEventLogs('access',Auth::id(),$msg,$ip));
                 return 'OK';
+            }
             else
                 return 'ERR';
         }

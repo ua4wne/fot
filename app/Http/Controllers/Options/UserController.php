@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\DB;
 use Validator;
+use App\Events\AddEventLogs;
 
 class UserController extends Controller
 {
@@ -73,6 +73,8 @@ class UserController extends Controller
                     $message->to($request->email)->subject('Данные для регистрации');
                 });
                 $msg = 'Новый пользователь '. $input['name'] .' был успешно добавлен!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/users')->with('status',$msg);
             }
         }
