@@ -43,7 +43,7 @@
 
                         <tr>
 
-                            <td>{{ $curr->name }}</td>
+                            <th>{!! Html::link(route('currencyEdit',['currency'=>$curr->id]),$curr->name,['alt'=>$curr->name]) !!}</th>
                             <td>{{ $curr->dcode }}</td>
                             <td>{{ $curr->scode }}</td>
                             <td>{{ $curr->cource }}</td>

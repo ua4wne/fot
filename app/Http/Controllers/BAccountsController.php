@@ -7,6 +7,9 @@ use App\Models\BankAccount;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Validator;
+use App\Events\AddEventLogs;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class BAccountsController extends Controller
 {
@@ -25,7 +28,11 @@ class BAccountsController extends Controller
     }
 
     public function create(Request $request){
-
+        if(!Role::granted('ref_doc_add')){//вызываем event
+            $msg = 'Попытка создания нового банковского счета!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на создание записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 
@@ -52,6 +59,8 @@ class BAccountsController extends Controller
             //dump($acc);
             if($acc->save()){
                 $msg = 'Банковский счет '. $input['account'] .' был успешно добавлен!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/bacc')->with('status',$msg);
             }
         }
@@ -81,11 +90,23 @@ class BAccountsController extends Controller
     public function edit($id,Request $request){
         $model = BankAccount::find($id);
         if($request->isMethod('delete')){
+            if(!Role::granted('ref_doc_del')){
+                $msg = 'Попытка удаления банковского счета '.$model->account;
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                abort(503,'У Вас нет прав на удаление записи!');
+            }
             $model->delete();
             $msg = 'Банковский счет '. $model->account .' был удален!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
             return redirect('/bacc')->with('status',$msg);
         }
-
+        if(!Role::granted('ref_doc_edit')){
+            $msg = 'Попытка редактирования банковского счета '.$model->account;
+            //вызываем event
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на редактирование записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
             $messages = [
@@ -108,6 +129,8 @@ class BAccountsController extends Controller
             $model->fill($input);
             if($model->update()){
                 $msg = 'Данные счета '. $model->account .' обновлены!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/bacc')->with('status',$msg);
             }
         }

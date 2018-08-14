@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\references;
 
+use App\Events\AddEventLogs;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Currency;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class CurrencyController extends Controller
@@ -25,7 +27,9 @@ class CurrencyController extends Controller
     }
 
     public function create(Request $request){
-        if(!Role::granted('ref_doc_add')){
+        if(!Role::granted('ref_doc_add')){//вызываем event
+            $msg = 'Попытка создания новой записи в справочнике валют!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
             abort(503,'У Вас нет прав на создание записи!');
         }
 
@@ -53,6 +57,8 @@ class CurrencyController extends Controller
             $money->fill($input);
             if($money->save()){
                 $msg = 'Валюта '. $input['name'] .' была успешно добавлена!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/currency')->with('status',$msg);
             }
         }
@@ -69,14 +75,20 @@ class CurrencyController extends Controller
         $model = Currency::find($id);
         if($request->isMethod('delete')){
             if(!Role::granted('ref_doc_del')){
+                $msg = 'Попытка удаления валюты '.$model->name;
+                event(new AddEventLogs('access',Auth::id(),$msg));
                 abort(503,'У Вас нет прав на удаление записи!');
             }
-            //$model = Currency::find($id);
             $model->delete();
             $msg = 'Валюта '. $model->name .' была удалена!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
             return redirect('/currency')->with('status',$msg);
         }
         if(!Role::granted('ref_doc_edit')){
+            $msg = 'Попытка редактирования валюты '. $model->name;
+            //вызываем event
+            event(new AddEventLogs('access',Auth::id(),$msg));
             abort(503,'У Вас нет прав на редактирование записи!');
         }
         if($request->isMethod('post')){
@@ -95,6 +107,8 @@ class CurrencyController extends Controller
             $model->fill($input);
             if($model->update()){
                 $msg = 'Валюта '. $model->name .' обновлена!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/currency')->with('status',$msg);
             }
         }

@@ -13,15 +13,21 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class AddEventLogs
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    public $type;
+    public $user_id;
+    public $text;
+    public $ip;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($type,$user_id,$text,$ip=null)
     {
-        //
+        $this->type = $type;
+        $this->user_id = $user_id;
+        $this->text = $text;
+        $this->ip = $ip;
     }
 
     /**

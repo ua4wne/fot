@@ -6,6 +6,9 @@ use App\Models\Division;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Validator;
+use App\Events\AddEventLogs;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class DivisionController extends Controller
 {
@@ -24,7 +27,11 @@ class DivisionController extends Controller
     }
 
     public function create(Request $request){
-
+        if(!Role::granted('ref_doc_add')){//вызываем event
+            $msg = 'Попытка создания нового подразделения!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на создание записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 
@@ -44,6 +51,8 @@ class DivisionController extends Controller
             $division->fill($input);
             if($division->save()){
                 $msg = 'Подразделение '. $input['name'] .' было успешно добавлено!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/divisions')->with('status',$msg);
             }
         }
@@ -66,11 +75,23 @@ class DivisionController extends Controller
     public function edit($id,Request $request){
         $model = Division::find($id);
         if($request->isMethod('delete')){
+            if(!Role::granted('ref_doc_del')){
+                $msg = 'Попытка удаления подразделения '.$model->name;
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                abort(503,'У Вас нет прав на удаление записи!');
+            }
             $model->delete();
             $msg = 'Подразделение '. $model->name .' было удалено!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
             return redirect('/divisions')->with('status',$msg);
         }
-
+        if(!Role::granted('ref_doc_edit')){
+            $msg = 'Попытка редактирования подразделения '. $model->name;
+            //вызываем event
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на редактирование записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
             $messages = [
@@ -87,6 +108,8 @@ class DivisionController extends Controller
             $model->fill($input);
             if($model->update()){
                 $msg = 'Данные подразделения '. $model->name .' обновлены!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/divisions')->with('status',$msg);
             }
         }

@@ -26,6 +26,14 @@ class EventLog
      */
     public function handle(AddEventLogs $event)
     {
-        //
+        $data = date('Y-m-d H:i:s');
+        \App\Models\Eventlog::create([
+            'type' => $event->type,
+            'user_id' => $event->user_id,
+            'text' => $event->text,
+            'ip' => $event->ip,
+            'created_at' => $data,
+            'updated_at' => $data,
+        ]);
     }
 }

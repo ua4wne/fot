@@ -6,6 +6,9 @@ use App\Models\Operation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
+use App\Events\AddEventLogs;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class TypeOperationController extends Controller
 {
@@ -24,7 +27,11 @@ class TypeOperationController extends Controller
     }
 
     public function create(Request $request){
-
+        if(!Role::granted('ref_doc_add')){//вызываем event
+            $msg = 'Попытка создания новой записи в справочнике Виды операций!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на создание записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 
@@ -44,6 +51,8 @@ class TypeOperationController extends Controller
             $oper->fill($input);
             if($oper->save()){
                 $msg = 'Операция '. $input['name'] .' была успешно добавлена!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/operations')->with('status',$msg);
             }
         }
@@ -59,8 +68,15 @@ class TypeOperationController extends Controller
     public function edit($id,Request $request){
         $model = Operation::find($id);
         if($request->isMethod('delete')){
+            if(!Role::granted('ref_doc_del')){
+                $msg = 'Попытка удаления операции '.$model->name;
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                abort(503,'У Вас нет прав на удаление записи!');
+            }
             $model->delete();
             $msg = 'Операция '. $model->name .' была удалена!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
         }
         return redirect('/operations')->with('status',$msg);
     }
