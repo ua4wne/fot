@@ -13,7 +13,7 @@ class CodeController extends Controller
 {
     public function index(){
         if(view()->exists('refs.bcode')){
-            $codes = Buhcode::paginate(env('PAGINATION_SIZE')); //all();
+            $codes = Buhcode::all();
             $data = [
                 'title' => 'План счетов',
                 'head' => 'План счетов бухгалтерского учета',
@@ -53,7 +53,7 @@ class CodeController extends Controller
             $acc = new Buhcode();
             $acc->fill($input);
             if($acc->save()){
-                $msg = 'Счет учета '. $input['code'] .' был успешно добавлен!';
+                $msg = 'Счет учета '. $input['code'] .' был успешно добавлен в план счетов бухучета!';
                 //вызываем event
                 event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/codes')->with('status',$msg);

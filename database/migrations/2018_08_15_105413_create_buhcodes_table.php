@@ -15,7 +15,7 @@ class CreateBuhcodesTable extends Migration
     {
         Schema::create('buhcodes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code',5)->unique();
+            $table->string('code',10)->unique();
             $table->text('text');
             $table->boolean('show')->default(0);
             $table->timestamps();

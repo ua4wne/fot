@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('export-firm/{type}', 'FirmExcelController@exportFirm')->name('exportFirm');
         Route::post('import-contract', 'ContractExcelController@importContract')->name('importContract');
         Route::get('export-contract/{type}', 'ContractExcelController@exportFirm')->name('exportContract');
+        Route::post('import-code', 'CodeExcelController@importCode')->name('importCode');
     });
 
     //currency/ группа обработки роутов справочника currency
@@ -220,6 +221,10 @@ Route::middleware(['auth'])->group(function(){
         Route::match(['get','post'],'/add',['uses'=>'CodeController@create','as'=>'codeAdd']);
         //codes/edit
         Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'CodeController@edit','as'=>'codeEdit']);
+        //codes/ajax/edit
+        Route::post('/ajax/edit',['uses'=>'Ajax\CodeController@edit','as'=>'editCode']);
+        //codes/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\CodeController@delete','as'=>'deleteCode']);
     });
 });
 
