@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="images/favicon.ico" type="image/ico" />
 
-    <title>{{ $title }}</title>
+    <title>{{ $title ?? '' }}</title>
 
     <!-- Bootstrap -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -68,7 +68,7 @@
                                 <li><a href="{{ route('main') }}"><i class="fa fa-home"></i> Рабочий стол </a></li>
                                 <li><a><i class="fa fa-university"></i> Банк и касса <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="form.html">Банковские выписки</a></li>
+                                        <li><a href="{{ route('bstate') }}">Банковские выписки</a></li>
                                         <li><a href="form_advanced.html">Кассовые документы</a></li>
                                         <li><a href="form_validation.html">Авансовые отчеты</a></li>
                                     </ul>
@@ -120,16 +120,20 @@
                                         <li><a href="{{ route('operations') }}">Виды операции</a></li>
                                         <li><a href="{{ route('typedocs') }}">Виды договоров</a></li>
                                         <li><a href="{{ route('settlements') }}">Виды расчетов</a></li>
+                                        <li><a href="{{ route('codes') }}">План счетов бухучета</a></li>
                                         <li><a href="profile.html">Счета расчетов с контрагентами</a></li>
                                     </ul>
                                 </li>
+                                @if(\App\User::hasRole('admin'))
                                 <li><a><i class="fa fa-cog"></i> Настройки <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('users') }}">Пользователи</a></li>
-                                        <li><a href="#level1_2">Level One</a>
+                                        <li><a href="{{ route('roles') }}">Роли</a></li>
+                                        <li><a href="{{ route('actions') }}">Разрешения</a></li>
                                         </li>
                                     </ul>
                                 </li>
+                                @endif
                             </ul>
                         </div>
 
@@ -177,7 +181,7 @@
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                    <li><a href="javascript:;"> Profile</a></li>
+                                    <li><a href="javascript:;"> Профиль</a></li>
                                     <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                                 </ul>
                             </li>

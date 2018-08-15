@@ -7,6 +7,9 @@ use App\Models\Division;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Validator;
+use App\Events\AddEventLogs;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends Controller
 {
@@ -25,7 +28,11 @@ class OrganizationController extends Controller
     }
 
     public function create(Request $request){
-
+        if(!Role::granted('ref_doc_add')){//вызываем event
+            $msg = 'Попытка создания новой организации!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на создание записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 
@@ -48,6 +55,8 @@ class OrganizationController extends Controller
             $org->fill($input);
             if($org->save()){
                 $msg = 'Организация '. $input['name'] .' была успешно добавлена!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/organization')->with('status',$msg);
             }
         }
@@ -63,12 +72,23 @@ class OrganizationController extends Controller
     public function edit($id,Request $request){
         $model = Organisation::find($id);
         if($request->isMethod('delete')){
-            //$model = Currency::find($id);
+            if(!Role::granted('ref_doc_del')){
+                $msg = 'Попытка удаления организации '.$model->name;
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                abort(503,'У Вас нет прав на удаление записи!');
+            }
             $model->delete();
             $msg = 'Организация '. $model->name .' была удалена!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
             return redirect('/organization')->with('status',$msg);
         }
-
+        if(!Role::granted('ref_doc_edit')){
+            $msg = 'Попытка редактирования организации '. $model->name;
+            //вызываем event
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на редактирование записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
             $messages = [
@@ -84,6 +104,8 @@ class OrganizationController extends Controller
             $model->fill($input);
             if($model->update()){
                 $msg = 'Данные организации '. $model->name .' обновлены!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/organization')->with('status',$msg);
             }
         }

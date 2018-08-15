@@ -12,6 +12,8 @@
 */
 
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+//activate
+Route::get('/activate','Auth\LoginController@activate');
 
 Route::middleware(['auth'])->group(function(){
 
@@ -119,6 +121,21 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/delete',['uses'=>'Ajax\BAccountController@delete','as'=>'deleteAccount']);
     });
 
+    //bstate/ группа обработки роутов bank_statements
+    Route::group(['prefix'=>'bstate'], function(){
+        Route::get('/',['uses'=>'BankStatementController@index','as'=>'bstate']);
+        //bstate/add
+        Route::match(['get','post'],'/add',['uses'=>'BankStatementController@create','as'=>'bstateAdd']);
+        //bstate/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'BankStatementController@edit','as'=>'bstateEdit']);
+        //bstate/ajax/add
+        Route::post('/ajax/add',['uses'=>'Ajax\BankStatementController@create','as'=>'newBstate']);
+        //bstate/ajax/edit
+        Route::post('/ajax/edit',['uses'=>'Ajax\BankStatementController@edit','as'=>'editBstate']);
+        //bstate/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\BankStatementController@delete','as'=>'deleteBstate']);
+    });
+
     //groups/ группа обработки роутов groups
     Route::group(['prefix'=>'groups'], function(){
         Route::get('/',['uses'=>'GroupController@index','as'=>'groups']);
@@ -162,6 +179,47 @@ Route::middleware(['auth'])->group(function(){
         Route::match(['get','post'],'/add',['uses'=>'Options\UserController@create','as'=>'userAdd']);
         //users/edit
         Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'Options\UserController@edit','as'=>'userEdit']);
+        //users/ajax/edit
+        Route::post('/ajax/edit',['uses'=>'Ajax\UserController@switchLogin','as'=>'switchLogin']);
+        //users/ajax/edit_login
+        Route::post('/ajax/edit_login',['uses'=>'Ajax\UserController@editLogin','as'=>'editLogin']);
+        //users/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\UserController@delete','as'=>'deleteLogin']);
+        //users/ajax/add_role
+        Route::post('/ajax/add_role',['uses'=>'Ajax\UserController@addRole','as'=>'addRole']);
+        //users/ajax/get_role
+        Route::post('/ajax/get_role',['uses'=>'Ajax\UserController@getRole','as'=>'getRole']);
+    });
+
+    //roles/ группа обработки роутов roles
+    Route::group(['prefix'=>'roles'], function(){
+        Route::get('/',['uses'=>'Options\RoleController@index','as'=>'roles']);
+        //roles/add
+        Route::match(['get','post'],'/add',['uses'=>'Options\RoleController@create','as'=>'roleAdd']);
+        //roles/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'Options\RoleController@edit','as'=>'roleEdit']);
+        //roles/ajax/get_action
+        Route::post('/ajax/get_action',['uses'=>'Ajax\ActionController@getAction','as'=>'getAction']);
+        //roles/ajax/add_action
+        Route::post('/ajax/add_action',['uses'=>'Ajax\ActionController@addAction','as'=>'addAction']);
+    });
+
+    //actions/ группа обработки роутов actions
+    Route::group(['prefix'=>'actions'], function(){
+        Route::get('/',['uses'=>'Options\ActionController@index','as'=>'actions']);
+        //actions/add
+        Route::match(['get','post'],'/add',['uses'=>'Options\ActionController@create','as'=>'actionAdd']);
+        //actions/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'Options\ActionController@edit','as'=>'actionEdit']);
+    });
+
+    //codes/ группа обработки роутов codes
+    Route::group(['prefix'=>'codes'], function(){
+        Route::get('/',['uses'=>'CodeController@index','as'=>'codes']);
+        //codes/add
+        Route::match(['get','post'],'/add',['uses'=>'CodeController@create','as'=>'codeAdd']);
+        //codes/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'CodeController@edit','as'=>'codeEdit']);
     });
 });
 

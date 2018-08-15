@@ -56,11 +56,14 @@
         <h2 class="text-center">{{ $head }}</h2>
         @if($contracts)
             <div class="x_content">
+                @if(\App\Models\Role::granted('import_sale_doc'))
                 <div class="btn-group">
                     <a href="#">
                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#importContract"><i class="fa fa-upload fa-fw"></i> Импорт</button>
                     </a>
                 </div>
+                @endif
+                @if(\App\Models\Role::granted('export_sale_doc'))
                 <div class="btn-group">
                     <a class="btn btn-success btn-sm" href="#"><i class="fa fa-upload fa-fw"></i> Экспорт</a>
                     <a class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
@@ -72,6 +75,7 @@
                         <li><a href="{{ route('exportContract',['type'=>'csv']) }}"><i class="fa fa-file-excel-o fa-fw"></i> В файл CSV</a></li>
                     </ul>
                 </div>
+                @endif
                 <div class="btn-group">
                     <a href="{{route('contractAdd')}}">
                         <button type="button" class="btn btn-primary btn-sm">Новый договор</button>

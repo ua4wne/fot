@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use Validator;
+use App\Events\AddEventLogs;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class BankController extends Controller
 {
@@ -24,7 +27,11 @@ class BankController extends Controller
     }
 
     public function create(Request $request){
-
+        if(!Role::granted('ref_doc_add')){//вызываем event
+            $msg = 'Попытка создания новой записи в справочнике банков!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на создание записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 
@@ -51,6 +58,8 @@ class BankController extends Controller
             $banks->fill($input);
             if($banks->save()){
                 $msg = 'Банк '. $input['name'] .' был успешно добавлен!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/banks')->with('status',$msg);
             }
         }
@@ -66,12 +75,23 @@ class BankController extends Controller
     public function edit($id,Request $request){
         $model = Bank::find($id);
         if($request->isMethod('delete')){
-            //$model = Currency::find($id);
+            if(!Role::granted('ref_doc_del')){
+                $msg = 'Попытка удаления записи банка '.$model->name;
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                abort(503,'У Вас нет прав на удаление записи!');
+            }
             $model->delete();
             $msg = 'Банк '. $model->name .' был удален!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
             return redirect('/banks')->with('status',$msg);
         }
-
+        if(!Role::granted('ref_doc_edit')){
+            $msg = 'Попытка редактирования записи банка '. $model->name;
+            //вызываем event
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на редактирование записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
             $messages = [
@@ -89,6 +109,8 @@ class BankController extends Controller
             $model->fill($input);
             if($model->update()){
                 $msg = 'Данные банка '. $model->name .' обновлены!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/banks')->with('status',$msg);
             }
         }

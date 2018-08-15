@@ -15,17 +15,6 @@
     <!-- END BREADCRUMB -->
     <!-- page content -->
 
-    {{--@if (count($errors) > 0)
-        <div class="alert alert-danger modal-dialog">
-            <a href="#" class="close" data-dismiss="alert">&times;</a>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif--}}
-
     <div class="row">
         <h2 class="text-center">Редактирование счета {{ $data['account'] }}</h2>
         {!! Form::open(['url' => route('baccEdit',['id'=>$data['id']]),'class'=>'form-horizontal','method'=>'POST']) !!}

@@ -17,6 +17,7 @@ class ChangeUsersTable extends Migration
             $table->boolean('active')->default(0);
             $table->string('login',50)->unique();
             $table->string('image',100)->nullable();
+            $table->string('auth_code',100)->nullable();
         });
     }
 

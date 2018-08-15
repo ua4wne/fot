@@ -124,11 +124,14 @@
         <h2 class="text-center">{{ $head }}</h2>
         @if($firms)
             <div class="x_content">
+                @if(\App\Models\Role::granted('import_refs'))
                 <div class="btn-group">
                     <a href="#">
                         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#importFirm"><i class="fa fa-upload fa-fw"></i> Импорт</button>
                     </a>
                 </div>
+                @endif
+                @if(\App\Models\Role::granted('export_refs'))
                 <div class="btn-group">
                     <a class="btn btn-success btn-sm" href="#"><i class="fa fa-upload fa-fw"></i> Экспорт</a>
                     <a class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" href="#">
@@ -140,6 +143,7 @@
                         <li><a href="{{ route('exportFirm',['type'=>'csv']) }}"><i class="fa fa-file-excel-o fa-fw"></i> В файл CSV</a></li>
                     </ul>
                 </div>
+                @endif
                 <div class="btn-group">
                 <a href="{{route('firmAdd')}}">
                     <button type="button" class="btn btn-primary btn-sm">Новый контрагент</button>
@@ -236,6 +240,8 @@
                         //alert(res);
                         if(res=='ERR')
                             alert('Ошибка записи данных.');
+                        if(res=='NO')
+                            alert('Выполнение операции запрещено!');
                         else{
                             var obj = jQuery.parseJSON(res);
                             var id = obj.id;
@@ -290,7 +296,9 @@
                         //alert(res);
                         if(res=='OK')
                             $('#'+id).hide();
-                        else
+                        if(res=='NO')
+                            alert('Выполнение операции запрещено!');
+                        if(res!='OK'&&res!='NO')
                             alert('Ошибка удаления данных.');
                     }
                 });

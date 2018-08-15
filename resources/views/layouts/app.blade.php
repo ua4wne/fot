@@ -31,5 +31,9 @@
             @yield('content')
 
     </div>
-
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/js/bootstrap.min.js"></script>
 </body>
+</html>

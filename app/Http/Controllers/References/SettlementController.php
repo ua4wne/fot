@@ -6,6 +6,9 @@ use App\Models\Settlement;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
+use App\Events\AddEventLogs;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class SettlementController extends Controller
 {
@@ -24,7 +27,11 @@ class SettlementController extends Controller
     }
 
     public function create(Request $request){
-
+        if(!Role::granted('ref_doc_add')){//вызываем event
+            $msg = 'Попытка создания нового вида расчетов!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на создание записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 
@@ -44,6 +51,8 @@ class SettlementController extends Controller
             $settl->fill($input);
             if($settl->save()){
                 $msg = 'Новый вид расчета '. $input['name'] .' был успешно добавлен!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/settlements')->with('status',$msg);
             }
         }
@@ -59,8 +68,15 @@ class SettlementController extends Controller
     public function edit($id,Request $request){
         $model = Settlement::find($id);
         if($request->isMethod('delete')){
+            if(!Role::granted('ref_doc_del')){
+                $msg = 'Попытка удаления вида расчета '.$model->name;
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                abort(503,'У Вас нет прав на удаление записи!');
+            }
             $model->delete();
             $msg = 'Вид расчета '. $model->name .' был удален!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
         }
         return redirect('/settlements')->with('status',$msg);
     }

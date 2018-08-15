@@ -366,6 +366,8 @@
                             //alert(res);
                             if(res=='OK')
                                 window.location.replace('/organization/view/{{ $org->id }}');
+                            if(res=='NO')
+                                alert('Выполнение операции запрещено!');
                             else
                                 alert('Ошибка записи данных.');
                         }
@@ -401,6 +403,8 @@
                             //alert(res);
                             if(res=='OK')
                                 window.location.replace('/organization/view/{{ $org->id }}');
+                            if(res=='NO')
+                                alert('Выполнение операции запрещено!');
                             else
                                 alert('Ошибка записи данных.');
                         }
@@ -430,6 +434,8 @@
                             //alert(res);
                             if(res=='OK')
                                 $('#'+id).hide();
+                            if(res=='NO')
+                                alert('Выполнение операции запрещено!');
                             else
                                 alert('Ошибка удаления данных.');
                         }
@@ -468,6 +474,8 @@
                             //alert(res);
                             if(res=='OK')
                                 window.location.replace('/organization/view/{{ $org->id }}');
+                            if(res=='NO')
+                                alert('Выполнение операции запрещено!');
                             else
                                 alert('Ошибка записи данных.');
                         }
@@ -503,6 +511,8 @@
                             //alert(res);
                             if(res=='OK')
                                 window.location.replace('/organization/view/{{ $org->id }}');
+                            if(res=='NO')
+                                alert('Выполнение операции запрещено!');
                             else
                                 alert('Ошибка записи данных.');
                         }
@@ -542,6 +552,8 @@
                             //alert(res);
                             if(res=='OK')
                                 $('#'+id).hide();
+                            if(res=='NO')
+                                alert('Выполнение операции запрещено!');
                             else
                                 alert('Ошибка удаления данных.');
                         }

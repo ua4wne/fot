@@ -6,6 +6,9 @@ use App\Models\Firm;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Validator;
+use App\Events\AddEventLogs;
+use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class FirmController extends Controller
 {
@@ -76,7 +79,11 @@ class FirmController extends Controller
     }
 
     public function create(Request $request){
-
+        if(!Role::granted('ref_doc_add')){//вызываем event
+            $msg = 'Попытка создания нового контрагента!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на создание записи!');
+        }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
 
@@ -103,6 +110,8 @@ class FirmController extends Controller
             $firm->fill($input);
             if($firm->save()){
                 $msg = 'Контрагент '. $input['name'] .' был успешно добавлен!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
                 return redirect('/firms/'.$input['type'])->with('status',$msg);
             }
         }
