@@ -121,6 +121,21 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/delete',['uses'=>'Ajax\BAccountController@delete','as'=>'deleteAccount']);
     });
 
+    //bstate/ группа обработки роутов bank_statements
+    Route::group(['prefix'=>'bstate'], function(){
+        Route::get('/',['uses'=>'BankStatementController@index','as'=>'bstate']);
+        //bstate/add
+        Route::match(['get','post'],'/add',['uses'=>'BankStatementController@create','as'=>'bstateAdd']);
+        //bstate/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'BankStatementController@edit','as'=>'bstateEdit']);
+        //bstate/ajax/add
+        Route::post('/ajax/add',['uses'=>'Ajax\BankStatementController@create','as'=>'newBstate']);
+        //bstate/ajax/edit
+        Route::post('/ajax/edit',['uses'=>'Ajax\BankStatementController@edit','as'=>'editBstate']);
+        //bstate/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\BankStatementController@delete','as'=>'deleteBstate']);
+    });
+
     //groups/ группа обработки роутов groups
     Route::group(['prefix'=>'groups'], function(){
         Route::get('/',['uses'=>'GroupController@index','as'=>'groups']);
@@ -196,6 +211,15 @@ Route::middleware(['auth'])->group(function(){
         Route::match(['get','post'],'/add',['uses'=>'Options\ActionController@create','as'=>'actionAdd']);
         //actions/edit
         Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'Options\ActionController@edit','as'=>'actionEdit']);
+    });
+
+    //codes/ группа обработки роутов codes
+    Route::group(['prefix'=>'codes'], function(){
+        Route::get('/',['uses'=>'CodeController@index','as'=>'codes']);
+        //codes/add
+        Route::match(['get','post'],'/add',['uses'=>'CodeController@create','as'=>'codeAdd']);
+        //codes/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'CodeController@edit','as'=>'codeEdit']);
     });
 });
 

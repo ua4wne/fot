@@ -68,7 +68,7 @@
                                 <li><a href="{{ route('main') }}"><i class="fa fa-home"></i> Рабочий стол </a></li>
                                 <li><a><i class="fa fa-university"></i> Банк и касса <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="form.html">Банковские выписки</a></li>
+                                        <li><a href="{{ route('bstate') }}">Банковские выписки</a></li>
                                         <li><a href="form_advanced.html">Кассовые документы</a></li>
                                         <li><a href="form_validation.html">Авансовые отчеты</a></li>
                                     </ul>
@@ -120,6 +120,7 @@
                                         <li><a href="{{ route('operations') }}">Виды операции</a></li>
                                         <li><a href="{{ route('typedocs') }}">Виды договоров</a></li>
                                         <li><a href="{{ route('settlements') }}">Виды расчетов</a></li>
+                                        <li><a href="{{ route('codes') }}">План счетов бухучета</a></li>
                                         <li><a href="profile.html">Счета расчетов с контрагентами</a></li>
                                     </ul>
                                 </li>
