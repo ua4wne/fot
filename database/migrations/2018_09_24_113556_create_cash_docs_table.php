@@ -18,6 +18,7 @@ class CreateCashDocsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('doc_num',15);
+            $table->enum('direction', ['coming', 'expense']);
             $table->integer('operation_id')->unsigned();
             $table->foreign('operation_id')->references('id')->on('operations');
             $table->integer('buhcode_id')->unsigned();

@@ -231,7 +231,7 @@ Route::middleware(['auth'])->group(function(){
     Route::group(['prefix'=>'cash_docs'], function(){
         Route::get('/',['uses'=>'CashDocController@index','as'=>'cash_docs']);
         //cash_docs/add
-        Route::match(['get','post'],'/add',['uses'=>'CashDocController@create','as'=>'cashDocAdd']);
+        Route::match(['get','post'],'/add/{direction}',['uses'=>'CashDocController@create','as'=>'cashDocAdd']);
         //cash_docs/edit
         Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'CodeController@edit','as'=>'cashDocEdit']);
     });
