@@ -22,12 +22,18 @@
         @endif
         {!! Form::open(['url' => route('cashDocAdd',['direction'=>$direction]),'class'=>'form-horizontal','method'=>'POST']) !!}
 
-        {!! Form::hidden('doc_num',$doc_num) !!}
+        <div class="form-group">
+            {!! Form::label('type', 'Документ №:',['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {!! Form::text('doc_num', $doc_num,['class' => 'form-control','placeholder'=>'Введите номер документа'])!!}
+                {!! $errors->first('doc_num', '<p class="text-danger">:message</p>') !!}
+            </div>
+        </div>
 
         <div class="form-group">
             {!! Form::label('type', 'Вид операции:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::select('operation_id', array('physical' => 'Физическое лицо', 'legal_entity' => 'Юридическое лицо'), 'legal_entity',['class' => 'form-control']); !!}
+                {!! Form::select('operation_id', $opersel, old('operation_id'),['class' => 'form-control']); !!}
             </div>
         </div>
 

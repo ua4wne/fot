@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Lib\LibController;
 use App\Models\CashDoc;
+use App\Models\Operation;
+use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Validator;
 use App\Events\AddEventLogs;
@@ -68,12 +70,23 @@ class CashDocController extends Controller
         }
         if(view()->exists('cash_doc_add')){
             $doc_num = LibController::GenNumberDoc('cash_docs');
+            $operations = Operation::select(['id','name'])->get();
+            $opersel = array();
+            foreach ($operations as $operation){
+                $opersel[$operation->id] = $operation->name;
+            }
+            $orgs = Organisation::select(['id','name'])->get();
             $orgsel = array();
+            foreach ($orgs as $org){
+                $orgsel[$org->id] = $org->name;
+            }
+
             $data = [
                 'title' => 'Новый документ',
                 'direction' => $direction,
                 'doc_num' => $doc_num,
                 'orgsel' => $orgsel,
+                'opersel' => $opersel,
             ];
             return view('cash_doc_add', $data);
         }
