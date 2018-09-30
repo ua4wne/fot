@@ -44,6 +44,13 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('sex', 'Пол:',['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {!! Form::select('sex', array('male' => 'Мужской', 'female' => 'Женский'), 'male',['class' => 'form-control','required'=>'required']); !!}
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-xs-offset-2 col-xs-10">
                 {!! Form::button('Сохранить', ['class' => 'btn btn-primary','type'=>'submit']) !!}
             </div>

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Lib\LibController;
+use App\Models\Buhcode;
 use App\Models\CashDoc;
+use App\Models\Firm;
 use App\Models\Operation;
 use App\Models\Organisation;
 use Illuminate\Http\Request;
@@ -16,11 +18,81 @@ class CashDocController extends Controller
 {
     public function index(){
         if(view()->exists('cash_doc')){
-            $docs = CashDoc::all();
+            $now = date('Y-m-d');
+            $arr = explode('-',$now);
+            $year = $arr[0];
+            $month = $arr[1];
+            $day = $arr[2];
+            $from = date('Y-m-d', strtotime("$year-$month-$day -1 month"));
+            $to = date('Y-m-d');
+            //dd($from);
+            $docs = CashDoc::whereBetween('created_at',[$from, $to])->get();
+            $operations = Operation::select(['id','name'])->get();
+            $opersel = array();
+            foreach ($operations as $operation){
+                $opersel[$operation->id] = $operation->name;
+            }
+            $orgs = Organisation::select(['id','name'])->get();
+            $orgsel = array();
+            foreach ($orgs as $org){
+                $orgsel[$org->id] = $org->name;
+            }
+            $buxcodes = Buhcode::select(['id','code'])->where(['show'=>1])->get();
+            $codesel = array();
+            foreach ($buxcodes as $buxcode){
+                $codesel[$buxcode->id] = $buxcode->code;
+            }
             $data = [
                 'title' => 'Кассовые документы',
                 'head' => 'Журнал кассовых документов',
                 'docs' => $docs,
+                'orgsel' => $orgsel,
+                'opersel' => $opersel,
+                'codesel' => $codesel,
+            ];
+
+            return view('cash_doc',$data);
+        }
+        abort(404);
+    }
+
+    public function view(Request $request){
+        if($request->isMethod('post')){
+            $from = $request['from'];
+            $to = $request['to'];
+            $docs = CashDoc::whereBetween('created_at',[$from, $to])->get();
+            $operations = Operation::select(['id','name'])->get();
+            $opersel = array();
+            foreach ($operations as $operation){
+                $opersel[$operation->id] = $operation->name;
+            }
+            $orgs = Organisation::select(['id','name'])->get();
+            $orgsel = array();
+            foreach ($orgs as $org){
+                $orgsel[$org->id] = $org->name;
+            }
+            $buxcodes = Buhcode::select(['id','code'])->where(['show'=>1])->get();
+            $codesel = array();
+            foreach ($buxcodes as $buxcode){
+                $codesel[$buxcode->id] = $buxcode->code;
+            }
+            $data = [
+                'title' => 'Кассовые документы',
+                'head' => 'Журнал кассовых документов',
+                'docs' => $docs,
+                'orgsel' => $orgsel,
+                'opersel' => $opersel,
+                'codesel' => $codesel,
+            ];
+        }
+        if(view()->exists('cash_doc')){
+            $data = [
+                'title' => 'Кассовые документы',
+                'head' => 'Журнал кассовых документов',
+                'docs' => $docs,
+                'orgsel' => $orgsel,
+                'opersel' => $opersel,
+                'codesel' => $codesel,
             ];
 
             return view('cash_doc',$data);
@@ -36,7 +108,8 @@ class CashDocController extends Controller
         }
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
-
+            if(isset($input['firm_id']))
+                $input['firm_id'] = Firm::where('name', $input['firm_id'])->first()->id;
             $messages = [
                 'required' => 'Поле обязательно к заполнению!',
                 'max' => 'Значение поля должно быть не более :max символов!',
@@ -61,6 +134,7 @@ class CashDocController extends Controller
             $doc = new CashDoc();
             $doc->fill($input);
             $doc->direction = $direction;
+            $doc->user_id = Auth::id();
             if($doc->save()){
                 $msg = 'Новый документ '. $input['doc_num'] .' добавлен в журнал кассовых документов!';
                 //вызываем event
@@ -80,13 +154,18 @@ class CashDocController extends Controller
             foreach ($orgs as $org){
                 $orgsel[$org->id] = $org->name;
             }
-
+            $buxcodes = Buhcode::select(['id','code'])->where(['show'=>1])->get();
+            $codesel = array();
+            foreach ($buxcodes as $buxcode){
+                $codesel[$buxcode->id] = $buxcode->code;
+            }
             $data = [
                 'title' => 'Новый документ',
                 'direction' => $direction,
                 'doc_num' => $doc_num,
                 'orgsel' => $orgsel,
                 'opersel' => $opersel,
+                'codesel' => $codesel,
             ];
             return view('cash_doc_add', $data);
         }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Validator;
 use App\Events\AddEventLogs;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -54,6 +55,7 @@ class UserController extends Controller
                 'login' => 'required|string|min:3|max:50|unique:users',
                 'name' => 'required|string|max:100',
                 'email' => 'required|string|email|max:40|unique:users',
+                'sex' => 'required|string||max:6',
             ],$messages);
             if($validator->fails()){
                 return redirect()->route('userAdd')->withErrors($validator)->withInput();
@@ -61,6 +63,7 @@ class UserController extends Controller
 
             $user = new User();
             $user->fill($input);
+            $user->image = '/images/'.$user->sex.'.png';
             $user->active = 0;
             $user->auth_code = $this->generateAuthCode(16);
             $pass = $this->makepass(8);
@@ -98,6 +101,24 @@ class UserController extends Controller
         $code = implode("", $code_array);
 
         return $code;
+    }
+
+    public function resetPass($user_id){
+        $user = User::find($user_id);
+        $pass = $this->makepass(8);
+        $user->password = Hash::make($pass);
+        if($user->save()){
+            //Отправляем письмо на указанный адрес
+            $url = url('/');
+            Mail::send('emails.resetpass', array('url' => $url,'login'=>$user->login,'pass'=>$pass), function($message) use ($user)
+            {
+                $message->to($user->email)->subject('Сброс старого пароля');
+            });
+            $msg = "Новый пароль для пользователя $user->login - $pass";
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),'Для пользователя '.$user->login.' был установлен новый пароль.'));
+            return redirect('/users')->with('status',$msg);
+        }
     }
 
     //функция генерации случайного пароля

@@ -16,6 +16,7 @@ class ChangeUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('active')->default(0);
             $table->string('login',50)->unique();
+            $table->enum('sex',['male,female']);
             $table->string('image',100)->nullable();
             $table->string('auth_code',100)->nullable();
         });

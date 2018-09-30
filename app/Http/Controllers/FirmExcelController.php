@@ -8,6 +8,8 @@ use App\Models\Group;
 use Illuminate\Http\Request;
 use Excel;
 use PHPExcel_IOFactory;
+use App\Events\AddEventLogs;
+use Illuminate\Support\Facades\Auth;
 
 class FirmExcelController extends Controller
 {
@@ -42,8 +44,11 @@ class FirmExcelController extends Controller
                     }
                 }
             }
-            $msg = 'Обработано записей: '.$num;
-            return redirect('/firms')->with('status',$msg);
+            //$msg = 'Обработано записей: '.$num;
+            $msg = 'Выполнение импорта контрагентов из файла Excel!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
+            return redirect('/firms')->with('status','Обработано записей: '.$num);
         }
     }
 

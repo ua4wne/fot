@@ -61,8 +61,8 @@
                             {!! Form::open(['url'=>route('baccEdit',['id'=>$acc->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}
                             {{ method_field('DELETE') }}
                             <div class="form-group" role="group">
-                                <a href="{{route('baccEdit',['id'=>$acc->id])}}"><button class="btn btn-success btn-sm" type="button"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button></a>
-                                {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit']) !!}
+                                <a href="{{route('baccEdit',['id'=>$acc->id])}}"><button class="btn btn-success btn-sm" type="button" title="Редактироватьть запись"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button></a>
+                                {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit','title'=>'Удалить запись']) !!}
                             </div>
                             {!! Form::close() !!}
                         </td>

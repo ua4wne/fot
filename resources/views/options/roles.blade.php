@@ -88,8 +88,8 @@
                                 {!! Form::open(['url'=>route('roleEdit',['id'=>$role->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}
                                 {{ method_field('DELETE') }}
                                 <div class="form-group" role="group">
-                                    <button class="btn btn-info btn-sm role" type="button" data-toggle="modal" data-target="#actions"><i class="fa fa-cogs fa-lg" aria-hidden="true"></i></button>
-                                    {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit']) !!}
+                                    <button class="btn btn-info btn-sm role" type="button" data-toggle="modal" data-target="#actions" title="Настройка разрешений"><i class="fa fa-cogs fa-lg" aria-hidden="true"></i></button>
+                                    {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit','title'=>'Удалить запись']) !!}
                                 </div>
                                 {!! Form::close() !!}
                             </td>

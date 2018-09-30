@@ -121,8 +121,8 @@
                                                 <td>{{ $item->name }}</td>
                                                 <td style="width:110px;">
                                                     <div class="form-group" role="group">
-                                                        <button class="btn btn-success btn-sm div_edit" type="button" data-toggle="modal" data-target="#editDivision"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button>
-                                                        <button class="btn btn-danger btn-sm div_delete" type="button"><i class="fa fa-trash fa-lg>" aria-hidden="true"></i></button>
+                                                        <button class="btn btn-success btn-sm div_edit" type="button" data-toggle="modal" data-target="#editDivision" title="Редактировать запись"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button>
+                                                        <button class="btn btn-danger btn-sm div_delete" type="button" title="Удалить запись"><i class="fa fa-trash fa-lg>" aria-hidden="true"></i></button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -307,8 +307,8 @@
                                                 @endif
                                                 <td style="width:110px;">
                                                     <div class="form-group" role="group">
-                                                        <button class="btn btn-success btn-sm acc_edit" type="button" data-toggle="modal" data-target="#editAccount"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button>
-                                                        <button class="btn btn-danger btn-sm acc_delete" type="button"><i class="fa fa-trash fa-lg>" aria-hidden="true"></i></button>
+                                                        <button class="btn btn-success btn-sm acc_edit" type="button" data-toggle="modal" data-target="#editAccount" title="Редактировать запись"><i class="fa fa-edit fa-lg>" aria-hidden="true"></i></button>
+                                                        <button class="btn btn-danger btn-sm acc_delete" type="button" title="Удалить запись"><i class="fa fa-trash fa-lg>" aria-hidden="true"></i></button>
                                                     </div>
                                                 </td>
                                             </tr>

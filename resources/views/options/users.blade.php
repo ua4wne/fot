@@ -140,7 +140,7 @@
 
                     <tr>
                         @if($user->image)
-                            <td><div class="profile_pic user-profile"><img src="{{ $user->image }}" alt="..." class="img-responsive center-block"></div></td>
+                            <td style="width:70px;"><img src="{{ $user->image }}" alt="..." class="img-responsive center-block"></td>
                         @else
                             <td style="width:70px;"><img src="/images/male.png" alt="..." class="img-responsive center-block"></td>
                         @endif
@@ -162,16 +162,17 @@
                         @if($user->id==1)
                             <td style="width:150px;">
                                 <div class="form-group" role="group">
-                                    <button class="btn btn-info btn-sm login_role" type="button" data-toggle="modal" data-target="#roleUser"><i class="fa fa-users fa-lg" aria-hidden="true"></i></button>
-                                    <button class="btn btn-success btn-sm login_edit" type="button" data-toggle="modal" data-target="#editUser"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
+                                    <button class="btn btn-info btn-sm login_role" type="button" data-toggle="modal" data-target="#roleUser" title = "Установить роли"><i class="fa fa-users fa-lg" aria-hidden="true"></i></button>
+                                    <button class="btn btn-success btn-sm login_edit" type="button" data-toggle="modal" data-target="#editUser" title = "Редактироватьть запись"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
                                 </div>
                             </td>
                         @else
-                            <td style="width:150px;">
+                            <td style="width:200px;">
                                 <div class="form-group" role="group">
-                                    <button class="btn btn-info btn-sm login_role" type="button" data-toggle="modal" data-target="#roleUser"><i class="fa fa-users fa-lg" aria-hidden="true"></i></button>
-                                    <button class="btn btn-success btn-sm login_edit" type="button" data-toggle="modal" data-target="#editUser"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
-                                    <button class="btn btn-danger btn-sm login_delete" type="button"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                    <button class="btn btn-info btn-sm login_role" type="button" data-toggle="modal" data-target="#roleUser" title = "Установить роли"><i class="fa fa-users fa-lg" aria-hidden="true"></i></button>
+                                    <button class="btn btn-success btn-sm login_edit" type="button" data-toggle="modal" data-target="#editUser" title = "Редактироватьть запись"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
+                                    <a href="{{ route('userReset',['id'=>$user->id]) }}" class="btn btn-warning btn-sm" type="button" title = "Сбросить пароль"><i class="fa fa-recycle fa-lg" aria-hidden="true"></i></a>
+                                    <button class="btn btn-danger btn-sm login_delete" type="button" title = "Удалить запись"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                                 </div>
                             </td>
                         @endif
@@ -260,7 +261,6 @@
                 }
             });
         });
-
 
         $('.label-success').click(function(){
             var id = $(this).attr("id");
@@ -372,8 +372,6 @@
                             $('#'+id).parent().parent().hide();
                         if(res=='NO')
                             alert('Выполнение операции запрещено!');
-                        else
-                            alert('Ошибка удаления данных.');
                     }
                 });
             }

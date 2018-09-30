@@ -38,6 +38,13 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('type', 'Счет учета:',['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {!! Form::select('buhcode_id', $codesel, old('buhcode_id'),['class' => 'form-control']); !!}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('name','Сумма, руб.:',['class' => 'col-xs-2 control-label'])   !!}
             <div class="col-xs-8">
                 {!! Form::text('amount',old('amount'),['class' => 'form-control','placeholder'=>'Введите сумму в рублях'])!!}
@@ -46,17 +53,17 @@
         </div>
 
         <div class="form-group">
-            {!! Form::label('org_id','Получатель\Плательщик:',['class' => 'col-xs-2 control-label'])   !!}
+            {!! Form::label('firm_id','Получатель\Плательщик:',['class' => 'col-xs-2 control-label'])   !!}
             <div class="col-xs-8">
-                {!! Form::text('org_id',old('org_id'),['class' => 'form-control','placeholder'=>'Введите полное наименование организации'])!!}
-                {!! $errors->first('org_id', '<p class="text-danger">:message</p>') !!}
+                {!! Form::text('firm_id',old('firm_id'),['class' => 'form-control','placeholder'=>'Введите полное наименование организации','id'=>'search_firm'])!!}
+                {!! $errors->first('firm_id', '<p class="text-danger">:message</p>') !!}
             </div>
         </div>
 
         <div class="form-group">
-            {!! Form::label('firm_id', 'Организация:',['class'=>'col-xs-2 control-label']) !!}
+            {!! Form::label('org_id', 'Организация:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::select('firm_id', $orgsel, old('firm_id'),['class' => 'form-control','id'=>'organ_id']); !!}
+                {!! Form::select('org_id', $orgsel, old('org_id'),['class' => 'form-control','id'=>'organ_id']); !!}
             </div>
         </div>
 
@@ -89,7 +96,17 @@
 @endsection
 
 @section('user_script')
+    <script src="/js/typeahead.min.js"></script>
     <script>
+        var url = "{{ route('getOrg') }}";
+        $('#search_firm').typeahead({
+            source:  function (query, process) {
+                return $.get(url, { query: query }, function (data) {
+                    return process(data);
+                });
+            }
+        });
+
         $("#organ_id").prepend( $('<option value="0">Выберите организацию</option>'));
         $("#organ_id :first").attr("selected", "selected");
         $("#organ_id :first").attr("disabled", "disabled");

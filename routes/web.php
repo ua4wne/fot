@@ -25,6 +25,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('import-contract', 'ContractExcelController@importContract')->name('importContract');
         Route::get('export-contract/{type}', 'ContractExcelController@exportFirm')->name('exportContract');
         Route::post('import-code', 'CodeExcelController@importCode')->name('importCode');
+        Route::post('import-cash_doc', 'DocExcelController@importCashDoc')->name('importCashDoc');
     });
 
     //currency/ группа обработки роутов справочника currency
@@ -180,6 +181,8 @@ Route::middleware(['auth'])->group(function(){
         Route::match(['get','post'],'/add',['uses'=>'Options\UserController@create','as'=>'userAdd']);
         //users/edit
         Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'Options\UserController@edit','as'=>'userEdit']);
+        //users/reset
+        Route::get('/reset/{id}',['uses'=>'Options\UserController@resetPass','as'=>'userReset']);
         //users/ajax/edit
         Route::post('/ajax/edit',['uses'=>'Ajax\UserController@switchLogin','as'=>'switchLogin']);
         //users/ajax/edit_login
@@ -230,10 +233,17 @@ Route::middleware(['auth'])->group(function(){
     //cash_docs/ группа обработки роутов cash-docs
     Route::group(['prefix'=>'cash_docs'], function(){
         Route::get('/',['uses'=>'CashDocController@index','as'=>'cash_docs']);
+        Route::post('/view',['uses'=>'CashDocController@view','as'=>'cash_docs_period']);
+        //cash_docs/ajax/getorg
+        Route::get('/ajax/getorg',['uses'=>'Ajax\CashDocController@ajaxData','as'=>'getOrg']);
         //cash_docs/add
         Route::match(['get','post'],'/add/{direction}',['uses'=>'CashDocController@create','as'=>'cashDocAdd']);
         //cash_docs/edit
-        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'CodeController@edit','as'=>'cashDocEdit']);
+        //Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'CodeController@edit','as'=>'cashDocEdit']);
+        //cash/ajax/edit
+        Route::post('/ajax/edit',['uses'=>'Ajax\CashDocController@edit','as'=>'editCashDoc']);
+        //cash/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\CashDocController@delete','as'=>'delCashDoc']);
     });
 });
 

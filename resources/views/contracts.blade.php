@@ -130,8 +130,8 @@
                     @endif
                     <td style="width:110px;">
                         <div class="form-group" role="group">
-                            <button class="btn btn-success btn-sm contract_edit" type="button" data-toggle="modal" data-target="#editContract"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
-                            <button class="btn btn-danger btn-sm contract_delete" type="button"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            <button class="btn btn-success btn-sm contract_edit" type="button" data-toggle="modal" data-target="#editContract" title="Редактировать запись"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
+                            <button class="btn btn-danger btn-sm contract_delete" type="button" title="Удалить запись"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                         </div>
                     </td>
                 </tr>

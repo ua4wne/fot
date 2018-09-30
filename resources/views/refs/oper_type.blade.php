@@ -44,7 +44,7 @@
                                 {!! Form::open(['url'=>route('operationEdit',['id'=>$oper->id]), 'class'=>'form-horizontal','method' => 'POST', 'onsubmit' => 'return confirmDelete()']) !!}
                                 {{ method_field('DELETE') }}
                                 <div class="form-group" role="group">
-                                    {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit']) !!}
+                                    {!! Form::button('<i class="fa fa-trash-o fa-lg>" aria-hidden="true"></i>',['class'=>'btn btn-danger','type'=>'submit','title'=>'Удалить запись']) !!}
                                 </div>
                                 {!! Form::close() !!}
                             </td>
