@@ -68,7 +68,7 @@
                                 <li><a href="{{ route('main') }}"><i class="fa fa-home"></i> Рабочий стол </a></li>
                                 <li><a><i class="fa fa-university"></i> Банк и касса <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="{{ route('bstate') }}">Банковские выписки</a></li>
+                                        <li><a href="{{ route('statements') }}">Банковские выписки</a></li>
                                         <li><a href="{{ route('cash_docs') }}">Кассовые документы</a></li>
                                         <li><a href="form_validation.html">Авансовые отчеты</a></li>
                                     </ul>

@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('export-contract/{type}', 'ContractExcelController@exportFirm')->name('exportContract');
         Route::post('import-code', 'CodeExcelController@importCode')->name('importCode');
         Route::post('import-cash_doc', 'DocExcelController@importCashDoc')->name('importCashDoc');
+        Route::post('import-statements', 'DocExcelController@importStatements')->name('importStatements');
     });
 
     //currency/ группа обработки роутов справочника currency
@@ -244,6 +245,18 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/edit',['uses'=>'Ajax\CashDocController@edit','as'=>'editCashDoc']);
         //cash/ajax/delete
         Route::post('/ajax/delete',['uses'=>'Ajax\CashDocController@delete','as'=>'delCashDoc']);
+    });
+
+    //statements/ группа обработки роутов statements
+    Route::group(['prefix'=>'statements'], function(){
+        Route::get('/',['uses'=>'StatementController@index','as'=>'statements']);
+        Route::post('/view',['uses'=>'StatementController@view','as'=>'statement_period']);
+        //statements/add
+        Route::match(['get','post'],'/add/{direction}',['uses'=>'StatementController@create','as'=>'statementAdd']);
+        //statements/ajax/edit
+        Route::post('/ajax/edit',['uses'=>'Ajax\StatementController@edit','as'=>'editStatement']);
+        //statements/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\StatementController@delete','as'=>'delStatement']);
     });
 });
 
