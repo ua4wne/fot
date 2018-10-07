@@ -104,10 +104,10 @@
             @endif
             <div class="btn-group">
                 <a href="{{route('statementAdd',['direction'=>'coming'])}}">
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-plus green" aria-hidden="true"></i> Приход</button>
+                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-plus green" aria-hidden="true"></i> Поступление</button>
                 </a>
                 <a href="{{route('statementAdd',['direction'=>'expense'])}}">
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-minus red" aria-hidden="true"></i> Расход</button>
+                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-minus red" aria-hidden="true"></i> Списание</button>
                 </a>
                 <a href="#">
                     <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#setPeriod"><i class="fa fa-search" aria-hidden="true"></i> Период</button>

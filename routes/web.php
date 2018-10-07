@@ -87,7 +87,8 @@ Route::middleware(['auth'])->group(function(){
     //contracts/ группа обработки роутов contracts
     Route::group(['prefix'=>'contracts'], function(){
         Route::get('/',['uses'=>'ContractController@index','as'=>'contracts']);
-        Route::get('/view/{id}',['uses'=>'ContractController@view','as'=>'contractView']);
+        Route::post('/view',['uses'=>'ContractController@view','as'=>'contractView']);
+        Route::get('/view{id?}',['uses'=>'ContractController@view','as'=>'contractView']);
         //contracts/add
         Route::match(['get','post'],'/add',['uses'=>'ContractController@create','as'=>'contractAdd']);
         //contract/edit

@@ -76,7 +76,7 @@ class BankController extends Controller
         $model = Bank::find($id);
         if($request->isMethod('delete')){
             if(!Role::granted('ref_doc_del')){
-                $msg = 'Попытка удаления записи банка '.$model->name;
+                $msg = 'Попытка удаления банка '.$model->name;
                 event(new AddEventLogs('access',Auth::id(),$msg));
                 abort(503,'У Вас нет прав на удаление записи!');
             }
@@ -87,7 +87,7 @@ class BankController extends Controller
             return redirect('/banks')->with('status',$msg);
         }
         if(!Role::granted('ref_doc_edit')){
-            $msg = 'Попытка редактирования записи банка '. $model->name;
+            $msg = 'Попытка редактирования банка '. $model->name;
             //вызываем event
             event(new AddEventLogs('access',Auth::id(),$msg));
             abort(503,'У Вас нет прав на редактирование записи!');

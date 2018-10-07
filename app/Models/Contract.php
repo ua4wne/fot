@@ -9,7 +9,7 @@ class Contract extends Model
     //указываем имя таблицы
     protected $table = 'contracts';
 
-    protected $fillable = ['num_doc','name', 'tdoc_id', 'org_id', 'firm_id', 'text', 'start', 'stop', 'settlement_id'];
+    protected $fillable = ['num_doc','name', 'tdoc_id', 'org_id', 'firm_id', 'text', 'start', 'stop', 'currency_id','settlement_id'];
 
     public function organization()
     {
@@ -29,5 +29,10 @@ class Contract extends Model
     public function settlement()
     {
         return $this->belongsTo('App\Models\Settlement');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo('App\Models\Currency');
     }
 }

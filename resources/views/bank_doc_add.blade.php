@@ -8,7 +8,7 @@
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb">
         <li><a href="{{ route('main') }}">Рабочий стол</a></li>
-        <li><a href="{{ route('cash_docs') }}">Кассовые документы</a></li>
+        <li><a href="{{ route('statements') }}">Банковские выписки</a></li>
         <li class="active">{{ $title }}</li>
     </ul>
     <!-- END BREADCRUMB -->
@@ -16,14 +16,14 @@
 
     <div class="row">
         @if($direction == 'coming')
-            <h2 class="text-center">Поступление наличных</h2>
+            <h2 class="text-center">Поступление на расчетный счет</h2>
         @else
-            <h2 class="text-center">Выдача наличных</h2>
+            <h2 class="text-center">Списание с расчетного счета</h2>
         @endif
-        {!! Form::open(['url' => route('cashDocAdd',['direction'=>$direction]),'class'=>'form-horizontal','method'=>'POST']) !!}
+        {!! Form::open(['url' => route('statementAdd',['direction'=>$direction]),'class'=>'form-horizontal','method'=>'POST']) !!}
 
         <div class="form-group">
-            {!! Form::label('doc_num', 'Документ №:',['class'=>'col-xs-2 control-label']) !!}
+            {!! Form::label('type', 'Документ №:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
                 {!! Form::text('doc_num', $doc_num,['class' => 'form-control','placeholder'=>'Введите номер документа'])!!}
                 {!! $errors->first('doc_num', '<p class="text-danger">:message</p>') !!}
@@ -31,21 +31,21 @@
         </div>
 
         <div class="form-group">
-            {!! Form::label('operation_id', 'Вид операции:',['class'=>'col-xs-2 control-label']) !!}
+            {!! Form::label('type', 'Вид операции:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::select('operation_id', $opersel, old('operation_id'),['class' => 'form-control']); !!}
+                {!! Form::select('operation_id', $opersel, old('operation_id'),['class' => 'form-control','id'=>'operation_id']); !!}
             </div>
         </div>
 
         <div class="form-group">
-            {!! Form::label('buhcode_id', 'Счет учета:',['class'=>'col-xs-2 control-label']) !!}
+            {!! Form::label('type', 'Счет учета:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::select('buhcode_id', $codesel, old('buhcode_id'),['class' => 'form-control']); !!}
+                {!! Form::select('buhcode_id', $codesel, old('buhcode_id'),['class' => 'form-control', 'id'=>'buhcode_id']); !!}
             </div>
         </div>
 
         <div class="form-group">
-            {!! Form::label('amount','Сумма, руб.:',['class' => 'col-xs-2 control-label'])   !!}
+            {!! Form::label('name','Сумма, руб.:',['class' => 'col-xs-2 control-label'])   !!}
             <div class="col-xs-8">
                 {!! Form::text('amount',old('amount'),['class' => 'form-control','placeholder'=>'Введите сумму в рублях'])!!}
                 {!! $errors->first('amount', '<p class="text-danger">:message</p>') !!}
@@ -53,12 +53,19 @@
         </div>
 
         <div class="form-group">
-            {!! Form::label('firm_id','Получатель\Плательщик:',['class' => 'col-xs-2 control-label'])   !!}
+            {!! Form::label('firm_id','Получатель:',['class' => 'col-xs-2 control-label','id'=>'control-label'])   !!}
             <div class="col-xs-8">
                 {!! Form::text('firm_id',old('firm_id'),['class' => 'form-control','placeholder'=>'Введите полное наименование организации','id'=>'search_firm'])!!}
                 {!! $errors->first('firm_id', '<p class="text-danger">:message</p>') !!}
             </div>
         </div>
+
+            <div class="form-group">
+                {!! Form::label('contract', 'Договор:',['class'=>'col-xs-2 control-label']) !!}
+                <div class="col-xs-8">
+                    {!! Form::select('contract', $bacc , old('contract'),['class' => 'form-control', 'id'=>'contract']); !!}
+                </div>
+            </div>
 
         <div class="form-group">
             {!! Form::label('org_id', 'Организация:',['class'=>'col-xs-2 control-label']) !!}
@@ -68,11 +75,18 @@
         </div>
 
         <div class="form-group">
-            {!! Form::label('contract','Договор:',['class' => 'col-xs-2 control-label'])   !!}
-            <div class="col-xs-8">
-                {!! Form::text('contract',old('contract'),['class' => 'form-control','placeholder'=>'Укажите договор'])!!}
-                {!! $errors->first('contract', '<p class="text-danger">:message</p>') !!}
-            </div>
+           {!! Form::label('bacc_id', 'Банковский счет:',['class'=>'col-xs-2 control-label']) !!}
+           <div class="col-xs-8">
+               {!! Form::select('bacc_id', $bacc , old('bacc_id'),['class' => 'form-control', 'id'=>'bacc_id']); !!}
+           </div>
+        </div>
+
+        <div class="form-group">
+           {!! Form::label('purpose','Назначение платежа:',['class' => 'col-xs-2 control-label'])   !!}
+           <div class="col-xs-8">
+              {!! Form::textarea('purpose',old('purpose'),['class' => 'form-control','placeholder'=>'Назначение платежа','rows' => 2, 'cols' => 40])!!}
+              {!! $errors->first('purpose', '<p class="text-danger">:message</p>') !!}
+           </div>
         </div>
 
         <div class="form-group">
@@ -110,5 +124,16 @@
         $("#organ_id").prepend( $('<option value="0">Выберите организацию</option>'));
         $("#organ_id :first").attr("selected", "selected");
         $("#organ_id :first").attr("disabled", "disabled");
+
+        $("#buhcode_id :contains('51')").attr("selected", "selected");
+
+        if($('.text-center').text()=='Списание с расчетного счета'){
+            $("#operation_id :contains('Оплата поставщику')").attr("selected", "selected");
+            $('#control-label').text('Получатель:');
+        }
+        else{
+            $("#operation_id :contains('Оплата от покупателя')").attr("selected", "selected");
+            $('#control-label').text('Плательщик:');
+        }
     </script>
 @endsection
