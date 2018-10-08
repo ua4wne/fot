@@ -24,7 +24,7 @@ class CashDocController extends Controller
             $month = $arr[1];
             $day = $arr[2];
             $from = date('Y-m-d', strtotime("$year-$month-$day -1 month"));
-            $to = date('Y-m-d');
+            $to = date('Y-m-d', strtotime("$year-$month-$day +1 day"));
             //dd($from);
             $docs = CashDoc::whereBetween('created_at',[$from, $to])->get();
             $operations = Operation::select(['id','name'])->get();
@@ -76,14 +76,6 @@ class CashDocController extends Controller
             foreach ($buxcodes as $buxcode){
                 $codesel[$buxcode->id] = $buxcode->code;
             }
-            $data = [
-                'title' => 'Кассовые документы',
-                'head' => 'Журнал кассовых документов',
-                'docs' => $docs,
-                'orgsel' => $orgsel,
-                'opersel' => $opersel,
-                'codesel' => $codesel,
-            ];
         }
         if(view()->exists('cash_doc')){
             $data = [

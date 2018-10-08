@@ -21,9 +21,9 @@ class CashDoc extends Model
         return $this->belongsTo('App\Models\Buhcode');
     }
 
-    public function organization()
+    public function organisation()
     {
-        return $this->belongsTo('App\Models\Organisation');
+        return $this->belongsTo('App\Models\Organisation','org_id','id');
     }
 
     public function firm()

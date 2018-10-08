@@ -29,7 +29,7 @@ class CreateStatementsTable extends Migration
             $table->foreign('bacc_id')->references('id')->on('bank_accounts');
             $table->integer('firm_id')->unsigned();
             $table->foreign('firm_id')->references('id')->on('firms');
-            $table->decimal('amount');
+            $table->decimal('amount',11,2);
             $table->string('contract',150)->nullable();
             $table->text('purpose');
             $table->string('comment',200)->nullable();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Lib\LibController;
 use App\Models\Buhcode;
+use App\Models\Firm;
 use App\Models\Operation;
 use App\Models\Organisation;
 use App\Models\Statement;
@@ -23,7 +24,7 @@ class StatementController extends Controller
             $month = $arr[1];
             $day = $arr[2];
             $from = date('Y-m-d', strtotime("$year-$month-$day -1 month"));
-            $to = date('Y-m-d');
+            $to = date('Y-m-d', strtotime("$year-$month-$day +1 day"));
             //dd($from);
             $docs = Statement::whereBetween('created_at',[$from, $to])->get();
             $operations = Operation::select(['id','name'])->get();
@@ -51,6 +52,42 @@ class StatementController extends Controller
             ];
 
             return view('statements',$data);
+        }
+        abort(404);
+    }
+
+    public function view(Request $request){
+        if($request->isMethod('post')){
+            $from = $request['from'];
+            $to = $request['to'];
+            $docs = Statement::whereBetween('created_at',[$from, $to])->get();
+            $operations = Operation::select(['id','name'])->get();
+            $opersel = array();
+            foreach ($operations as $operation){
+                $opersel[$operation->id] = $operation->name;
+            }
+            $orgs = Organisation::select(['id','name'])->get();
+            $orgsel = array();
+            foreach ($orgs as $org){
+                $orgsel[$org->id] = $org->name;
+            }
+            $buxcodes = Buhcode::select(['id','code'])->where(['show'=>1])->get();
+            $codesel = array();
+            foreach ($buxcodes as $buxcode){
+                $codesel[$buxcode->id] = $buxcode->code;
+            }
+        }
+        if(view()->exists('cash_doc')){
+            $data = [
+                'title' => 'Кассовые документы',
+                'head' => 'Журнал кассовых документов',
+                'docs' => $docs,
+                'orgsel' => $orgsel,
+                'opersel' => $opersel,
+                'codesel' => $codesel,
+            ];
+
+            return view('cash_doc',$data);
         }
         abort(404);
     }

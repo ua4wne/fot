@@ -258,6 +258,12 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/edit',['uses'=>'Ajax\StatementController@edit','as'=>'editStatement']);
         //statements/ajax/delete
         Route::post('/ajax/delete',['uses'=>'Ajax\StatementController@delete','as'=>'delStatement']);
+        //statements/ajax/find_bacc
+        Route::post('/ajax/find_bacc',['uses'=>'Ajax\StatementController@findBacc','as'=>'findBacc']);
+        //statements/ajax/find_contract
+        Route::post('/ajax/find_contract',['uses'=>'Ajax\StatementController@findContract','as'=>'findContract']);
+        //statements/ajax/getparams
+        Route::post('/ajax/getparams',['uses'=>'Ajax\StatementController@getParams','as'=>'ParamStatement']);
     });
 });
 

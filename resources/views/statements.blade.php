@@ -128,13 +128,6 @@
                         {!! Form::open(['url' => route('editStatement'),'id'=>'edit_doc','class'=>'form-horizontal','method'=>'POST']) !!}
 
                         <div class="form-group">
-                            {!! Form::label('doc_num', 'Документ №:',['class'=>'col-xs-2 control-label']) !!}
-                            <div class="col-xs-8">
-                                {!! Form::text('doc_num', old('doc_num'), ['class' => 'form-control','required'=>'required','id'=>'doc_num'])!!}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
                             {!! Form::label('operation_id', 'Вид операции:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
                                 {!! Form::select('operation_id', $opersel, old('operation_id'),['class' => 'form-control','required'=>'required','id'=>'operation_id']); !!}
@@ -152,30 +145,41 @@
                             {!! Form::label('amount','Сумма, руб.:',['class' => 'col-xs-2 control-label'])   !!}
                             <div class="col-xs-8">
                                 {!! Form::text('amount',old('amount'),['class' => 'form-control','placeholder'=>'Введите сумму в рублях','required'=>'required','id'=>'amount'])!!}
-                                {!! $errors->first('amount', '<p class="text-danger">:message</p>') !!}
                             </div>
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('firm_id','Получатель\ Плательщик:',['class' => 'col-xs-2 control-label'])   !!}
+                            {!! Form::label('firm_id','Контрагент:',['class' => 'col-xs-2 control-label'])   !!}
                             <div class="col-xs-8">
                                 {!! Form::text('firm_id',old('firm_id'),['class' => 'form-control','placeholder'=>'Введите полное наименование организации','required'=>'required','id'=>'search_firm'])!!}
-                                {!! $errors->first('firm_id', '<p class="text-danger">:message</p>') !!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('org_id', 'Организация:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
-                                {!! Form::select('org_id', $orgsel, old('org_id'),['class' => 'form-control','id'=>'organ_id','required'=>'required']); !!}
+                                {!! Form::select('org_id', $orgsel, old('org_id'),['class' => 'form-control','id'=>'org_id','required'=>'required']); !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('bacc_id', 'Банковский счет:',['class'=>'col-xs-2 control-label']) !!}
+                            <div class="col-xs-8">
+                                {!! Form::text('bacc_id', old('bacc_id'),['class' => 'form-control', 'id'=>'bacc_id','required'=>'required']); !!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('contract','Договор:',['class' => 'col-xs-2 control-label'])   !!}
                             <div class="col-xs-8">
-                                {!! Form::text('contract',old('contract'),['class' => 'form-control','placeholder'=>'Укажите договор','id'=>'contract'])!!}
-                                {!! $errors->first('contract', '<p class="text-danger">:message</p>') !!}
+                                {!! Form::text('contract',old('contract'),['class' => 'form-control','placeholder'=>'Укажите договор','id'=>'contract','required'=>'required'])!!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('purpose','Назначение платежа:',['class' => 'col-xs-2 control-label'])   !!}
+                            <div class="col-xs-8">
+                                {!! Form::textarea('purpose',old('purpose'),['class' => 'form-control','placeholder'=>'Назначение платежа','rows' => 2, 'cols' => 40,'required'=>'required'])!!}
                             </div>
                         </div>
 
@@ -208,14 +212,13 @@
                 <thead>
                 <tr>
                     <th>Дата</th>
-                    <th>Номер</th>
-                    <th>Приход</th>
-                    <th>Расход</th>
-                    <th>Валюта</th>
-                    <th>Получатель\Плательщик</th>
+                    <th>Поступление</th>
+                    <th>Списание</th>
+                    <th>Назначение платежа</th>
+                    <th>Контрагент</th>
                     <th>Вид операции</th>
                     <th>Организация</th>
-                    <th>Ответственный</th>
+                    <th>Банковский счет</th>
                     <th>Комментарий</th>
                     <th>Действия</th>
                 </tr>
@@ -225,7 +228,6 @@
 
                     <tr id="{{ $doc->id }}">
                         <td>{{ $doc->created_at }}</td>
-                        <th class="edit">{{ $doc->doc_num }}</th>
                         @if($doc->direction == 'coming')
                             <td>{{ $doc->amount }}</td>
                             <td></td>
@@ -233,11 +235,11 @@
                             <td></td>
                             <td>{{ $doc->amount }}</td>
                         @endif
-                        <td>руб.</td>
-                        <td>{{ \App\Models\Firm::find($doc->firm_id)->name }}</td>
-                        <td>{{ \App\Models\Operation::find($doc->operation_id)->name }}</td>
-                        <td>{{ \App\Models\Organisation::find($doc->org_id)->name }}</td>
-                        <td>{{ \App\User::find($doc->user_id)->name }}</td>
+                        <td>{{ $doc->purpose }}</td>
+                        <td>{{ $doc->firm->name }}</td>
+                        <td>{{ $doc->operation->name }}</td>
+                        <td>{{ $doc->organisation->name }}</td>
+                        <td>{{ $doc->bank_account->account }}</td>
                         <td>{{ $doc->comment }}</td>
                         <td style="width:110px;">
                             <div class="form-group" role="group">
@@ -290,23 +292,43 @@
         $('.doc_edit').click(function(){
             var id = $(this).parent().parent().parent().attr("id");
             var comment  = $(this).parent().parent().prev().text();
-            //var cdate = $(this).parent().parent().prevAll().eq(1).text();
+            var bacc_id = $(this).parent().parent().prevAll().eq(1).text();
             var org = $(this).parent().parent().prevAll().eq(2).text();
             var operation = $(this).parent().parent().prevAll().eq(3).text();
             var firm = $(this).parent().parent().prevAll().eq(4).text();
-            var doc_num = $(this).parent().parent().prevAll().eq(9).text();
+            var purpose = $(this).parent().parent().prevAll().eq(5).text();
             var amount = $(this).parent().parent().prevAll().eq(6).text();
             if(amount.length == 0)
                 amount = $(this).parent().parent().prevAll().eq(7).text();
-            var doc_num = $(this).parent().parent().prevAll().eq(8).text();
 
             $("#operation_id :contains("+operation+")").attr("selected", "selected");
             $('#comment').val(comment);
             $('#search_firm').val(firm);
-            $('#doc_num').val(doc_num);
-            $("#organ_id :contains("+org+")").attr("selected", "selected");
+            $("#org_id :contains("+org+")").attr("selected", "selected");
             $('#id_doc').val(id);
+            $('#bacc_id').val(bacc_id);
             $('#amount').val(amount);
+            $('#purpose').val(purpose);
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('ParamStatement') }}',
+                data: {'id': id},
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (res) {
+                    //alert(res);
+                    var arr = jQuery.parseJSON(res);
+                    $.each(arr,function(key,value){
+                        if(key==0)
+                            $("#buhcode_id :contains("+value.toString()+")").attr("selected", "selected");
+                        if(key==1)
+                            $('#contract').val(value.toString());
+                    });
+
+                }
+            });
         });
 
         $('#edit_btn').click(function(e){
@@ -331,14 +353,20 @@
             else{
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('editCashDoc') }}',
+                    url: '{{ route('editStatement') }}',
                     data: $('#edit_doc').serialize(),
                     success: function(res){
                         //alert(res);
                         if(res=='OK')
-                            window.location.replace('/cash_docs');
+                            window.location.replace('/statements');
                         if(res=='NO')
                             alert('Выполнение операции запрещено!');
+                        if(res=='NO CONTRACT')
+                            alert('Договор указан неверно. Операция прервана!');
+                        if(res=='NO BACC')
+                            alert('Банковский счет указан неверно. Операция прервана!');
+                        if(res=='ERR')
+                            alert('При обновлении данных возникла ошибка!');
                     }
                 });
             }
@@ -350,7 +378,7 @@
             if (x) {
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('delCashDoc') }}',
+                    url: '{{ route('delStatement') }}',
                     data: {'id':id},
                     headers: {
                         'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')

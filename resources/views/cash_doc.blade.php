@@ -234,9 +234,9 @@
                             <td>{{ $doc->amount }}</td>
                         @endif
                         <td>руб.</td>
-                        <td>{{ \App\Models\Firm::find($doc->firm_id)->name }}</td>
-                        <td>{{ \App\Models\Operation::find($doc->operation_id)->name }}</td>
-                        <td>{{ \App\Models\Organisation::find($doc->org_id)->name }}</td>
+                        <td>{{ $doc->firm->name }}</td>
+                        <td>{{ $doc->operation->name }}</td>
+                        <td>{{ $doc->organisation->name }}</td>
                         <td>{{ \App\User::find($doc->user_id)->name }}</td>
                         <td>{{ $doc->comment }}</td>
                         <td style="width:110px;">

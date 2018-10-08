@@ -21,13 +21,18 @@ class Statement extends Model
         return $this->belongsTo('App\Models\Buhcode');
     }
 
-    public function organization()
+    public function organisation()
     {
-        return $this->belongsTo('App\Models\Organisation');
+        return $this->belongsTo('App\Models\Organisation','org_id','id');
     }
 
     public function firm()
     {
         return $this->belongsTo('App\Models\Firm');
+    }
+
+    public function bank_account()
+    {
+        return $this->belongsTo('App\Models\BankAccount','bacc_id','id');
     }
 }
