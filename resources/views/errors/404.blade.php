@@ -8,6 +8,7 @@
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb">
         <li><a href="{{ route('main') }}">Рабочий стол</a></li>
+        <li><a href="{{ URL::previous() }}">Назад</a></li>
         <li class="active">Страница не найдена</li>
     </ul>
     <!-- END BREADCRUMB -->

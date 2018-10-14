@@ -27,6 +27,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('import-code', 'CodeExcelController@importCode')->name('importCode');
         Route::post('import-cash_doc', 'DocExcelController@importCashDoc')->name('importCashDoc');
         Route::post('import-statements', 'DocExcelController@importStatements')->name('importStatements');
+        Route::post('import-advances', 'DocExcelController@importAdvances')->name('importAdvances');
     });
 
     //currency/ группа обработки роутов справочника currency
@@ -264,6 +265,29 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/find_contract',['uses'=>'Ajax\StatementController@findContract','as'=>'findContract']);
         //statements/ajax/getparams
         Route::post('/ajax/getparams',['uses'=>'Ajax\StatementController@getParams','as'=>'ParamStatement']);
+    });
+
+    //person/ группа обработки роутов справочника persons
+    Route::group(['prefix'=>'persons'], function(){
+        Route::get('/',['uses'=>'References\PersonController@index','as'=>'persons']);
+        //persons/add
+        Route::match(['get','post'],'/add',['uses'=>'References\PersonController@create','as'=>'personAdd']);
+        //persons/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'References\PersonController@edit','as'=>'personEdit']);
+    });
+
+    //advances/ группа обработки роутов advances
+    Route::group(['prefix'=>'advances'], function(){
+        Route::match(['get','post'],'/',['uses'=>'AdvanceController@index','as'=>'advances']);
+        Route::get('/view/{id}',['uses'=>'AdvanceController@view','as'=>'advanceView']);
+        //advances/add
+        Route::get('/add',['uses'=>'AdvanceController@create','as'=>'advanceAdd']);
+        //advances/ajax/add
+        Route::post('/ajax/add',['uses'=>'Ajax\AdvanceController@create','as'=>'addAdvance']);
+        //advances/ajax/addpos
+        Route::post('/ajax/addpos',['uses'=>'Ajax\AdvanceController@addPosition','as'=>'addAdvancePos']);
+        //advances/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'AdvanceController@edit','as'=>'advanceEdit']);
     });
 });
 

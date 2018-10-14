@@ -70,7 +70,7 @@
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('statements') }}">Банковские выписки</a></li>
                                         <li><a href="{{ route('cash_docs') }}">Кассовые документы</a></li>
-                                        <li><a href="form_validation.html">Авансовые отчеты</a></li>
+                                        <li><a href="{{ route('advances') }}">Авансовые отчеты</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-credit-card"></i> Покупки и продажи <span class="fa fa-chevron-down"></span></a>
@@ -81,8 +81,8 @@
                                 </li>
                                 <li><a><i class="fa fa-users"></i> Сотрудники и зарплата <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="tables.html">Сотрудники</a></li>
-                                        <li><a href="tables_dynamic.html">Физические лица</a></li>
+                                        <li><a href="#">Сотрудники</a></li>
+                                        <li><a href="{{ route('persons') }}">Физические лица</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-sitemap"></i> Наши юр. лица <span class="fa fa-chevron-down"></span></a>
