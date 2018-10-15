@@ -14,7 +14,7 @@ class PersonController extends Controller
 {
     public function index(){
         if(view()->exists('refs.persons')){
-            $persons = Person::paginate(env('PAGINATION_SIZE')); //all();
+            $persons = Person::all();
             $data = [
                 'title' => 'Физлица',
                 'head' => 'Физические лица',

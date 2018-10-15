@@ -147,7 +147,7 @@
                     <td>{{ $doc->comment }}</td>
                     <td style="width:110px;">
                         <div class="form-group" role="group">
-                            <button class="btn btn-success btn-sm doc_edit" type="button" data-toggle="modal" data-target="#editDoc" title="Редактировать документ"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
+                            <a href="{{route('advanceEdit',['id'=>$doc->id])}}"><button class="btn btn-success btn-sm" type="button" title="Редактировать документ"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button></a>
                             <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                         </div>
                     </td>
@@ -173,5 +173,31 @@
             }
             $('#basicModal').modal(options);
         });
+
+        $('.doc_delete').click(function(){
+            var id = $(this).parent().parent().parent().attr("id");
+            var x = confirm("Выбранная запись будет удалена. Продолжить (Да/Нет)?");
+            if (x) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('delAdvance') }}',
+                    data: {'id':id},
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(res){
+                        //alert(res);
+                        if(res=='OK')
+                            $('#'+id).hide();
+                        if(res=='NO')
+                            alert('Выполнение операции запрещено!');
+                    }
+                });
+            }
+            else {
+                return false;
+            }
+        });
+
     </script>
 @endsection

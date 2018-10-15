@@ -9,7 +9,7 @@
     <ul class="breadcrumb">
         <li><a href="{{ route('main') }}">Рабочий стол</a></li>
         <li><a href="{{ route('advances') }}">Авансовые отчеты</a></li>
-        <li class="active">Новая запись</li>
+        <li class="active">{{ $title }}</li>
     </ul>
     <!-- END BREADCRUMB -->
     <!-- page content -->
@@ -72,7 +72,7 @@
 
                     <div class="form-group">
                         <div class="col-xs-8">
-                            {!! Form::hidden('id_doc','',['class' => 'form-control','id'=>'id_doc','required'=>'required']) !!}
+                            {!! Form::hidden('id_doc',$model->id,['class' => 'form-control','id'=>'id_doc','required'=>'required']) !!}
                         </div>
                     </div>
 
@@ -87,13 +87,13 @@
     </div>
 
     <div class="row" id="doc_header">
-        <h2 class="text-center">Новый документ</h2>
-        {!! Form::open(['url' => route('addAdvance'),'class'=>'form-horizontal','method'=>'POST', 'id'=>'new_doc']) !!}
+        <h2 class="text-center">{{ $title }}</h2>
+        {!! Form::open(['url' => route('advanceEdit',['id'=>$model->id]),'class'=>'form-horizontal','method'=>'POST', 'id'=>'new_doc']) !!}
 
         <div class="form-group">
             {!! Form::label('doc_num', 'Документ №:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::text('doc_num', $doc_num, ['class' => 'form-control','placeholder'=>'Введите номер документа','required' => 'required', 'id' => 'doc_num'])!!}
+                {!! Form::text('doc_num', $model->doc_num, ['class' => 'form-control','placeholder'=>'Введите номер документа','required' => 'required', 'id' => 'doc_num'])!!}
                 {!! $errors->first('doc_num', '<p class="text-danger">:message</p>') !!}
             </div>
         </div>
@@ -101,35 +101,35 @@
         <div class="form-group">
             {!! Form::label('person_id', 'Подотчетное лицо:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::select('person_id', $persel, old('person_id'),['class' => 'form-control','required' => 'required', 'id' => 'person_id']); !!}
+                {!! Form::select('person_id', $persel, $model->person_id, ['class' => 'form-control','required' => 'required', 'id' => 'person_id']); !!}
             </div>
         </div>
 
         <div class="form-group">
             {!! Form::label('currency_id', 'Валюта:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::select('currency_id', $currsel, old('currency_id'),['class' => 'form-control','required' => 'required', 'id' => 'currency_id']); !!}
+                {!! Form::select('currency_id', $currsel, $model->currency_id, ['class' => 'form-control','required' => 'required', 'id' => 'currency_id']); !!}
             </div>
         </div>
 
         <div class="form-group">
             {!! Form::label('org_id', 'Организация:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::select('org_id', $orgsel, old('org_id'),['class' => 'form-control','required' => 'required', 'id' => 'org_id']); !!}
+                {!! Form::select('org_id', $orgsel, $model->org_id, ['class' => 'form-control','required' => 'required', 'id' => 'org_id']); !!}
             </div>
         </div>
 
         <div class="form-group">
             {!! Form::label('comment', 'Комментарий:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::text('comment', old('comment'),['class' => 'form-control','placeholder'=>'Введите комментарий', 'id' => 'comment'])!!}
+                {!! Form::text('comment', $model->comment, ['class' => 'form-control','placeholder'=>'Введите комментарий', 'id' => 'comment'])!!}
                 {!! $errors->first('comment', '<p class="text-danger">:message</p>') !!}
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-xs-offset-2 col-xs-10">
-                {!! Form::button('Сохранить', ['class' => 'btn btn-primary','type'=>'submit', 'id'=>'addBtn']) !!}
+                {!! Form::button('Обновить', ['class' => 'btn btn-primary','type'=>'submit', 'id'=>'addBtn']) !!}
             </div>
         </div>
 
@@ -145,22 +145,40 @@
                 </a>
             </div>
         </div>
-            <div class="x_panel">
-        <table id="doc_table" class="table table-striped table-bordered">
-            <thead>
-            <tr>
-                <th>Документ расхода</th>
-                <th>Контрагент</th>
-                <th>Договор</th>
-                <th>Содержание</th>
-                <th>Сумма</th>
-                <th>Счета расчетов</th>
-                <th>Действия</th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+        <div class="x_panel">
+            <table id="doc_table" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Документ расхода</th>
+                    <th>Контрагент</th>
+                    <th>Договор</th>
+                    <th>Содержание</th>
+                    <th>Сумма</th>
+                    <th>Счета расчетов</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                @if($positions)
+                    @foreach($positions as $position)
+                        <tr id="{{ $position->id }}" class="advance_pos">
+                            <td>{{ $position->text }}</td>
+                            <td>{{ $position->firm->name }}</td>
+                            <td>{{ $position->contract->name }}</td>
+                            <td>{{ $position->comment }}</td>
+                            <td>{{ $position->amount }}</td>
+                            <td>{{ $position->buhcode->code }}</td>
+                            <td style="width:70px;">
+                                <div class="form-group" role="group">
+                                    <button class="btn btn-danger btn-sm pos_delete" type="button" title="Удалить позицию"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
+                </tbody>
+            </table>
+        </div>
     </div>
 
     </div>
@@ -169,19 +187,10 @@
 @section('user_script')
     <script src="/js/typeahead.min.js"></script>
     <script>
-        $('.x_panel').hide();
-        $('.x_content').hide();
-        $("#person_id").prepend($('<option value="0">Выберите подотчетное лицо</option>'));
-        $("#person_id :first").attr("selected", "selected");
-        $("#person_id :first").attr("disabled", "disabled");
-        $("#org_id").prepend($('<option value="0">Выберите организацию</option>'));
-        $("#org_id :first").attr("selected", "selected");
-        $("#org_id :first").attr("disabled", "disabled");
-
-        var url_firm = "{{ route('getOrg') }}";
+        var url = "{{ route('getOrg') }}";
         $('#search_firm').typeahead({
             source:  function (query, process) {
-                return $.get(url_firm, { query: query }, function (data) {
+                return $.get(url, { query: query }, function (data) {
                     return process(data);
                 });
             }
@@ -189,6 +198,31 @@
 
         $('#new_pos').click(function(){
             $("#buhcode_id :contains('76.09')").attr("selected", "selected");
+        });
+
+        $('.pos_delete').click(function(){
+            var id = $(this).parent().parent().parent().attr("id");
+            var x = confirm("Выбранная запись будет удалена. Продолжить (Да/Нет)?");
+            if (x) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('delAdvancePos') }}',
+                    data: {'id':id},
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(res){
+                        //alert(res);
+                        if(res=='OK')
+                            $('#'+id).hide();
+                        if(res=='NO')
+                            alert('Выполнение операции запрещено!');
+                    }
+                });
+            }
+            else {
+                return false;
+            }
         });
 
         $( "#search_firm" ).blur(function() {
@@ -276,41 +310,11 @@
                         if (res) {
                             $('#addBtn').prop('disabled', true);
                             $('#addBtn').hide();
-                            $('.x_panel').show();
-                            $('.x_content').show();
-                            $('#id_doc').val(res);
                         }
                     }
                 });
             }
         });
-
-        $(document).on ({
-            click: function() {
-                var id = $(this).parent().parent().parent().attr("id");
-                var x = confirm("Выбранная запись будет удалена. Продолжить (Да/Нет)?");
-                if (x) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ route('delAdvancePos') }}',
-                        data: {'id':id},
-                        headers: {
-                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(res){
-                            //alert(res);
-                            if(res=='OK')
-                                $('#'+id).hide();
-                            if(res=='NO')
-                                alert('Выполнение операции запрещено!');
-                        }
-                    });
-                }
-                else {
-                    return false;
-                }
-            }
-        }, ".pos_delete" );
 
     </script>
 @endsection

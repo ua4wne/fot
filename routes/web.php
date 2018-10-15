@@ -286,8 +286,12 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/add',['uses'=>'Ajax\AdvanceController@create','as'=>'addAdvance']);
         //advances/ajax/addpos
         Route::post('/ajax/addpos',['uses'=>'Ajax\AdvanceController@addPosition','as'=>'addAdvancePos']);
+        //advances/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\AdvanceController@delete','as'=>'delAdvance']);
+        //advances/ajax/delpos
+        Route::post('/ajax/delpos',['uses'=>'Ajax\AdvanceController@deletePosition','as'=>'delAdvancePos']);
         //advances/edit
-        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'AdvanceController@edit','as'=>'advanceEdit']);
+        Route::match(['get','post'],'/edit/{id}',['uses'=>'AdvanceController@edit','as'=>'advanceEdit']);
     });
 });
 

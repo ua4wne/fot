@@ -58,7 +58,6 @@
                 @endforeach
                 </tbody>
             </table>
-            {{ $persons->links() }}
         @endif
     </div>
     </div>

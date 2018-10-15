@@ -59,9 +59,8 @@ class AdvanceController extends Controller
                     <td>'.$model->comment.'</td>
                     <td>'.$model->amount.'</td>
                     <td>'.$model->buhcode->code.'</td>                  
-                    <td style="width:110px;">
+                    <td style="width:70px;">
                         <div class="form-group" role="group">
-                            <button class="btn btn-success btn-sm pos_edit" type="button" data-toggle="modal" data-target="#editPos" title="Редактировать позицию"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
                             <button class="btn btn-danger btn-sm pos_delete" type="button" title="Удалить позицию"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                         </div>
                     </td>
@@ -70,6 +69,48 @@ class AdvanceController extends Controller
             }
             else{
                 return null;
+            }
+        }
+    }
+
+    public function delete(Request $request){
+        if($request->isMethod('post')){
+            $id = $request->input('id');
+            $model = Advance::find($id);
+            if(!Role::granted('finance')){
+                $msg = 'Попытка удаления документа авансового отчета '. $model->doc_num;
+                //вызываем event
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                return 'NO';
+            }
+            AdvanceTable::where(['advance_id'=>$id])->delete(); //удаляем связанные записи
+            if($model->delete()) {
+                $msg = 'Авансовый отчет '. $model->doc_num .' был удален!';
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
+                return 'OK';
+            }
+            else{
+                return 'ERR';
+            }
+        }
+    }
+
+    public function deletePosition(Request $request){
+        if($request->isMethod('post')){
+            $id = $request->input('id');
+            $model = AdvanceTable::find($id);
+            if(!Role::granted('finance')){
+                $msg = 'Попытка удаления позиции документа авансового отчета '. $model->advance->doc_num;
+                //вызываем event
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                return 'NO';
+            }
+            if($model->delete()) {
+                return 'OK';
+            }
+            else{
+                return 'ERR';
             }
         }
     }
