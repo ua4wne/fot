@@ -114,4 +114,31 @@ class AdvanceController extends Controller
             }
         }
     }
+
+    public function edit(Request $request){
+        if($request->isMethod('post')){
+            $input = $request->except('_token'); //параметр _token нам не нужен
+            if(!Role::granted('finance')){
+                $msg = 'Попытка редактирования документа авансового отчета №'. $input['doc_num'];
+                //вызываем event
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                return 'NO';
+            }
+            $id = $request->input('id');
+            $model = Advance::find($id);
+            if(!empty($model)){
+                $model->fill($input);
+                $model->user_id = Auth::id();
+                if($model->update()) {
+                    $msg = 'Был отредактирован документ №'. $input['doc_num'] .' ID документа '.$id;
+                    //вызываем event
+                    event(new AddEventLogs('info',Auth::id(),$msg));
+                    return $model->id;
+                }
+            }
+            else{
+                return null;
+            }
+        }
+    }
 }

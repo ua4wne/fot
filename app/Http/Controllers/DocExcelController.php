@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Advance;
 use App\Models\BankAccount;
 use App\Models\Buhcode;
 use App\Models\CashDoc;
+use App\Models\Currency;
 use App\Models\Operation;
 use App\Models\Organisation;
+use App\Models\Person;
 use App\Models\Statement;
 use App\User;
 use Illuminate\Http\Request;
@@ -137,6 +140,50 @@ class DocExcelController extends Controller
             //вызываем event
             event(new AddEventLogs('info',Auth::id(),$msg));
             return redirect('/statements')->with('status','Обработано записей: '.$num);
+        }
+    }
+
+    public function importAdvances(Request $request){
+        if($request->hasFile('file')){
+            //set_time_limit(300);
+            $path = $request->file('file')->getRealPath();
+            $excel = PHPExcel_IOFactory::load($path);
+            // Цикл по листам Excel-файла
+            foreach ($excel->getWorksheetIterator() as $worksheet) {
+                // выгружаем данные из объекта в массив
+                $tables[] = $worksheet->toArray();
+            }
+            $num=0;
+            $currency_id = Currency::where(array('dcode'=>'643'))->first()->id;
+            // Цикл по листам Excel-файла
+            foreach( $tables as $table ) {
+                $rows = count($table);
+                for($i=1;$i<$rows;$i++){
+                    $row = $table[$i];
+                    $date = $row[0];
+                    $dt1 = explode(' ',$date);
+                    $tmp = explode('.', $dt1[0]);
+                    $date = $tmp[2].'-'.$tmp[1].'-'.$tmp[0].' '.$dt1[1];
+                    $doc_num = $row[1];
+                    $person = $row[2];
+                    $person_id = Person::firstOrCreate(array('fio'=>$person))->id;
+                    $amount = $row[3];
+                    $amount = str_replace(',','',$amount);
+                    $org = $row[5];
+                    $org_id = Organisation::firstOrCreate(array('name'=>$org))->id;
+                    $user = $row[6];
+                    $user_id = User::where(array('name'=>$user))->first()->id;
+                    // Получение документа по свойствам, или создание нового экземпляра
+                    $doc = Advance::firstOrCreate(array('user_id'=>$user_id,'doc_num'=>$doc_num,'person_id'=>$person_id,'amount'=>$amount,'currency_id'=>$currency_id,'org_id'=>$org_id,'created_at'=>$date));
+                    $doc->created_at = $date;
+                    if($doc->save())
+                        $num++;
+                }
+            }
+            $msg = 'Выполнение импорта из файла Excel банковских выписок!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
+            return redirect('/advances')->with('status','Обработано записей: '.$num);
         }
     }
 }

@@ -128,6 +128,12 @@
         </div>
 
         <div class="form-group">
+            <div class="col-xs-8">
+                {!! Form::hidden('id',$model->id,['class' => 'form-control', 'required'=>'required']) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-xs-offset-2 col-xs-10">
                 {!! Form::button('Обновить', ['class' => 'btn btn-primary','type'=>'submit', 'id'=>'addBtn']) !!}
             </div>
@@ -303,7 +309,7 @@
             else {
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('addAdvance') }}',
+                    url: '{{ route('editAdvance') }}',
                     data: $('#new_doc').serialize(),
                     success: function (res) {
                         //alert(res);

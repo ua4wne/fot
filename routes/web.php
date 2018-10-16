@@ -290,8 +290,10 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/delete',['uses'=>'Ajax\AdvanceController@delete','as'=>'delAdvance']);
         //advances/ajax/delpos
         Route::post('/ajax/delpos',['uses'=>'Ajax\AdvanceController@deletePosition','as'=>'delAdvancePos']);
+        //advances/ajax/edit
+        Route::post('/ajax/edit',['uses'=>'Ajax\AdvanceController@edit','as'=>'editAdvance']);
         //advances/edit
-        Route::match(['get','post'],'/edit/{id}',['uses'=>'AdvanceController@edit','as'=>'advanceEdit']);
+        Route::get('/edit/{id}',['uses'=>'AdvanceController@edit','as'=>'advanceEdit']);
     });
 });
 
