@@ -28,6 +28,8 @@ Route::middleware(['auth'])->group(function(){
         Route::post('import-cash_doc', 'DocExcelController@importCashDoc')->name('importCashDoc');
         Route::post('import-statements', 'DocExcelController@importStatements')->name('importStatements');
         Route::post('import-advances', 'DocExcelController@importAdvances')->name('importAdvances');
+        Route::post('import-sales', 'DocExcelController@importSales')->name('importSales');
+        Route::post('import-purchases', 'DocExcelController@importPurchases')->name('importPurchases');
     });
 
     //currency/ группа обработки роутов справочника currency
@@ -294,6 +296,58 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/edit',['uses'=>'Ajax\AdvanceController@edit','as'=>'editAdvance']);
         //advances/edit
         Route::get('/edit/{id}',['uses'=>'AdvanceController@edit','as'=>'advanceEdit']);
+    });
+
+    //nomenclatures/ группа обработки роутов nomenclatures
+    Route::group(['prefix'=>'nomenclatures'], function(){
+        Route::get('/',['uses'=>'References\NomenclatureController@index','as'=>'nomenclatures']);
+        Route::get('/view/{id}',['uses'=>'References\NomenclatureController@view','as'=>'nomenclatureView']);
+        //nomenclature/addgroup
+        Route::match(['get','post'],'/addgroup',['uses'=>'Ajax\NomenclatureController@createGroup','as'=>'groupNomenclatureAdd']);
+        //nomenclature/add
+        Route::match(['get','post'],'/add',['uses'=>'Ajax\NomenclatureController@create','as'=>'nomenclatureAdd']);
+        //nomenclature/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\NomenclatureController@delete','as'=>'deleteNomenclature']);
+    });
+
+    //sales/ группа обработки роутов sales
+    Route::group(['prefix'=>'sales'], function(){
+        Route::match(['get','post'],'/',['uses'=>'SaleController@index','as'=>'sales']);
+        Route::get('/view/{id}',['uses'=>'SaleController@view','as'=>'saleView']);
+        //sales/add
+        Route::get('/add',['uses'=>'SaleController@create','as'=>'saleAdd']);
+        //sales/ajax/add
+        Route::post('/ajax/add',['uses'=>'Ajax\SaleController@create','as'=>'addSale']);
+        //sales/ajax/addpos
+        Route::post('/ajax/addpos',['uses'=>'Ajax\SaleController@addPosition','as'=>'addSalePos']);
+        //sales/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\SaleController@delete','as'=>'delSale']);
+        //sales/ajax/delpos
+        Route::post('/ajax/delpos',['uses'=>'Ajax\SaleController@deletePosition','as'=>'delSalePos']);
+        //sales/ajax/edit
+        Route::post('/ajax/edit',['uses'=>'Ajax\SaleController@edit','as'=>'editSale']);
+        //sales/edit
+        //Route::get('/edit/{id}',['uses'=>'SaleController@edit','as'=>'saleEdit']);
+    });
+
+    //purchases/ группа обработки роутов purchases
+    Route::group(['prefix'=>'purchases'], function(){
+        Route::match(['get','post'],'/',['uses'=>'PurchaseController@index','as'=>'purchases']);
+        Route::get('/view/{id}',['uses'=>'PurchaseController@view','as'=>'purchaseView']);
+        //purchases/add
+        Route::get('/add',['uses'=>'PurchaseController@create','as'=>'purchaseAdd']);
+        //purchases/ajax/add
+        Route::post('/ajax/add',['uses'=>'Ajax\PurchaseController@create','as'=>'addPurchase']);
+        //purchases/ajax/addpos
+        Route::post('/ajax/addpos',['uses'=>'Ajax\PurchaseController@addPosition','as'=>'addPurchasePos']);
+        //purchases/ajax/delete
+        Route::post('/ajax/delete',['uses'=>'Ajax\PurchaseController@delete','as'=>'delPurchase']);
+        //purchases/ajax/delpos
+        Route::post('/ajax/delpos',['uses'=>'Ajax\PurchaseController@deletePosition','as'=>'delPurchasePos']);
+        //purchases/ajax/edit
+        Route::post('/ajax/edit',['uses'=>'Ajax\PurchaseController@edit','as'=>'editPurchase']);
+        //purchases/edit
+        //Route::get('/edit/{id}',['uses'=>'SaleController@edit','as'=>'saleEdit']);
     });
 });
 

@@ -75,8 +75,9 @@
                                 </li>
                                 <li><a><i class="fa fa-credit-card"></i> Покупки и продажи <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="general_elements.html">Реализация (продажи)</a></li>
-                                        <li><a href="media_gallery.html">Поступление (покупки)</a></li>
+                                        <li><a href="{{ route('sales') }}">Реализация (продажи)</a></li>
+                                        <li><a href="{{ route('purchases') }}">Поступление (покупки)</a></li>
+                                        <li><a href="{{ route('nomenclatures') }}">Номенклатура</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-users"></i> Сотрудники и зарплата <span class="fa fa-chevron-down"></span></a>
