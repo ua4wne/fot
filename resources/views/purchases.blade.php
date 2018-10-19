@@ -8,7 +8,7 @@
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb">
         <li><a href="{{ route('main') }}">Рабочий стол</a></li>
-        <li class="active"><a href="{{ route('sales') }}">{{ $title }}</a></li>
+        <li class="active"><a href="{{ route('purchases') }}">{{ $title }}</a></li>
     </ul>
     <!-- END BREADCRUMB -->
     <!-- page content -->
@@ -64,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="importSale" tabindex="-1" role="dialog" aria-labelledby="importSale" aria-hidden="true">
+        <div class="modal fade" id="importPurchase" tabindex="-1" role="dialog" aria-labelledby="importPurchase" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -73,7 +73,7 @@
                         </button>
                         <h4 class="modal-title">Загрузка данных</h4>
                     </div>
-                    {!! Form::open(array('route' => 'importSales','method'=>'POST','files'=>'true')) !!}
+                    {!! Form::open(array('route' => 'importPurchases','method'=>'POST','files'=>'true')) !!}
                     <div class="modal-body">
 
                         <div class="form-group">
@@ -99,13 +99,13 @@
                 @if(\App\Models\Role::granted('import_sale_doc'))
                     <div class="btn-group">
                         <a href="#">
-                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#importSale"><i class="fa fa-upload fa-fw"></i> Импорт</button>
+                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#importPurchase"><i class="fa fa-upload fa-fw"></i> Импорт</button>
                         </a>
                     </div>
                 @endif
                 <div class="btn-group">
-                    <a href="{{route('saleAdd')}}">
-                        <button type="button" class="btn btn-primary btn-sm">Новая реализация</button>
+                    <a href="{{route('purchaseAdd')}}">
+                        <button type="button" class="btn btn-primary btn-sm">Новый приход</button>
                     </a>
                 </div>
 
@@ -140,14 +140,14 @@
                     <td>{{ $doc->created_at }}</td>
                     <td>{{ $doc->doc_num }}</td>
                     <td>{{ $doc->firm->name }}</td>
-                    <td>{{ \App\Models\SaleTable::where(['sale_id'=>$doc->id])->sum('amount') }}</td>
+                    <td>{{ \App\Models\PurchaseTable::where(['purchase_id'=>$doc->id])->sum('amount') }}</td>
                     <td>{{ $doc->currency->name }}</td>
                     <td>{{ $doc->organisation->name }}</td>
                     <td>{{ \App\User::find($doc->user_id)->name }}</td>
                     <td>{{ $doc->comment }}</td>
                     <td style="width:110px;">
                         <div class="form-group" role="group">
-                            <a href="{{route('saleEdit',['id'=>$doc->id])}}"><button class="btn btn-success btn-sm" type="button" title="Редактировать документ"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button></a>
+                            <a href="{{route('purchaseEdit',['id'=>$doc->id])}}"><button class="btn btn-success btn-sm" type="button" title="Редактировать документ"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button></a>
                             <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                         </div>
                     </td>
@@ -180,7 +180,7 @@
             if (x) {
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('delSale') }}',
+                    url: '{{ route('delPurchase') }}',
                     data: {'id':id},
                     headers: {
                         'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')

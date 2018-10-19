@@ -327,7 +327,7 @@ Route::middleware(['auth'])->group(function(){
         //sales/ajax/edit
         Route::post('/ajax/edit',['uses'=>'Ajax\SaleController@edit','as'=>'editSale']);
         //sales/edit
-        //Route::get('/edit/{id}',['uses'=>'SaleController@edit','as'=>'saleEdit']);
+        Route::get('/edit/{id}',['uses'=>'SaleController@edit','as'=>'saleEdit']);
     });
 
     //purchases/ группа обработки роутов purchases
@@ -347,7 +347,7 @@ Route::middleware(['auth'])->group(function(){
         //purchases/ajax/edit
         Route::post('/ajax/edit',['uses'=>'Ajax\PurchaseController@edit','as'=>'editPurchase']);
         //purchases/edit
-        //Route::get('/edit/{id}',['uses'=>'SaleController@edit','as'=>'saleEdit']);
+        Route::get('/edit/{id}',['uses'=>'PurchaseController@edit','as'=>'purchaseEdit']);
     });
 });
 

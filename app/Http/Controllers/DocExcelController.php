@@ -6,10 +6,12 @@ use App\Models\Advance;
 use App\Models\BankAccount;
 use App\Models\Buhcode;
 use App\Models\CashDoc;
+use App\Models\Contract;
 use App\Models\Currency;
 use App\Models\Operation;
 use App\Models\Organisation;
 use App\Models\Person;
+use App\Models\Sale;
 use App\Models\Statement;
 use App\User;
 use Illuminate\Http\Request;
@@ -184,6 +186,52 @@ class DocExcelController extends Controller
             //вызываем event
             event(new AddEventLogs('info',Auth::id(),$msg));
             return redirect('/advances')->with('status','Обработано записей: '.$num);
+        }
+    }
+
+    public function importSales(Request $request){
+        if($request->hasFile('file')){
+            set_time_limit(300);
+            $path = $request->file('file')->getRealPath();
+            $excel = PHPExcel_IOFactory::load($path);
+            // Цикл по листам Excel-файла
+            foreach ($excel->getWorksheetIterator() as $worksheet) {
+                // выгружаем данные из объекта в массив
+                $tables[] = $worksheet->toArray();
+            }
+            $num=0;
+            $currency_id = Currency::where(array('dcode'=>'643'))->first()->id;
+            $buhcode_id = Buhcode::where(array('code'=>'76.06'))->first()->id;
+            // Цикл по листам Excel-файла
+            foreach( $tables as $table ) {
+                $rows = count($table);
+                for($i=1;$i<$rows;$i++){
+                    $row = $table[$i];
+                    $date = $row[0];
+                    $dt1 = explode(' ',$date);
+                    $tmp = explode('.', $dt1[0]);
+                    $date = $tmp[2].'-'.$tmp[1].'-'.$tmp[0].' '.$dt1[1];
+                    $doc_num = $row[1];
+                    $firm = $row[2];
+                    $firm_id = Firm::firstOrCreate(array('name'=>$firm))->id;
+                    $org = $row[5];
+                    $org_id = Organisation::firstOrCreate(array('full_name'=>$org))->id;
+                    $contract_id = Contract::where('org_id',$org_id)->where('firm_id',$firm_id)->first()->id;
+                    $user = $row[6];
+                    $user_id = User::where(array('name'=>$user))->first()->id;
+                    $comment = $row[7];
+                    // Получение документа по свойствам, или создание нового экземпляра
+                    $doc = Sale::firstOrCreate(array('user_id'=>$user_id,'doc_num'=>$doc_num,'org_id'=>$org_id,'firm_id'=>$firm_id,'buhcode_id'=>$buhcode_id,
+                        'currency_id'=>$currency_id,'contract_id'=>$contract_id,'comment'=>$comment,'created_at'=>$date));
+                    $doc->created_at = $date;
+                    if($doc->save())
+                        $num++;
+                }
+            }
+            $msg = 'Выполнение импорта из файла Excel реализаций!';
+            //вызываем event
+            event(new AddEventLogs('info',Auth::id(),$msg));
+            return redirect('/sales')->with('status','Обработано записей: '.$num);
         }
     }
 }

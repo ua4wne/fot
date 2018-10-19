@@ -24,7 +24,10 @@ class CreatePurchasesTable extends Migration
             $table->foreign('firm_id')->references('id')->on('firms');
             $table->integer('buhcode_id')->unsigned();
             $table->foreign('buhcode_id')->references('id')->on('buhcodes');
-            $table->string('contract',150)->nullable();
+            $table->integer('currency_id')->unsigned();
+            $table->foreign('currency_id')->references('id')->on('currency');
+            $table->integer('contract_id')->unsigned();
+            $table->foreign('contract_id')->references('id')->on('contracts');
             $table->string('comment',200)->nullable();
             $table->timestamps();
         });
