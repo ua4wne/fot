@@ -82,7 +82,7 @@
                                 </li>
                                 <li><a><i class="fa fa-users"></i> Сотрудники и зарплата <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="#">Сотрудники</a></li>
+                                        {{--<li><a href="#">Сотрудники</a></li>--}}
                                         <li><a href="{{ route('persons') }}">Физические лица</a></li>
                                     </ul>
                                 </li>
@@ -122,7 +122,7 @@
                                         <li><a href="{{ route('typedocs') }}">Виды договоров</a></li>
                                         <li><a href="{{ route('settlements') }}">Виды расчетов</a></li>
                                         <li><a href="{{ route('codes') }}">План счетов бухучета</a></li>
-                                        <li><a href="profile.html">Счета расчетов с контрагентами</a></li>
+                                        {{--<li><a href="profile.html">Счета расчетов с контрагентами</a></li>--}}
                                     </ul>
                                 </li>
                                 @if(\App\User::hasRole('admin'))
@@ -149,8 +149,8 @@
                         <a data-toggle="tooltip" data-placement="top" title="FullScreen">
                             <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Lock">
-                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                        <a data-toggle="tooltip" data-placement="top" title="Журнал событий" href="{{ route('eventlog') }}">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                         </a>
                         <a data-toggle="tooltip" data-placement="top" title="Logout" href="{{ route('logout') }}">
                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>

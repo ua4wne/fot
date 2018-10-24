@@ -10,4 +10,9 @@ class Eventlog extends Model
     protected $table = 'eventlogs';
 
     protected $fillable = ['type','user_id','text','ip'];
+
+    public function users()
+    {
+        return $this->belongsTo('App\User','user_id','id');
+    }
 }

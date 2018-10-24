@@ -349,6 +349,13 @@ Route::middleware(['auth'])->group(function(){
         //purchases/edit
         Route::get('/edit/{id}',['uses'=>'PurchaseController@edit','as'=>'purchaseEdit']);
     });
+
+    //eventlog/ группа обработки роутов eventlog
+    Route::group(['prefix'=>'eventlog'], function(){
+        Route::get('/',['uses'=>'EventlogController@index','as'=>'eventlog']);
+        //eventlog/edit
+        Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'EventlogController@edit','as'=>'eventEdit']);
+    });
 });
 
 Auth::routes();

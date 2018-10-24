@@ -115,7 +115,7 @@
         <div class="form-group">
             {!! Form::label('contract','Договор:',['class' => 'col-xs-2 control-label'])   !!}
             <div class="col-xs-8">
-                {!! Form::select('contract',array(),old('contract'),['class' => 'form-control','required'=>'required','id'=>'contract'])!!}
+                {!! Form::select('contract',array(),old('contract'),['class' => 'form-control','id'=>'contract'])!!}
             </div>
         </div>
 

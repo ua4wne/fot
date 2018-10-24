@@ -30,7 +30,7 @@
                         </button>
                         <h4 class="modal-title">Выбор периода</h4>
                     </div>
-                    {!! Form::open(['url' => route('sales'),'id'=>'set_period','class'=>'form-horizontal','method'=>'POST']) !!}
+                    {!! Form::open(['url' => route('sales'),'class'=>'form-horizontal','method'=>'POST']) !!}
                     <div class="modal-body">
 
                         <div class="form-group">
