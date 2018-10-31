@@ -145,10 +145,11 @@
                     <td>{{ $doc->organisation->name }}</td>
                     <td>{{ \App\User::find($doc->user_id)->name }}</td>
                     <td>{{ $doc->comment }}</td>
-                    <td style="width:110px;">
+                    <td style="width:130px;">
                         <div class="form-group" role="group">
-                            <a href="{{route('advanceEdit',['id'=>$doc->id])}}"><button class="btn btn-success btn-sm" type="button" title="Редактировать документ"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button></a>
-                            <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                            <a href="{{route('advanceClone',['id'=>$doc->id])}}"><button class="btn btn-info btn-sm" type="button" title="Клонировать документ"><i class="fa fa-clone" aria-hidden="true"></i></button></a>
+                            <a href="{{route('advanceEdit',['id'=>$doc->id])}}"><button class="btn btn-success btn-sm" type="button" title="Редактировать документ"><i class="fa fa-edit" aria-hidden="true"></i></button></a>
+                            <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash" aria-hidden="true"></i></button>
                         </div>
                     </td>
                 </tr>

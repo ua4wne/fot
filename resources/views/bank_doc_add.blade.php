@@ -31,6 +31,13 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('created_at', 'Дата:',['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {{ Form::date('created_at', \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d')),['class' => 'form-control']) }}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('operation_id', 'Вид операции:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
                 {!! Form::select('operation_id', $opersel, old('operation_id'),['class' => 'form-control','id'=>'operation_id']); !!}
@@ -153,14 +160,14 @@
             });
         });
 
-        $( "#search_firm" ).blur(function() {
+        $("#search_firm").blur(function () {
             $("#contract").empty(); //очищаем от старых значений
             var firm = $("#search_firm").val();
             var org_id = $("#org_id option:selected").val();
             $.ajax({
                 type: 'POST',
                 url: '{{ route('findContract') }}',
-                data: {'firm': firm,'org_id':org_id},
+                data: {'firm': firm, 'org_id': org_id},
                 headers: {
                     'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
                 },

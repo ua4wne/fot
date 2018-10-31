@@ -99,6 +99,13 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('created_at', 'Дата:',['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {{ Form::date('created_at', \Carbon\Carbon::createFromFormat('Y-m-d', $created_at),['class' => 'form-control','required'=>'required','id'=>'created_at']) }}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('person_id', 'Подотчетное лицо:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
                 {!! Form::select('person_id', $persel, $model->person_id, ['class' => 'form-control','required' => 'required', 'id' => 'person_id']); !!}
@@ -277,6 +284,7 @@
                         //alert(res);
                         if (res) {
                             $("#doc_table").append($(res));
+                            $('#amount').val('');
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {

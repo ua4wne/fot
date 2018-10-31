@@ -9,7 +9,7 @@ class Advance extends Model
     //указываем имя таблицы
     protected $table = 'advances';
 
-    protected $fillable = ['user_id', 'doc_num', 'person_id', 'amount', 'currency_id', 'org_id', 'comment'];
+    protected $fillable = ['user_id', 'created_at', 'doc_num', 'person_id', 'amount', 'currency_id', 'org_id', 'comment'];
 
     public function advance_table()
     {

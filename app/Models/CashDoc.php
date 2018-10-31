@@ -9,7 +9,7 @@ class CashDoc extends Model
     //указываем имя таблицы
     protected $table = 'cash_docs';
 
-    protected $fillable = ['user_id', 'doc_num', 'direction', 'operation_id', 'buhcode_id', 'org_id', 'firm_id', 'amount', 'contract', 'comment'];
+    protected $fillable = ['user_id', 'created_at', 'doc_num', 'direction', 'operation_id', 'buhcode_id', 'org_id', 'firm_id', 'amount', 'contract', 'comment'];
 
     public function operation()
     {

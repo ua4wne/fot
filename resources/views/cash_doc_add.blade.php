@@ -31,6 +31,13 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('created_at', 'Дата:',['class'=>'col-xs-2 control-label']) !!}
+            <div class="col-xs-8">
+                {{ Form::date('created_at', \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d')),['class' => 'form-control','required'=>'required','id'=>'created_at']) }}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('operation_id', 'Вид операции:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
                 {!! Form::select('operation_id', $opersel, old('operation_id'),['class' => 'form-control']); !!}
@@ -100,14 +107,14 @@
     <script>
         var url = "{{ route('getOrg') }}";
         $('#search_firm').typeahead({
-            source:  function (query, process) {
-                return $.get(url, { query: query }, function (data) {
+            source: function (query, process) {
+                return $.get(url, {query: query}, function (data) {
                     return process(data);
                 });
             }
         });
 
-        $("#organ_id").prepend( $('<option value="0">Выберите организацию</option>'));
+        $("#organ_id").prepend($('<option value="0">Выберите организацию</option>'));
         $("#organ_id :first").attr("selected", "selected");
         $("#organ_id :first").attr("disabled", "disabled");
     </script>

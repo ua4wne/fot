@@ -253,8 +253,8 @@ Route::middleware(['auth'])->group(function(){
 
     //statements/ группа обработки роутов statements
     Route::group(['prefix'=>'statements'], function(){
-        Route::get('/',['uses'=>'StatementController@index','as'=>'statements']);
-        Route::post('/view',['uses'=>'StatementController@view','as'=>'statement_period']);
+        Route::match(['get','post'],'/',['uses'=>'StatementController@index','as'=>'statements']);
+        Route::get('/view/{id}',['uses'=>'StatementController@view','as'=>'statementView']);
         //statements/add
         Route::match(['get','post'],'/add/{direction}',['uses'=>'StatementController@create','as'=>'statementAdd']);
         //statements/ajax/edit
@@ -284,8 +284,12 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/view/{id}',['uses'=>'AdvanceController@view','as'=>'advanceView']);
         //advances/add
         Route::get('/add',['uses'=>'AdvanceController@create','as'=>'advanceAdd']);
+        //advances/clone
+        Route::get('/clone/{id}',['uses'=>'AdvanceController@clone','as'=>'advanceClone']);
         //advances/ajax/add
         Route::post('/ajax/add',['uses'=>'Ajax\AdvanceController@create','as'=>'addAdvance']);
+        //advances/ajax/clone
+        Route::post('/ajax/clone',['uses'=>'Ajax\AdvanceController@clone','as'=>'cloneAdvance']);
         //advances/ajax/addpos
         Route::post('/ajax/addpos',['uses'=>'Ajax\AdvanceController@addPosition','as'=>'addAdvancePos']);
         //advances/ajax/delete

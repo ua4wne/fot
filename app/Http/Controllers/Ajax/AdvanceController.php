@@ -38,6 +38,46 @@ class AdvanceController extends Controller
         }
     }
 
+    public function clone(Request $request){
+        if($request->isMethod('post')){
+            $input = $request->except('_token,id'); //параметр _token нам не нужен
+            $old_id = $request['id'];
+            $model = new Advance();
+            if(!Role::granted('finance')){
+                $msg = 'Попытка создания документа авансового отчета!'. $model->doc_num;
+                //вызываем event
+                event(new AddEventLogs('access',Auth::id(),$msg));
+                return 'NO';
+            }
+            $model->fill($input);
+            $model->user_id = Auth::id();
+            if($model->save()) {
+                //клонируем в новый документ позиции документа-источника
+                $positions = AdvanceTable::where('advance_id',$old_id)->get();
+                if(!empty($positions)){
+                    foreach ($positions as $pos){
+                        $table = new AdvanceTable();
+                        $table->advance_id = $model->id;
+                        $table->text = $pos->text;
+                        $table->firm_id = $pos->firm_id;
+                        $table->contract_id = $pos->contract_id;
+                        $table->comment = $pos->comment;
+                        $table->amount = $pos->amount;
+                        $table->buhcode_id = $pos->buhcode_id;
+                        $table->save();
+                    }
+                }
+                $msg = 'Добавлен новый авансовый отчет. Документ №'. $model->doc_num .' ID документа '.$model->id;
+                //вызываем event
+                event(new AddEventLogs('info',Auth::id(),$msg));
+                return $model->id;
+            }
+            else{
+                return null;
+            }
+        }
+    }
+
     public function addPosition(Request $request){
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен

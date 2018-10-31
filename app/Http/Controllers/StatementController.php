@@ -16,17 +16,17 @@ use Illuminate\Support\Facades\Auth;
 
 class StatementController extends Controller
 {
-    public function index(){
-        if(view()->exists('statements')){
-            $now = date('Y-m-d');
-            $arr = explode('-',$now);
-            $year = $arr[0];
-            $month = $arr[1];
-            $day = $arr[2];
-            $from = date('Y-m-d', strtotime("$year-$month-$day -1 month"));
-            $to = date('Y-m-d', strtotime("$year-$month-$day +1 day"));
-            //dd($from);
+    public function index(Request $request){
+        if($request->isMethod('post')){
+            $from = $request['from'];
+            $to = $request['to'];
             $docs = Statement::whereBetween('created_at',[$from, $to])->get();
+        }
+        else{
+            //$docs = Statement::all()->sortByDesc('created_at')->take(100);
+            $docs = Statement::orderBy('created_at', 'desc')->take(100)->get();
+        }
+        if(view()->exists('statements')){
             $operations = Operation::select(['id','name'])->get();
             $opersel = array();
             foreach ($operations as $operation){
@@ -56,42 +56,6 @@ class StatementController extends Controller
         abort(404);
     }
 
-    public function view(Request $request){
-        if($request->isMethod('post')){
-            $from = $request['from'];
-            $to = $request['to'];
-            $docs = Statement::whereBetween('created_at',[$from, $to])->get();
-            $operations = Operation::select(['id','name'])->get();
-            $opersel = array();
-            foreach ($operations as $operation){
-                $opersel[$operation->id] = $operation->name;
-            }
-            $orgs = Organisation::select(['id','name'])->get();
-            $orgsel = array();
-            foreach ($orgs as $org){
-                $orgsel[$org->id] = $org->name;
-            }
-            $buxcodes = Buhcode::select(['id','code'])->where(['show'=>1])->get();
-            $codesel = array();
-            foreach ($buxcodes as $buxcode){
-                $codesel[$buxcode->id] = $buxcode->code;
-            }
-        }
-        if(view()->exists('cash_doc')){
-            $data = [
-                'title' => 'Кассовые документы',
-                'head' => 'Журнал кассовых документов',
-                'docs' => $docs,
-                'orgsel' => $orgsel,
-                'opersel' => $opersel,
-                'codesel' => $codesel,
-            ];
-
-            return view('cash_doc',$data);
-        }
-        abort(404);
-    }
-
     public function create(Request $request,$direction){
         if(!Role::granted('bank_doc_add')){//вызываем event
             $msg = 'Попытка создания новой банковской выписки!';
@@ -112,6 +76,7 @@ class StatementController extends Controller
             ];
             $validator = Validator::make($input,[
                 'doc_num' => 'required|string|max:15',
+                'created_at' => 'required|date',
                 'operation_id' => 'required|integer',
                 'buhcode_id' => 'required|integer',
                 'bacc_id' => 'required|integer',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Ajax;
 
+use App\Http\Controllers\Lib\LibController;
 use App\Models\BankAccount;
 use App\Models\Contract;
 use App\Models\Firm;
@@ -60,17 +61,30 @@ class StatementController extends Controller
             if(isset($input['firm_id']))
                 $input['firm_id'] = Firm::where('name', $input['firm_id'])->first()->id;
             $id = $request->input('id_doc');
-            $model = Statement::find($id);
-            if(!Role::granted('sale_doc_edit')){
-                $msg = 'Попытка редактирования банковской выписки '. $model->doc_num;
-                //вызываем event
-                event(new AddEventLogs('access',Auth::id(),$msg));
-                return 'NO';
+            if($id=='new'){
+                if(!Role::granted('bank_doc_add')){
+                    $msg = 'Попытка создания новой банковской выписки!';
+                    //вызываем event
+                    event(new AddEventLogs('access',Auth::id(),$msg));
+                    return 'NO';
+                }
+                $model = new Statement();
+                $model->doc_num = LibController::GenNumberDoc('statement_docs');
             }
+            else{
+                $model = Statement::find($id);
+                if(!Role::granted('bank_doc_edit')){
+                    $msg = 'Попытка редактирования банковской выписки '. $model->doc_num;
+                    //вызываем event
+                    event(new AddEventLogs('access',Auth::id(),$msg));
+                    return 'NO';
+                }
+            }
+
             //проверяем, что есть такой договор с фирмой
             $contract = Contract::where('org_id',$input['org_id'])->where('firm_id',$input['firm_id'])->where('name',$input['contract'])->first();
             if(empty($contract))
-                return 'NO CONTRACT';
+                $input['contract'] = null;
             else
                 $input['contract'] = $contract->id;
             //проверяем, что есть такой банковский счет
@@ -81,15 +95,29 @@ class StatementController extends Controller
                 $input['bacc_id'] = $bacc->id;
             $model->fill($input);
             $model->user_id = Auth::id();
-            if($model->update()) {
-                $msg = 'Данные в банковской выписке '. $model->doc_num .' были обновлены! ID документа '.$model->id;
-                //вызываем event
-                event(new AddEventLogs('info',Auth::id(),$msg));
-                return 'OK';
+            if($id=='new'){
+                if($model->save()) {
+                    $msg = 'Новый документ '. $model->doc_num .' добавлен в банковские выписки!';
+                    //вызываем event
+                    event(new AddEventLogs('info',Auth::id(),$msg));
+                    return 'OK';
+                }
+                else{
+                    return 'ERR';
+                }
             }
             else{
-                return 'ERR';
+                if($model->update()) {
+                    $msg = 'Данные в банковской выписке '. $model->doc_num .' были обновлены! ID документа '.$model->id;
+                    //вызываем event
+                    event(new AddEventLogs('info',Auth::id(),$msg));
+                    return 'OK';
+                }
+                else{
+                    return 'ERR';
+                }
             }
+            return 'ERR';
         }
     }
 

@@ -18,15 +18,7 @@ class CashDocController extends Controller
 {
     public function index(){
         if(view()->exists('cash_doc')){
-            $now = date('Y-m-d');
-            $arr = explode('-',$now);
-            $year = $arr[0];
-            $month = $arr[1];
-            $day = $arr[2];
-            $from = date('Y-m-d', strtotime("$year-$month-$day -1 month"));
-            $to = date('Y-m-d', strtotime("$year-$month-$day +1 day"));
-            //dd($from);
-            $docs = CashDoc::whereBetween('created_at',[$from, $to])->get();
+            $docs = CashDoc::all()->sortByDesc('created_at')->take(100);
             $operations = Operation::select(['id','name'])->get();
             $opersel = array();
             foreach ($operations as $operation){

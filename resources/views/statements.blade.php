@@ -8,7 +8,7 @@
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb">
         <li><a href="{{ route('main') }}">Рабочий стол</a></li>
-        <li class="active">{{ $title }}</li>
+        <li class="active"><a href="{{ route('statements') }}">{{ $title }}</a></li>
     </ul>
     <!-- END BREADCRUMB -->
     <!-- page content -->
@@ -29,7 +29,7 @@
                     </button>
                     <h4 class="modal-title">Выбор периода</h4>
                 </div>
-                {!! Form::open(['url' => route('statement_period'),'id'=>'set_period','class'=>'form-horizontal','method'=>'POST']) !!}
+                {!! Form::open(['url' => route('statements'),'id'=>'set_period','class'=>'form-horizontal','method'=>'POST']) !!}
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -128,6 +128,13 @@
                         {!! Form::open(['url' => route('editStatement'),'id'=>'edit_doc','class'=>'form-horizontal','method'=>'POST']) !!}
 
                         <div class="form-group">
+                            {!! Form::label('created_at', 'Дата:',['class'=>'col-xs-2 control-label']) !!}
+                            <div class="col-xs-8">
+                                {{ Form::date('created_at', \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d')),['class' => 'form-control','required'=>'required','id'=>'created_at']) }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             {!! Form::label('operation_id', 'Вид операции:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
                                 {!! Form::select('operation_id', $opersel, old('operation_id'),['class' => 'form-control','required'=>'required','id'=>'operation_id']); !!}
@@ -172,7 +179,7 @@
                         <div class="form-group">
                             {!! Form::label('contract','Договор:',['class' => 'col-xs-2 control-label'])   !!}
                             <div class="col-xs-8">
-                                {!! Form::text('contract',old('contract'),['class' => 'form-control','placeholder'=>'Укажите договор','id'=>'contract','required'=>'required'])!!}
+                                {!! Form::text('contract',old('contract'),['class' => 'form-control','placeholder'=>'Укажите договор','id'=>'contract'])!!}
                             </div>
                         </div>
 
@@ -194,6 +201,12 @@
                         <div class="form-group">
                             <div class="col-xs-8">
                                 {!! Form::hidden('id_doc','',['class' => 'form-control','id'=>'id_doc','required'=>'required']) !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-8">
+                                {!! Form::hidden('direction','',['class' => 'form-control','id'=>'direction','required'=>'required']) !!}
                             </div>
                         </div>
 
@@ -241,10 +254,11 @@
                         <td>{{ $doc->organisation->name }}</td>
                         <td>{{ $doc->bank_account->account }}</td>
                         <td>{{ $doc->comment }}</td>
-                        <td style="width:110px;">
+                        <td style="width:140px;">
                             <div class="form-group" role="group">
-                                <button class="btn btn-success btn-sm doc_edit" type="button" data-toggle="modal" data-target="#editDoc" title="Редактировать документ"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
-                                <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                                <button class="btn btn-info btn-sm doc_clone" type="button" data-toggle="modal" data-target="#editDoc" title="Клонировать документ"><i class="fa fa-clone" aria-hidden="true"></i></button>
+                                <button class="btn btn-success btn-sm doc_edit" type="button" data-toggle="modal" data-target="#editDoc" title="Редактировать документ"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                                <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash" aria-hidden="true"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -260,9 +274,6 @@
 @section('user_script')
     <script src="/js/jquery.dataTables.min.js"></script>
     <script src="/js/typeahead.min.js"></script>
-    <!--<script src="/js/moment.min.js"></script>
-    <script src="/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="/js/ru.js"></script> -->
     <script>
         $(document).ready(function(){
             var options = {
@@ -280,15 +291,6 @@
             }
         });
 
-        /*$('#from').datetimepicker({
-            format: 'YYYY-MM-DD',
-            locale: 'ru'
-        });
-        $('#to').datetimepicker({
-            format: 'YYYY-MM-DD',
-            locale: 'ru'
-        }); */
-
         $('.doc_edit').click(function(){
             var id = $(this).parent().parent().parent().attr("id");
             var comment  = $(this).parent().parent().prev().text();
@@ -298,14 +300,65 @@
             var firm = $(this).parent().parent().prevAll().eq(4).text();
             var purpose = $(this).parent().parent().prevAll().eq(5).text();
             var amount = $(this).parent().parent().prevAll().eq(6).text();
-            if(amount.length == 0)
+            var direction = 'expense';
+            if(amount.length == 0){
+                direction = 'coming';
                 amount = $(this).parent().parent().prevAll().eq(7).text();
-
+            }
+            var created = $(this).parent().parent().prevAll().eq(8).text();
+            created = created.substr(0,10);
             $("#operation_id :contains("+operation+")").attr("selected", "selected");
             $('#comment').val(comment);
             $('#search_firm').val(firm);
             $("#org_id :contains("+org+")").attr("selected", "selected");
             $('#id_doc').val(id);
+            $('#direction').val(direction);
+            $('#bacc_id').val(bacc_id);
+            $('#amount').val(amount);
+            $('#purpose').val(purpose);
+            $('#created_at').val(created);
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('ParamStatement') }}',
+                data: {'id': id},
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (res) {
+                    //alert(res);
+                    var arr = jQuery.parseJSON(res);
+                    $.each(arr,function(key,value){
+                        if(key==0)
+                            $("#buhcode_id :contains("+value.toString()+")").attr("selected", "selected");
+                        if(key==1)
+                            $('#contract').val(value.toString());
+                    });
+
+                }
+            });
+        });
+
+        $('.doc_clone').click(function(){
+            //var id = $(this).parent().parent().parent().attr("id");
+            var comment  = $(this).parent().parent().prev().text();
+            var bacc_id = $(this).parent().parent().prevAll().eq(1).text();
+            var org = $(this).parent().parent().prevAll().eq(2).text();
+            var operation = $(this).parent().parent().prevAll().eq(3).text();
+            var firm = $(this).parent().parent().prevAll().eq(4).text();
+            var purpose = $(this).parent().parent().prevAll().eq(5).text();
+            var amount = $(this).parent().parent().prevAll().eq(6).text();
+            var direction = 'expense';
+            if(amount.length == 0){
+                direction = 'coming';
+                amount = $(this).parent().parent().prevAll().eq(7).text();
+            }
+            $("#operation_id :contains("+operation+")").attr("selected", "selected");
+            $('#comment').val(comment);
+            $('#search_firm').val(firm);
+            $("#org_id :contains("+org+")").attr("selected", "selected");
+            $('#id_doc').val('new');
+            $('#direction').val(direction);
             $('#bacc_id').val(bacc_id);
             $('#amount').val(amount);
             $('#purpose').val(purpose);

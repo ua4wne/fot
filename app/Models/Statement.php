@@ -9,7 +9,7 @@ class Statement extends Model
     //указываем имя таблицы
     protected $table = 'statements';
 
-    protected $fillable = ['user_id', 'doc_num', 'direction', 'operation_id', 'buhcode_id', 'org_id', 'bacc_id', 'firm_id', 'amount', 'contract', 'purpose', 'comment'];
+    protected $fillable = ['user_id', 'doc_num', 'created_at', 'direction', 'operation_id', 'buhcode_id', 'org_id', 'bacc_id', 'firm_id', 'amount', 'contract', 'purpose', 'comment'];
 
     public function operation()
     {
