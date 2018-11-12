@@ -129,7 +129,7 @@
         <div class="form-group">
             {!! Form::label('comment', 'Комментарий:',['class'=>'col-xs-2 control-label']) !!}
             <div class="col-xs-8">
-                {!! Form::text('comment', $model->comment, ['class' => 'form-control','placeholder'=>'Введите комментарий', 'id' => 'comment'])!!}
+                {!! Form::text('comment', $model->comment, ['class' => 'form-control','placeholder'=>'Введите комментарий', 'id' => 'comment_h'])!!}
                 {!! $errors->first('comment', '<p class="text-danger">:message</p>') !!}
             </div>
         </div>
@@ -213,30 +213,32 @@
             $("#buhcode_id :contains('76.09')").attr("selected", "selected");
         });
 
-        $('.pos_delete').click(function(){
-            var id = $(this).parent().parent().parent().attr("id");
-            var x = confirm("Выбранная запись будет удалена. Продолжить (Да/Нет)?");
-            if (x) {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('delAdvancePos') }}',
-                    data: {'id':id},
-                    headers: {
-                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(res){
-                        //alert(res);
-                        if(res=='OK')
-                            $('#'+id).hide();
-                        if(res=='NO')
-                            alert('Выполнение операции запрещено!');
-                    }
-                });
+        $(document).on ({
+            click: function() {
+                var id = $(this).parent().parent().parent().attr("id");
+                var x = confirm("Выбранная запись будет удалена. Продолжить (Да/Нет)?");
+                if (x) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('delAdvancePos') }}',
+                        data: {'id':id},
+                        headers: {
+                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(res){
+                            //alert(res);
+                            if(res=='OK')
+                                $('#'+id).hide();
+                            if(res=='NO')
+                                alert('Выполнение операции запрещено!');
+                        }
+                    });
+                }
+                else {
+                    return false;
+                }
             }
-            else {
-                return false;
-            }
-        });
+        }, ".pos_delete" );
 
         $( "#search_firm" ).blur(function() {
             $("#contract").empty(); //очищаем от старых значений
@@ -285,6 +287,7 @@
                         if (res) {
                             $("#doc_table").append($(res));
                             $('#amount').val('');
+                            $('#comment').val('');
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
@@ -329,6 +332,5 @@
                 });
             }
         });
-
     </script>
 @endsection

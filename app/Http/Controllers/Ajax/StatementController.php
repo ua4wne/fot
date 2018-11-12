@@ -100,7 +100,32 @@ class StatementController extends Controller
                     $msg = 'Новый документ '. $model->doc_num .' добавлен в банковские выписки!';
                     //вызываем event
                     event(new AddEventLogs('info',Auth::id(),$msg));
-                    return 'OK';
+                    //return 'OK';
+                    $content = '<tr id='.$model->id.'>
+                        <td>'. $model->created_at .'</td>';
+                    if($model->direction == 'coming'){
+                        $content.='<td>' . $model->amount . '</td>
+                            <td></td>';
+                    }
+                    else{
+                        $content.='<td></td>
+                            <td>' . $model->amount . '</td>';
+                    }
+                    $content.='<td>' . $model->purpose . '</td>
+                        <td>' . $model->firm->name . '</td>
+                        <td>' . $model->operation->name . '</td>
+                        <td>' . $model->organisation->name . '</td>
+                        <td>' . $model->bank_account->account . '</td>
+                        <td>' . $model->comment . '</td>
+                        <td style="width:140px;">
+                            <div class="form-group" role="group">
+                                <button class="btn btn-info btn-sm doc_clone" type="button" data-toggle="modal" data-target="#editDoc" title="Клонировать документ"><i class="fa fa-clone" aria-hidden="true"></i></button>
+                                <button class="btn btn-success btn-sm doc_edit" type="button" data-toggle="modal" data-target="#editDoc" title="Редактировать документ"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                                <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                            </div>
+                        </td>
+                    </tr>';
+                    return $content;
                 }
                 else{
                     return 'ERR';
@@ -111,7 +136,33 @@ class StatementController extends Controller
                     $msg = 'Данные в банковской выписке '. $model->doc_num .' были обновлены! ID документа '.$model->id;
                     //вызываем event
                     event(new AddEventLogs('info',Auth::id(),$msg));
-                    return 'OK';
+                    //return 'OK';
+
+                    $content = '<tr id='.$model->id.'>
+                        <td>'. $model->created_at .'</td>';
+                    if($model->direction == 'coming'){
+                        $content.='<td>' . $model->amount . '</td>
+                            <td></td>';
+                    }
+                    else{
+                        $content.='<td></td>
+                            <td>' . $model->amount . '</td>';
+                    }
+                    $content.='<td>' . $model->purpose . '</td>
+                        <td>' . $model->firm->name . '</td>
+                        <td>' . $model->operation->name . '</td>
+                        <td>' . $model->organisation->name . '</td>
+                        <td>' . $model->bank_account->account . '</td>
+                        <td>' . $model->comment . '</td>
+                        <td style="width:140px;">
+                            <div class="form-group" role="group">
+                                <button class="btn btn-info btn-sm doc_clone" type="button" data-toggle="modal" data-target="#editDoc" title="Клонировать документ"><i class="fa fa-clone" aria-hidden="true"></i></button>
+                                <button class="btn btn-success btn-sm doc_edit" type="button" data-toggle="modal" data-target="#editDoc" title="Редактировать документ"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                                <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                            </div>
+                        </td>
+                    </tr>';
+                    return $content;
                 }
                 else{
                     return 'ERR';

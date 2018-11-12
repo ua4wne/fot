@@ -409,9 +409,11 @@
                     url: '{{ route('editStatement') }}',
                     data: $('#edit_doc').serialize(),
                     success: function(res){
-                        //alert(res);
-                        if(res=='OK')
-                            window.location.replace('/statements');
+                        alert(res);
+                        if(res=='OK'){
+                            //window.location.replace('/statements');
+
+                        }
                         if(res=='NO')
                             alert('Выполнение операции запрещено!');
                         if(res=='NO CONTRACT')
@@ -420,6 +422,10 @@
                             alert('Банковский счет указан неверно. Операция прервана!');
                         if(res=='ERR')
                             alert('При обновлении данных возникла ошибка!');
+                        else{
+                            var id = $('#id_doc').val();
+                            $('#'+id).replaceWith(res);
+                        }
                     }
                 });
             }
