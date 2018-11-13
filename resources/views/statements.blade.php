@@ -330,7 +330,7 @@
                     var arr = jQuery.parseJSON(res);
                     $.each(arr,function(key,value){
                         if(key==0)
-                            $("#buhcode_id :contains("+value.toString()+")").attr("selected", "selected");
+                            $("#buhcode_id").replaceWith(value.toString());
                         if(key==1)
                             $('#contract').val(value.toString());
                     });
@@ -340,7 +340,7 @@
         });
 
         $('.doc_clone').click(function(){
-            //var id = $(this).parent().parent().parent().attr("id");
+            var id = $(this).parent().parent().parent().attr("id");
             var comment  = $(this).parent().parent().prev().text();
             var bacc_id = $(this).parent().parent().prevAll().eq(1).text();
             var org = $(this).parent().parent().prevAll().eq(2).text();
@@ -374,12 +374,13 @@
                     //alert(res);
                     var arr = jQuery.parseJSON(res);
                     $.each(arr,function(key,value){
-                        if(key==0)
-                            $("#buhcode_id :contains("+value.toString()+")").attr("selected", "selected");
+                        if(key==0){
+                            //$("#buhcode_id :contains("+value.toString()+")").attr("selected", "selected");
+                            $("#buhcode_id").replaceWith(value.toString());
+                        }
                         if(key==1)
                             $('#contract').val(value.toString());
                     });
-
                 }
             });
         });
@@ -387,6 +388,7 @@
         $('#edit_btn').click(function(e){
             e.preventDefault();
             var error=0;
+            var id = $('#id_doc').val();
             $("#edit_doc").find(":input").each(function() {// проверяем каждое поле ввода в форме
                 if($(this).attr("required")=='required'){ //обязательное для заполнения поле формы?
                     if(!$(this).val()){// если поле пустое
@@ -409,11 +411,7 @@
                     url: '{{ route('editStatement') }}',
                     data: $('#edit_doc').serialize(),
                     success: function(res){
-                        alert(res);
-                        if(res=='OK'){
-                            //window.location.replace('/statements');
-
-                        }
+                        //alert(res);
                         if(res=='NO')
                             alert('Выполнение операции запрещено!');
                         if(res=='NO CONTRACT')
@@ -423,8 +421,10 @@
                         if(res=='ERR')
                             alert('При обновлении данных возникла ошибка!');
                         else{
-                            var id = $('#id_doc').val();
-                            $('#'+id).replaceWith(res);
+                            if(id=='new')
+                                $('#datatable').append(res);
+                            else
+                                $('#'+id).replaceWith(res);
                         }
                     }
                 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Ajax;
 
 use App\Http\Controllers\Lib\LibController;
 use App\Models\BankAccount;
+use App\Models\Buhcode;
 use App\Models\Contract;
 use App\Models\Firm;
 use App\Models\Statement;
@@ -47,10 +48,21 @@ class StatementController extends Controller
             $id = $request->input('id');
             $doc = Statement::find($id);
             $params = array();
-            $contract = Contract::find($doc->contract)->name;
-            array_push($params,$doc->buhcode->code);
+            if($doc->contract)
+                $contract = Contract::find($doc->contract)->name;
+            else
+                $contract = '';
+            $content = '<select class="form-control" required="required" id="buhcode_id" name="buhcode_id">';
+            $codes = Buhcode::where(['show'=>1])->get();
+            foreach ($codes as $code){
+                if($code->code==$doc->buhcode->code)
+                    $content.='<option value="'.$code->id.'" selected="selected">'.$code->code.'</option>';
+                else
+                    $content.='<option value="'.$code->id.'">'.$code->code.'</option>';
+            }
+            $content.='</select>';
+            array_push($params,$content); //doc->buhcode->code
             array_push($params,$contract);
-
             return json_encode($params);
         }
     }
