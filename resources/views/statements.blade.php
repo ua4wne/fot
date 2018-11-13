@@ -177,9 +177,9 @@
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('contract','Договор:',['class' => 'col-xs-2 control-label'])   !!}
+                            {!! Form::label('contract', 'Договор:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
-                                {!! Form::text('contract',old('contract'),['class' => 'form-control','placeholder'=>'Укажите договор','id'=>'contract'])!!}
+                                {!! Form::select('contract', array() , old('contract'),['class' => 'form-control', 'id'=>'contract']); !!}
                             </div>
                         </div>
 
@@ -291,6 +291,24 @@
             }
         });
 
+        $("#search_firm").blur(function () {
+            $("#contract").empty(); //очищаем от старых значений
+            var firm = $("#search_firm").val();
+            var org_id = $("#org_id option:selected").val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('findContract') }}',
+                data: {'firm': firm, 'org_id': org_id},
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (res) {
+                    //alert(res);
+                    $("#contract").prepend($(res));
+                }
+            });
+        });
+
         $('.doc_edit').click(function(){
             var id = $(this).parent().parent().parent().attr("id");
             var comment  = $(this).parent().parent().prev().text();
@@ -334,7 +352,21 @@
                         if(key==1)
                             $('#contract').val(value.toString());
                     });
-
+                    $("#contract").empty(); //очищаем от старых значений
+                    var firm = $("#search_firm").val();
+                    var org_id = $("#org_id option:selected").val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('findContract') }}',
+                        data: {'firm': firm, 'org_id': org_id},
+                        headers: {
+                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (res) {
+                            //alert(res);
+                            $("#contract").prepend($(res));
+                        }
+                    });
                 }
             });
         });
@@ -380,6 +412,21 @@
                         }
                         if(key==1)
                             $('#contract').val(value.toString());
+                    });
+                    $("#contract").empty(); //очищаем от старых значений
+                    var firm = $("#search_firm").val();
+                    var org_id = $("#org_id option:selected").val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('findContract') }}',
+                        data: {'firm': firm, 'org_id': org_id},
+                        headers: {
+                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (res) {
+                            //alert(res);
+                            $("#contract").prepend($(res));
+                        }
                     });
                 }
             });

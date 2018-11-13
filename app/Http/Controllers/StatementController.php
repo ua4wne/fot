@@ -84,7 +84,7 @@ class StatementController extends Controller
                 'purpose' => 'required|string|max:250',
                 'firm_id' => 'required|integer',
                 'amount' => 'required|numeric',
-                'contract' => 'nullable|string|max:150',
+                'contract' => 'nullable|integer',
                 'comment' => 'nullable|string|max:200',
             ],$messages);
             if($validator->fails()){

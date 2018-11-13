@@ -94,11 +94,11 @@ class StatementController extends Controller
             }
 
             //проверяем, что есть такой договор с фирмой
-            $contract = Contract::where('org_id',$input['org_id'])->where('firm_id',$input['firm_id'])->where('name',$input['contract'])->first();
+            /*$contract = Contract::where('org_id',$input['org_id'])->where('firm_id',$input['firm_id'])->where('name',$input['contract'])->first();
             if(empty($contract))
                 $input['contract'] = null;
             else
-                $input['contract'] = $contract->id;
+                $input['contract'] = $contract->id;*/
             //проверяем, что есть такой банковский счет
             $bacc = BankAccount::where('org_id',$input['org_id'])->where('account',$input['bacc_id'])->first();
             if(empty($bacc))
