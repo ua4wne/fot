@@ -91,7 +91,7 @@
         <div class="form-group">
             {!! Form::label('purpose','Назначение платежа:',['class' => 'col-xs-2 control-label'])   !!}
             <div class="col-xs-8">
-                {!! Form::textarea('purpose',old('purpose'),['class' => 'form-control','placeholder'=>'Назначение платежа','rows' => 2, 'cols' => 40])!!}
+                {!! Form::textarea('purpose',old('purpose'),['class' => 'form-control','placeholder'=>'Назначение платежа','rows' => 2, 'cols' => 40, 'id' => 'purpose'])!!}
                 {!! $errors->first('purpose', '<p class="text-danger">:message</p>') !!}
             </div>
         </div>
@@ -131,8 +131,11 @@
         $("#org_id").prepend($('<option value="0">Выберите организацию</option>'));
         $("#org_id :first").attr("selected", "selected");
         $("#org_id :first").attr("disabled", "disabled");
-
-        $("#buhcode_id :contains('51')").attr("selected", "selected");
+        @if($direction == 'coming')
+            $("#buhcode_id :contains('76.06')").attr("selected", "selected");
+        @else
+            $("#buhcode_id :contains('76.05')").attr("selected", "selected");
+        @endif
 
         if ($('.text-center').text() == 'Списание с расчетного счета') {
             $("#operation_id :contains('Оплата поставщику')").attr("selected", "selected");
@@ -176,6 +179,11 @@
                     $("#contract").prepend($(res));
                 }
             });
+        });
+
+        $( "#contract" ).change(function() {
+            var txt = $('#contract option:selected').text();
+            $('#purpose').val(txt);
         });
 
     </script>
