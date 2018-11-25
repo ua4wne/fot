@@ -31,6 +31,8 @@ class CashDocController extends Controller
                 event(new AddEventLogs('access',Auth::id(),$msg));
                 return 'NO';
             }
+            $date = $input['created_at'].' H:i:s';
+            $input['created_at'] = date($date);
             $model->fill($input);
             $model->user_id = Auth::id();
             if($model->update()) {

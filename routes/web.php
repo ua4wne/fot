@@ -243,8 +243,10 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/ajax/getorg',['uses'=>'Ajax\CashDocController@ajaxData','as'=>'getOrg']);
         //cash_docs/add
         Route::match(['get','post'],'/add/{direction}',['uses'=>'CashDocController@create','as'=>'cashDocAdd']);
-        //cash_docs/edit
-        //Route::match(['get','post','delete'],'/edit/{id}',['uses'=>'CodeController@edit','as'=>'cashDocEdit']);
+        //cash_docs/filter
+        Route::get('/filter',['uses'=>'CashDocController@set_filter','as'=>'cashBookFilter']);
+        //cash_docs/cash_book
+        Route::post('/cash_book',['uses'=>'CashDocController@cash_book','as'=>'cash_book']);
         //cash/ajax/edit
         Route::post('/ajax/edit',['uses'=>'Ajax\CashDocController@edit','as'=>'editCashDoc']);
         //cash/ajax/delete

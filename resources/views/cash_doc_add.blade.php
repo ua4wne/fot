@@ -114,8 +114,6 @@
             }
         });
 
-        $("#organ_id").prepend($('<option value="0">Выберите организацию</option>'));
-        $("#organ_id :first").attr("selected", "selected");
-        $("#organ_id :first").attr("disabled", "disabled");
+        $("#organ_id :contains('Стандарт Юнион')").attr("selected", "selected");
     </script>
 @endsection

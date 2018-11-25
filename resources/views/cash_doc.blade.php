@@ -112,6 +112,9 @@
                 <a href="#">
                     <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#setPeriod"><i class="fa fa-search" aria-hidden="true"></i> Период</button>
                 </a>
+                <a href="{{ route('cashBookFilter') }}">
+                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-bar-chart" aria-hidden="true"></i> Кассовая книга</button>
+                </a>
             </div>
         </div>
 
@@ -131,6 +134,13 @@
                             {!! Form::label('doc_num', 'Документ №:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
                                 {!! Form::text('doc_num', old('doc_num'), ['class' => 'form-control','required'=>'required','id'=>'doc_num'])!!}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {!! Form::label('created_at', 'Дата:',['class'=>'col-xs-2 control-label']) !!}
+                            <div class="col-xs-8">
+                                {{ Form::date('created_at', \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d')),['class' => 'form-control','required'=>'required','id'=>'created_at']) }}
                             </div>
                         </div>
 
@@ -299,6 +309,8 @@
             if(amount.length == 0)
                 amount = $(this).parent().parent().prevAll().eq(7).text();
             var doc_num = $(this).parent().parent().prevAll().eq(8).text();
+            var created = $(this).parent().parent().prevAll().eq(9).text();
+            created = created.substr(0,10);
 
             $("#operation_id :contains("+operation+")").attr("selected", "selected");
             $('#comment').val(comment);
@@ -307,6 +319,7 @@
             $("#organ_id :contains("+org+")").attr("selected", "selected");
             $('#id_doc').val(id);
             $('#amount').val(amount);
+            $('#created_at').val(created);
         });
 
         $('#edit_btn').click(function(e){

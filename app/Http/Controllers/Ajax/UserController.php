@@ -75,6 +75,9 @@ class UserController extends Controller
                 event(new AddEventLogs('access',Auth::id(),$msg,$ip));
                 return 'NO';
             }
+            //удаляем роли
+            DB::table('role_user')->where('user_id', '=', $id)->delete();
+
             if($model->delete()) {
                 $msg = 'Учетная запись '.$model->login.' была удалена!';
                 $ip = $request->getClientIp();

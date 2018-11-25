@@ -116,6 +116,8 @@ class CashDocController extends Controller
             }
 
             $doc = new CashDoc();
+            $date = $input['created_at'].' H:i:s';
+            $input['created_at'] = date($date);
             $doc->fill($input);
             $doc->direction = $direction;
             $doc->user_id = Auth::id();
@@ -152,6 +154,123 @@ class CashDocController extends Controller
                 'codesel' => $codesel,
             ];
             return view('cash_doc_add', $data);
+        }
+        abort(404);
+    }
+
+    public function cash_book(Request $request){
+        if(!Role::granted('reports')){//вызываем event
+            $msg = 'Попытка чтения отчета по кассе!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на чтение отчетов!');
+        }
+
+        if($request->isMethod('post')){
+            $input = $request->except('_token'); //параметр _token нам не нужен
+            $docs = CashDoc::where(['org_id'=>$input['org_id']])->whereBetween('created_at', array($input['from'], $input['to']))->get();
+            if(!count($docs)){
+                $content='<h2 class="text-center">Нет данных за выбранный период!</h2>';
+                $content.='<img src="/images/smile.png" class="img-responsive center-block">';
+            }
+            else{
+                $coming = CashDoc::where('direction','coming')->where('created_at','<',$input['from'])->sum('amount');
+                $expense = CashDoc::where('direction','expense')->where('created_at','<',$input['from'])->sum('amount');
+                $balance = $coming - $expense;
+                $content='';
+                $old_date=date("d.m.Y");
+                $k = 0;
+                $in = 0;
+                $out = 0;
+                foreach($docs as $doc){
+                    $date = DATE_FORMAT($doc->created_at,"d.m.Y");
+                    if($date != $old_date) {
+                        if($k){
+                            $balance = $balance+$in-$out;
+                            $content.='<tr>
+                                    <th colspan="2"><span class="pull-right">Итого за день</span></th><td></td><th>'.$in.'</th><th>'.$out.'</th>
+                                </tr>';
+                            if($balance<0){
+                                $content.='<tr>
+                                    <th colspan="2"><span class="pull-right">Остаток на конец дня</span></th><td></td><th><p class="text-danger">'.$balance.'</p></th><th>X</th>
+                                </tr>';
+                            }
+                            else{
+                                $content.='<tr>
+                                    <th colspan="2"><span class="pull-right">Остаток на конец дня</span></th><td></td><th>'.$balance.'</th><th>X</th>
+                                </tr>';
+                            }
+                            $in = 0;
+                            $out = 0;
+                            $content.='</tbody>
+                                </table>';
+                        }
+                        $content .= '<h2 class="text-center">КАССА за ' . $date . '</h2>';
+                        $content .= '<table id="datatable" class="table table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Номер документа</th>
+                                    <th>От кого получено или кому выдано</th>
+                                    <th>Номер счета</th>
+                                    <th>Приход</th>
+                                    <th>Расход</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>';
+                                    if($balance<0)
+                                        $content.='<th colspan="2"><span class="pull-right">Остаток на начало дня</span></th><td></td><th><p class="text-danger">'.$balance.'</p></th><td>X</td>';
+                                    else
+                                        $content.='<th colspan="2"><span class="pull-right">Остаток на начало дня</span></th><td></td><th>'.$balance.'</th><td>X</td>';
+                                $content.='</tr>';
+                    }
+                    if($doc->direction=='coming'){
+                        $in+=$doc->amount;
+                        $content.='<tr><td>'.$doc->doc_num.'</td><td>Принято от '.$doc->firm->name.'</td><td>'.$doc->buhcode->code.'</td><td>'.$doc->amount.'</td><td></td></tr>';
+                    }
+                    if($doc->direction=='expense'){
+                        $out+=$doc->amount;
+                        $content.='<tr><td>'.$doc->doc_num.'</td><td>Выдано '.$doc->firm->name.'</td><td>'.$doc->buhcode->code.'</td><td></td><td>'.$doc->amount.'</td></tr>';
+                    }
+                    $old_date = $date;
+                    $k++;
+                }
+                //для последней таблицы
+                $balance = $balance+$in-$out;
+                $content.='<tr>
+                                    <th colspan="2"><span class="pull-right">Итого за день</span></th><td></td><th>'.$in.'</th><th>'.$out.'</th>
+                                </tr>';
+                $content.='<tr>
+                                    <th colspan="2"><span class="pull-right">Остаток на конец дня</span></th><td></td><th>'.$balance.'</th><th>X</th>
+                                </tr>';
+                $content.='</tbody>
+                                </table>';
+            }
+        }
+
+        if(view()->exists('reports.cash_book')){
+            $data = [
+                'title' => 'Кассовая книга',
+                'head' => 'Кассовая книга',
+                'content' => $content,
+            ];
+            return view('reports.cash_book', $data);
+        }
+        abort(404);
+    }
+
+    public function set_filter(){
+        if(view()->exists('reports.cash_book_filter')){
+            $orgs = Organisation::select(['id','name'])->get();
+            $orgsel = array();
+            foreach ($orgs as $org){
+                $orgsel[$org->id] = $org->name;
+            }
+            $data = [
+                'title' => 'Выбор периода',
+                'head' => 'Выбор периода',
+                'orgsel' => $orgsel,
+            ];
+            return view('reports.cash_book_filter', $data);
         }
         abort(404);
     }

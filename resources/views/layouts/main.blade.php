@@ -103,7 +103,7 @@
                                 </li>
                                 <li><a><i class="fa fa-bar-chart-o"></i> Отчеты <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="chartjs.html">Chart JS</a></li>
+                                        <li><a href="{{ route('cashBookFilter') }}">Кассовая книга</a></li>
                                         <li><a href="chartjs2.html">Chart JS2</a></li>
                                         <li><a href="morisjs.html">Moris JS</a></li>
                                         <li><a href="echarts.html">ECharts</a></li>
@@ -202,8 +202,8 @@
                             <div class="tile-stats">
                                 <div class="icon"><i class="fa fa-rub"></i></div>
                                 <div class="count">Касса</div>
-                                <h3>Остаток - {{ empty($kassa) ? '' : $kassa }} (руб.)</h3>
-                                <p>подробнее</p>
+                                <h3>Остаток : {{ empty($kassa) ? '0' : $kassa }} (руб.)</h3>
+                                <p><a href="{{ route('cashBookFilter') }}">подробнее</a></p>
                             </div>
                         </div>
                         <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
