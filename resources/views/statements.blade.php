@@ -290,6 +290,9 @@
                 });
             }
         });
+        $('#datatable').DataTable( {
+            "order": [[ 0, "desc" ]]
+        } );
 
         $("#search_firm").blur(function () {
             $("#contract").empty(); //очищаем от старых значений

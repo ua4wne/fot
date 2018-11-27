@@ -167,7 +167,8 @@ class CashDocController extends Controller
 
         if($request->isMethod('post')){
             $input = $request->except('_token'); //параметр _token нам не нужен
-            $docs = CashDoc::where(['org_id'=>$input['org_id']])->whereBetween('created_at', array($input['from'], $input['to']))->get();
+            $to = date('Y-m-d', strtotime($input['to'] .' +1 day'));
+            $docs = CashDoc::where(['org_id'=>$input['org_id']])->whereBetween('created_at', array($input['from'], $to))->get();
             if(!count($docs)){
                 $content='<h2 class="text-center">Нет данных за выбранный период!</h2>';
                 $content.='<img src="/images/smile.png" class="img-responsive center-block">';
@@ -177,7 +178,7 @@ class CashDocController extends Controller
                 $expense = CashDoc::where('direction','expense')->where('created_at','<',$input['from'])->sum('amount');
                 $balance = $coming - $expense;
                 $content='';
-                $old_date=date("d.m.Y");
+                $old_date='01.01.1999'; //date("d.m.Y");
                 $k = 0;
                 $in = 0;
                 $out = 0;

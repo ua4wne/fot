@@ -104,10 +104,8 @@
                                 <li><a><i class="fa fa-bar-chart-o"></i> Отчеты <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('cashBookFilter') }}">Кассовая книга</a></li>
-                                        <li><a href="chartjs2.html">Chart JS2</a></li>
-                                        <li><a href="morisjs.html">Moris JS</a></li>
-                                        <li><a href="echarts.html">ECharts</a></li>
-                                        <li><a href="other_charts.html">Other Charts</a></li>
+                                        <li><a href="#">Карточка счета</a></li>
+                                        <li><a href="#">Оборотно-сальдовая ведомость по счету</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -122,7 +120,6 @@
                                         <li><a href="{{ route('typedocs') }}">Виды договоров</a></li>
                                         <li><a href="{{ route('settlements') }}">Виды расчетов</a></li>
                                         <li><a href="{{ route('codes') }}">План счетов бухучета</a></li>
-                                        {{--<li><a href="profile.html">Счета расчетов с контрагентами</a></li>--}}
                                     </ul>
                                 </li>
                                 @if(\App\User::hasRole('admin'))
@@ -198,36 +195,28 @@
             @section('tile_widget')
                 <!-- top tiles -->
                     <div class="row top_tiles">
-                        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
                             <div class="tile-stats">
                                 <div class="icon"><i class="fa fa-rub"></i></div>
                                 <div class="count">Касса</div>
-                                <h3>Остаток : {{ empty($kassa) ? '0' : $kassa }} (руб.)</h3>
+                                <h3>Остаток: {{ empty($kassa) ? '0' : $kassa }} (руб.)</h3>
                                 <p><a href="{{ route('cashBookFilter') }}">подробнее</a></p>
                             </div>
                         </div>
-                        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
                             <div class="tile-stats">
-                                <div class="icon"><i class="fa fa-comments-o"></i></div>
-                                <div class="count">179</div>
-                                <h3>New Sign ups</h3>
-                                <p>Lorem ipsum psdea itgum rixt.</p>
+                                <div class="icon"><i class="fa fa-arrow-down"></i></div>
+                                <div class="count">Поступило</div>
+                                <h3>Итого: {{ empty($coming) ? '0' : $coming }} (руб.)</h3>
+                                <p><a href="#">подробнее</a></p>
                             </div>
                         </div>
-                        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
                             <div class="tile-stats">
-                                <div class="icon"><i class="fa fa-sort-amount-desc"></i></div>
-                                <div class="count">179</div>
-                                <h3>New Sign ups</h3>
-                                <p>Lorem ipsum psdea itgum rixt.</p>
-                            </div>
-                        </div>
-                        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                            <div class="tile-stats">
-                                <div class="icon"><i class="fa fa-check-square-o"></i></div>
-                                <div class="count">179</div>
-                                <h3>New Sign ups</h3>
-                                <p>Lorem ipsum psdea itgum rixt.</p>
+                                <div class="icon"><i class="fa fa-arrow-up"></i></div>
+                                <div class="count">Списано</div>
+                                <h3>Итого: {{ empty($expense) ? '0' : $expense }} (руб.)</h3>
+                                <p><a href="#">подробнее</a></p>
                             </div>
                         </div>
                     </div>
@@ -241,7 +230,7 @@
         <!-- footer content -->
         <footer>
             <div class="pull-right">
-                Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+                Великолепные системы
             </div>
             <div class="clearfix"></div>
         </footer>

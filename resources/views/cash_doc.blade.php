@@ -203,6 +203,12 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <div class="col-xs-8">
+                                {!! Form::hidden('direction','',['class' => 'form-control','id'=>'direction','required'=>'required']) !!}
+                            </div>
+                        </div>
+
                         {!! Form::close() !!}
                     </div>
                     <div class="modal-footer">
@@ -249,8 +255,9 @@
                         <td>{{ $doc->organisation->name }}</td>
                         <td>{{ \App\User::find($doc->user_id)->name }}</td>
                         <td>{{ $doc->comment }}</td>
-                        <td style="width:110px;">
+                        <td style="width:140px;">
                             <div class="form-group" role="group">
+                                <button class="btn btn-info btn-sm doc_clone" type="button" data-toggle="modal" data-target="#editDoc" title="Клонировать документ"><i class="fa fa-clone" aria-hidden="true"></i></button>
                                 <button class="btn btn-success btn-sm doc_edit" type="button" data-toggle="modal" data-target="#editDoc" title="Редактировать документ"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></button>
                                 <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
                             </div>
@@ -287,6 +294,9 @@
                 });
             }
         });
+        $('#datatable').DataTable( {
+            "order": [[ 0, "desc" ]]
+        } );
 
         /*$('#from').datetimepicker({
             format: 'YYYY-MM-DD',
@@ -306,8 +316,11 @@
             var firm = $(this).parent().parent().prevAll().eq(4).text();
             var doc_num = $(this).parent().parent().prevAll().eq(9).text();
             var amount = $(this).parent().parent().prevAll().eq(6).text();
-            if(amount.length == 0)
+            var direction = 'expense';
+            if(amount.length == 0){
+                direction = 'coming';
                 amount = $(this).parent().parent().prevAll().eq(7).text();
+            }
             var doc_num = $(this).parent().parent().prevAll().eq(8).text();
             var created = $(this).parent().parent().prevAll().eq(9).text();
             created = created.substr(0,10);
@@ -315,11 +328,74 @@
             $("#operation_id :contains("+operation+")").attr("selected", "selected");
             $('#comment').val(comment);
             $('#search_firm').val(firm);
-            $('#doc_num').val(doc_num);
+            $('#doc_num').val(doc_num).show();
+            $('#doc_num').parent().prev().show();
             $("#organ_id :contains("+org+")").attr("selected", "selected");
             $('#id_doc').val(id);
             $('#amount').val(amount);
             $('#created_at').val(created);
+            $('#direction').val(direction);
+        });
+
+        $('.doc_clone').click(function(){
+            var id = $(this).parent().parent().parent().attr("id");
+            var comment  = $(this).parent().parent().prev().text();
+            var org = $(this).parent().parent().prevAll().eq(2).text();
+            var operation = $(this).parent().parent().prevAll().eq(3).text();
+            var firm = $(this).parent().parent().prevAll().eq(4).text();
+            var amount = $(this).parent().parent().prevAll().eq(6).text();
+            var doc_num = $(this).parent().parent().prevAll().eq(8).text();
+            var direction = 'expense';
+            if(amount.length == 0){
+                direction = 'coming';
+                amount = $(this).parent().parent().prevAll().eq(7).text();
+            }
+
+            $('#direction').val(direction);
+            $("#operation_id :contains("+operation+")").attr("selected", "selected");
+            $('#comment').val(comment);
+            $('#search_firm').val(firm);
+            $('#doc_num').val(doc_num).hide();
+            $('#doc_num').parent().prev().hide();
+            $("#organ_id :contains("+org+")").attr("selected", "selected");
+            $('#id_doc').val('new');
+            $('#amount').val(amount);
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('ParamStatement') }}',
+                data: {'id': id},
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (res) {
+                    //alert(res);
+                    var arr = jQuery.parseJSON(res);
+                    $.each(arr,function(key,value){
+                        if(key==0){
+                            //$("#buhcode_id :contains("+value.toString()+")").attr("selected", "selected");
+                            $("#buhcode_id").replaceWith(value.toString());
+                        }
+                        if(key==1)
+                            $('#contract').val(value.toString());
+                    });
+                    $("#contract").empty(); //очищаем от старых значений
+                    var firm = $("#search_firm").val();
+                    var org_id = $("#org_id option:selected").val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('findContract') }}',
+                        data: {'firm': firm, 'org_id': org_id},
+                        headers: {
+                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (res) {
+                            //alert(res);
+                            $("#contract").prepend($(res));
+                        }
+                    });
+                }
+            });
         });
 
         $('#edit_btn').click(function(e){
