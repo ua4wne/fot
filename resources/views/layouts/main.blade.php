@@ -104,8 +104,8 @@
                                 <li><a><i class="fa fa-bar-chart-o"></i> Отчеты <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('cashBookFilter') }}">Кассовая книга</a></li>
-                                        <li><a href="#">Карточка счета</a></li>
-                                        <li><a href="#">Оборотно-сальдовая ведомость по счету</a></li>
+                                        <li><a href="{{ route('acctFilter') }}">Карточка счета</a></li>
+                                        <li><a href="{{ route('balanceFilter') }}">Оборотно-сальдовая ведомость по счету</a></li>
                                     </ul>
                                 </li>
                             </ul>

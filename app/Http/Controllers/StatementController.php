@@ -131,4 +131,94 @@ class StatementController extends Controller
         }
         abort(404);
     }
+
+    public function set_filter(){
+        if(view()->exists('reports.acct_filter')){
+            $orgs = Organisation::select(['id','name'])->get();
+            $orgsel = array();
+            foreach ($orgs as $org){
+                $orgsel[$org->id] = $org->name;
+            }
+            $codes = Buhcode::select(['id','code'])->where(['show'=>1])->get();
+            $codsel = array();
+            foreach ($codes as $code){
+                $codsel[$code->id] = $code->code;
+            }
+            $data = [
+                'title' => 'Карточка счета',
+                'head' => 'Карточка счета',
+                'orgsel' => $orgsel,
+                'codsel' => $codsel,
+            ];
+            return view('reports.acct_filter', $data);
+        }
+        abort(404);
+    }
+
+    public function acct_report(Request $request){
+        if(!Role::granted('reports')){//вызываем event
+            $msg = 'Попытка чтения отчета по счету!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на чтение отчетов!');
+        }
+
+        if($request->isMethod('post')) {
+            $input = $request->except('_token'); //параметр _token нам не нужен
+            $to = date('Y-m-d', strtotime($input['to'] . ' +1 day'));
+        }
+        if(view()->exists('reports.acct')){
+            /*$data = [
+                'title' => 'Кассовая книга',
+                'head' => 'Кассовая книга',
+                'content' => $content,
+            ];
+            return view('reports.acct', $data);*/
+        }
+        abort(404);
+    }
+
+    public function balance_filter(){
+        if(view()->exists('reports.balance_filter')){
+            $orgs = Organisation::select(['id','name'])->get();
+            $orgsel = array();
+            foreach ($orgs as $org){
+                $orgsel[$org->id] = $org->name;
+            }
+            $codes = Buhcode::select(['id','code'])->where(['show'=>1])->get();
+            $codsel = array();
+            foreach ($codes as $code){
+                $codsel[$code->id] = $code->code;
+            }
+            $data = [
+                'title' => 'Оборотно-сальдовая ведомость по счету',
+                'head' => 'Оборотно-сальдовая ведомость',
+                'orgsel' => $orgsel,
+                'codsel' => $codsel,
+            ];
+            return view('reports.balance_filter', $data);
+        }
+        abort(404);
+    }
+
+    public function balance_report(Request $request){
+        if(!Role::granted('reports')){//вызываем event
+            $msg = 'Попытка чтения оборотно-сальдовой ведомости по счету!';
+            event(new AddEventLogs('access',Auth::id(),$msg));
+            abort(503,'У Вас нет прав на чтение отчетов!');
+        }
+
+        if($request->isMethod('post')) {
+            $input = $request->except('_token'); //параметр _token нам не нужен
+            $to = date('Y-m-d', strtotime($input['to'] . ' +1 day'));
+        }
+        if(view()->exists('reports.balance')){
+            /*$data = [
+                'title' => 'Кассовая книга',
+                'head' => 'Кассовая книга',
+                'content' => $content,
+            ];
+            return view('reports.balance', $data);*/
+        }
+        abort(404);
+    }
 }
