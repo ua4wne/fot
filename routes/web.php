@@ -18,6 +18,8 @@ Route::get('/activate','Auth\LoginController@activate');
 Route::middleware(['auth'])->group(function(){
 
     Route::get('/', 'MainController@index')->name('main');
+    // /ajax/balance_graph
+    Route::post('/ajax/balance_graph',['uses'=>'Ajax\MainController@balance_graph','as'=>'balance_graph']);
 
     Route::group(['prefix'=>'exchange'], function() {
         Route::post('import-firm', 'FirmExcelController@importFirm')->name('importFirm');
@@ -269,6 +271,14 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/ajax/find_contract',['uses'=>'Ajax\StatementController@findContract','as'=>'findContract']);
         //statements/ajax/getparams
         Route::post('/ajax/getparams',['uses'=>'Ajax\StatementController@getParams','as'=>'ParamStatement']);
+        //statements/filter
+        Route::get('/filter',['uses'=>'StatementController@set_filter','as'=>'acctFilter']);
+        //statements/acct
+        Route::post('/acct',['uses'=>'StatementController@acct_report','as'=>'acctReport']);
+        //statements/balance_filter
+        Route::get('/balance_filter',['uses'=>'StatementController@balance_filter','as'=>'balanceFilter']);
+        //statements/acct
+        Route::post('/balance',['uses'=>'StatementController@balance_report','as'=>'balanceReport']);
     });
 
     //person/ группа обработки роутов справочника persons

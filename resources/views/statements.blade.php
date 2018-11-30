@@ -268,6 +268,7 @@
 
             @endif
         </div>
+        </div>
         <!-- /page content -->
 @endsection
 

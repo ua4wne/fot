@@ -15,18 +15,30 @@
     <script src="/js/morris.min.js"></script>
 
     <script>
-        // Use Morris.Bar
-        Morris.Bar({
-            element: '1',
-            data: [
-                {x: '2011 Q1', y: 3, z: 2},
-                {x: '2011 Q2', y: 2, z: 1},
-                {x: '2011 Q3', y: 1, z: 2},
-                {x: '2011 Q4', y: 2, z: 4}
-            ],
-            xkey: 'x',
-            ykeys: ['y', 'z'],
-            labels: ['Приход', 'Расход']
+        $.ajax({
+            type: 'POST',
+            url: '{{ route('balance_graph') }}',
+            data: {'id':'graph'},
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(res){
+                //alert(res);
+                var obj = jQuery.parseJSON(res);
+                $.each(obj,function(key,data) {
+                    Morris.Bar({
+                        element: data.org.toString(),
+                        data: data.val,
+                        xkey: 'x',
+                        ykeys: ['y', 'z'],
+                        labels: ['Приход', 'Расход']
+                    });
+                });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
+            }
         });
     </script>
 

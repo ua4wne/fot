@@ -104,8 +104,8 @@
                                 <li><a><i class="fa fa-bar-chart-o"></i> Отчеты <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('cashBookFilter') }}">Кассовая книга</a></li>
-                                        <li><a href="#">Карточка счета</a></li>
-                                        <li><a href="#">Оборотно-сальдовая ведомость по счету</a></li>
+                                        <li><a href="{{ route('acctFilter') }}">Карточка счета</a></li>
+                                        <li><a href="{{ route('balanceFilter') }}">Оборотно-сальдовая ведомость по счету</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -206,17 +206,17 @@
                         <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
                             <div class="tile-stats">
                                 <div class="icon"><i class="fa fa-arrow-down"></i></div>
-                                <div class="count">Поступило</div>
+                                <div class="count">Приход</div>
                                 <h3>Итого: {{ empty($coming) ? '0' : $coming }} (руб.)</h3>
-                                <p><a href="#">подробнее</a></p>
+                                <p>за текущий год</p>
                             </div>
                         </div>
                         <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
                             <div class="tile-stats">
                                 <div class="icon"><i class="fa fa-arrow-up"></i></div>
-                                <div class="count">Списано</div>
+                                <div class="count">Расход</div>
                                 <h3>Итого: {{ empty($expense) ? '0' : $expense }} (руб.)</h3>
-                                <p><a href="#">подробнее</a></p>
+                                <p>за текущий год</p>
                             </div>
                         </div>
                     </div>

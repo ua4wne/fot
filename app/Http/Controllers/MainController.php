@@ -15,9 +15,10 @@ class MainController extends Controller
             $expense = CashDoc::where('direction','expense')->sum('amount');
             $kassa = $coming - $expense;
             $kassa = round($kassa,2);
-            $period = date('Y-m-d', strtotime(date("Y-m-d") .' -30 day'));
-            $in = Statement::where('direction','coming')->where('created_at','>=',$period)->sum('amount');
-            $out = Statement::where('direction','expense')->where('created_at','>=',$period)->sum('amount');
+            //$period = date('Y-m-d', strtotime(date("Y-m-d") .' -30 day'));
+            $period = date('Y'); //текущий год
+            $in = Statement::where('direction','coming')->where('created_at','like',$period.'%')->sum('amount');
+            $out = Statement::where('direction','expense')->where('created_at','like',$period.'%')->sum('amount');
             //выбираем свои организации
             $content='';
             $orgs = Organisation::where('name','not like','%Юнион%')->get();
