@@ -267,8 +267,8 @@ class CashDocController extends Controller
                 $orgsel[$org->id] = $org->name;
             }
             $data = [
-                'title' => 'Выбор периода',
-                'head' => 'Выбор периода',
+                'title' => 'Кассовая книга',
+                'head' => 'Кассовая книга',
                 'orgsel' => $orgsel,
             ];
             return view('reports.cash_book_filter', $data);
