@@ -7,6 +7,8 @@ use App\Models\BankAccount;
 use App\Models\Buhcode;
 use App\Models\Contract;
 use App\Models\Firm;
+use App\Models\Operation;
+use App\Models\Organisation;
 use App\Models\Statement;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -105,6 +107,8 @@ class StatementController extends Controller
                 return 'NO BACC';
             else
                 $input['bacc_id'] = $bacc->id;
+            $date = $input['created_at'].' H:i:s';
+            $input['created_at'] = date($date);
             $model->fill($input);
             $model->user_id = Auth::id();
             if($id=='new'){

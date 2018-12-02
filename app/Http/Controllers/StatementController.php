@@ -9,6 +9,7 @@ use App\Models\Operation;
 use App\Models\Organisation;
 use App\Models\Statement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Validator;
 use App\Events\AddEventLogs;
 use App\Models\Role;
@@ -19,12 +20,21 @@ class StatementController extends Controller
     public function index(Request $request){
         if($request->isMethod('post')){
             $from = $request['from'];
-            $to = $request['to'];
+            //$to = $request['to'];
+            $to = date('Y-m-d', strtotime($request['to'] .' +1 day'));
             $docs = Statement::whereBetween('created_at',[$from, $to])->get();
+            //сохраняем выбранные значения в сессии
+            Session::put('from', $from);
+            Session::put('to', $to);
         }
         else{
-            //$docs = Statement::all()->sortByDesc('created_at')->take(100);
-            $docs = Statement::orderBy('created_at', 'desc')->take(100)->get();
+            //ищем ранее сохраненные в сессии значения периода
+            $from = Session::get('from');
+            $to = Session::get('to');
+            if(empty($from) && empty($to))
+                $docs = Statement::orderBy('created_at', 'desc')->take(100)->get();
+            else
+                $docs = Statement::whereBetween('created_at',[$from, $to])->get();
         }
         if(view()->exists('statements')){
             $operations = Operation::select(['id','name'])->get();
@@ -91,6 +101,8 @@ class StatementController extends Controller
                 return redirect()->route('statementAdd',['direction'=>$direction])->withErrors($validator)->withInput();
             }
             $doc = new Statement();
+            $date = $input['created_at'].' H:i:s';
+            $input['created_at'] = date($date);
             $doc->fill($input);
             $doc->direction = $direction;
             $doc->user_id = Auth::id();

@@ -137,64 +137,63 @@
                         <div class="form-group">
                             {!! Form::label('operation_id', 'Вид операции:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
-                                {!! Form::select('operation_id', $opersel, old('operation_id'),['class' => 'form-control','required'=>'required','id'=>'operation_id']); !!}
+                                {!! Form::select('operation_id', $opersel,'', ['class' => 'form-control','required'=>'required','id'=>'operation_id']); !!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('buhcode_id', 'Счет учета:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
-                                {!! Form::select('buhcode_id', $codesel, old('buhcode_id'),['class' => 'form-control','required'=>'required','id'=>'buhcode_id']); !!}
+                                {!! Form::select('buhcode_id', $codesel, ['class' => 'form-control','required'=>'required','id'=>'buhcode_id']); !!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('amount','Сумма, руб.:',['class' => 'col-xs-2 control-label'])   !!}
                             <div class="col-xs-8">
-                                {!! Form::text('amount',old('amount'),['class' => 'form-control','placeholder'=>'Введите сумму в рублях','required'=>'required','id'=>'amount'])!!}
+                                {!! Form::text('amount','',['class' => 'form-control','placeholder'=>'Введите сумму в рублях','required'=>'required','id'=>'amount'])!!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('firm_id','Контрагент:',['class' => 'col-xs-2 control-label'])   !!}
                             <div class="col-xs-8">
-                                {!! Form::text('firm_id',old('firm_id'),['class' => 'form-control','placeholder'=>'Введите полное наименование организации','required'=>'required','id'=>'search_firm'])!!}
+                                {!! Form::text('firm_id','',['class' => 'form-control','placeholder'=>'Введите полное наименование организации','required'=>'required','id'=>'search_firm'])!!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('org_id', 'Организация:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
-                                {!! Form::select('org_id', $orgsel, old('org_id'),['class' => 'form-control','id'=>'org_id','required'=>'required']); !!}
+                                {!! Form::select('org_id', $orgsel, '',['class' => 'form-control','id'=>'org_id','required'=>'required']); !!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('bacc_id', 'Банковский счет:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
-                                {!! Form::text('bacc_id', old('bacc_id'),['class' => 'form-control', 'id'=>'bacc_id','required'=>'required']); !!}
+                                {!! Form::text('bacc_id', '',['class' => 'form-control', 'id'=>'bacc_id','required'=>'required']); !!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('contract', 'Договор:',['class'=>'col-xs-2 control-label']) !!}
                             <div class="col-xs-8">
-                                {!! Form::select('contract', array() , old('contract'),['class' => 'form-control', 'id'=>'contract']); !!}
+                                {!! Form::select('contract', array() , '',['class' => 'form-control', 'id'=>'contract']); !!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('purpose','Назначение платежа:',['class' => 'col-xs-2 control-label'])   !!}
                             <div class="col-xs-8">
-                                {!! Form::textarea('purpose',old('purpose'),['class' => 'form-control','placeholder'=>'Назначение платежа','rows' => 2, 'cols' => 40,'required'=>'required'])!!}
+                                {!! Form::textarea('purpose','',['class' => 'form-control','placeholder'=>'Назначение платежа','rows' => 2, 'cols' => 40,'required'=>'required'])!!}
                             </div>
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('comment','Комментарий:',['class' => 'col-xs-2 control-label'])   !!}
                             <div class="col-xs-8">
-                                {!! Form::text('comment',old('comment'),['class' => 'form-control','placeholder'=>'Комментарий','id'=>'comment'])!!}
-                                {!! $errors->first('comment', '<p class="text-danger">:message</p>') !!}
+                                {!! Form::text('comment','',['class' => 'form-control','placeholder'=>'Комментарий','id'=>'comment'])!!}
                             </div>
                         </div>
 
@@ -221,7 +220,7 @@
         </div>
 
         <div class="x_panel">
-            <table id="datatable" class="table table-striped table-bordered">
+            <table id="my_datatable" class="table table-striped table-bordered">
                 <thead>
                 <tr>
                     <th>Дата</th>
@@ -239,7 +238,7 @@
                 <tbody>
                 @foreach($docs as $k => $doc)
 
-                    <tr id="{{ $doc->id }}">
+                    <tr>
                         <td>{{ $doc->created_at }}</td>
                         @if($doc->direction == 'coming')
                             <td>{{ $doc->amount }}</td>
@@ -255,7 +254,7 @@
                         <td>{{ $doc->bank_account->account }}</td>
                         <td>{{ $doc->comment }}</td>
                         <td style="width:140px;">
-                            <div class="form-group" role="group">
+                            <div class="form-group" role="group" id="{{ $doc->id }}">
                                 <button class="btn btn-info btn-sm doc_clone" type="button" data-toggle="modal" data-target="#editDoc" title="Клонировать документ"><i class="fa fa-clone" aria-hidden="true"></i></button>
                                 <button class="btn btn-success btn-sm doc_edit" type="button" data-toggle="modal" data-target="#editDoc" title="Редактировать документ"><i class="fa fa-edit" aria-hidden="true"></i></button>
                                 <button class="btn btn-danger btn-sm doc_delete" type="button" title="Удалить документ"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -291,150 +290,162 @@
                 });
             }
         });
-        $('#datatable').DataTable( {
+        $('#my_datatable').DataTable( {
             "order": [[ 0, "desc" ]]
         } );
 
-        $("#search_firm").blur(function () {
-            $("#contract").empty(); //очищаем от старых значений
-            var firm = $("#search_firm").val();
-            var org_id = $("#org_id option:selected").val();
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('findContract') }}',
-                data: {'firm': firm, 'org_id': org_id},
-                headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (res) {
-                    //alert(res);
-                    $("#contract").prepend($(res));
-                }
-            });
-        });
-
-        $('.doc_edit').click(function(){
-            var id = $(this).parent().parent().parent().attr("id");
-            var comment  = $(this).parent().parent().prev().text();
-            var bacc_id = $(this).parent().parent().prevAll().eq(1).text();
-            var org = $(this).parent().parent().prevAll().eq(2).text();
-            var operation = $(this).parent().parent().prevAll().eq(3).text();
-            var firm = $(this).parent().parent().prevAll().eq(4).text();
-            var purpose = $(this).parent().parent().prevAll().eq(5).text();
-            var amount = $(this).parent().parent().prevAll().eq(6).text();
-            var direction = 'expense';
-            if(amount.length == 0){
-                direction = 'coming';
-                amount = $(this).parent().parent().prevAll().eq(7).text();
+        $(document).on ({
+            blur: function() {
+                $("#contract").empty(); //очищаем от старых значений
+                var firm = $("#search_firm").val();
+                var orgid = $("#org_id option:selected").val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('findContract') }}',
+                    data: {'firm': firm, 'org_id': orgid},
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (res) {
+                        //alert(res);
+                        $("#contract").prepend($(res));
+                    }
+                });
             }
-            var created = $(this).parent().parent().prevAll().eq(8).text();
-            created = created.substr(0,10);
-            $("#operation_id :contains("+operation+")").attr("selected", "selected");
-            $('#comment').val(comment);
-            $('#search_firm').val(firm);
-            $("#org_id :contains("+org+")").attr("selected", "selected");
-            $('#id_doc').val(id);
-            $('#direction').val(direction);
-            $('#bacc_id').val(bacc_id);
-            $('#amount').val(amount);
-            $('#purpose').val(purpose);
-            $('#created_at').val(created);
+        }, "#search_firm" );
 
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('ParamStatement') }}',
-                data: {'id': id},
-                headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (res) {
-                    //alert(res);
-                    var arr = jQuery.parseJSON(res);
-                    $.each(arr,function(key,value){
-                        if(key==0)
-                            $("#buhcode_id").replaceWith(value.toString());
-                        if(key==1)
-                            $('#contract').val(value.toString());
-                    });
-                    $("#contract").empty(); //очищаем от старых значений
-                    var firm = $("#search_firm").val();
-                    var org_id = $("#org_id option:selected").val();
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ route('findContract') }}',
-                        data: {'firm': firm, 'org_id': org_id},
-                        headers: {
-                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (res) {
-                            //alert(res);
-                            $("#contract").prepend($(res));
-                        }
-                    });
+        $(document).on ({
+            click: function() {
+                var id = $(this).parent().attr("id");
+                var comment  = $(this).parent().parent().prev().text();
+                var bacc_id = $(this).parent().parent().prevAll().eq(1).text();
+                var org = $(this).parent().parent().prevAll().eq(2).text();
+                var operation = $(this).parent().parent().prevAll().eq(3).text();
+                var firm = $(this).parent().parent().prevAll().eq(4).text();
+                var purpose = $(this).parent().parent().prevAll().eq(5).text();
+                var amount = $(this).parent().parent().prevAll().eq(6).text();
+                var direction = 'expense';
+                if(amount.length == 0){
+                    direction = 'coming';
+                    amount = $(this).parent().parent().prevAll().eq(7).text();
                 }
-            });
-        });
+                var created = $(this).parent().parent().prevAll().eq(8).text();
+                created = created.substr(0,10);
+//через подгрузку данных
+                $("#operation_id :contains("+operation+")").attr("selected", "selected");
+                $('#comment').val(comment);
+                $('#search_firm').val(firm);
+                $("#org_id :contains("+org+")").attr("selected", "selected");
+                $('#id_doc').val(id);
+                $('#direction').val(direction);
+                $('#bacc_id').val(bacc_id);
+                $('#amount').val(amount);
+                $('#purpose').val(purpose);
+                $('#created_at').val(created);
 
-        $('.doc_clone').click(function(){
-            var id = $(this).parent().parent().parent().attr("id");
-            var comment  = $(this).parent().parent().prev().text();
-            var bacc_id = $(this).parent().parent().prevAll().eq(1).text();
-            var org = $(this).parent().parent().prevAll().eq(2).text();
-            var operation = $(this).parent().parent().prevAll().eq(3).text();
-            var firm = $(this).parent().parent().prevAll().eq(4).text();
-            var purpose = $(this).parent().parent().prevAll().eq(5).text();
-            var amount = $(this).parent().parent().prevAll().eq(6).text();
-            var direction = 'expense';
-            if(amount.length == 0){
-                direction = 'coming';
-                amount = $(this).parent().parent().prevAll().eq(7).text();
+                $.ajax({
+                    type: 'POST',
+                    //cache: false,
+                    url: '{{ route('ParamStatement') }}',
+                    data: {'id': id},
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (res) {
+                        //alert(res);
+                        var arr = jQuery.parseJSON(res);
+                        $.each(arr,function(key,value){
+                            if(key==0)
+                                $("#buhcode_id").replaceWith(value.toString());
+                            if(key==1)
+                                $('#contract').val(value.toString());
+                        });
+                        $("#contract").empty(); //очищаем от старых значений
+                        var firm = $("#search_firm").val();
+                        var orgid = $("#org_id option:selected").val();
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route('findContract') }}',
+                            data: {'firm': firm, 'org_id': orgid},
+                            headers: {
+                                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (res) {
+                                //alert(res);
+                                $("#contract").prepend($(res));
+                            }
+                        });
+                    }
+                });
             }
-            $("#operation_id :contains("+operation+")").attr("selected", "selected");
-            $('#comment').val(comment);
-            $('#search_firm').val(firm);
-            $("#org_id :contains("+org+")").attr("selected", "selected");
-            $('#id_doc').val('new');
-            $('#direction').val(direction);
-            $('#bacc_id').val(bacc_id);
-            $('#amount').val(amount);
-            $('#purpose').val(purpose);
+        }, ".doc_edit" );
 
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('ParamStatement') }}',
-                data: {'id': id},
-                headers: {
-                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (res) {
-                    //alert(res);
-                    var arr = jQuery.parseJSON(res);
-                    $.each(arr,function(key,value){
-                        if(key==0){
-                            //$("#buhcode_id :contains("+value.toString()+")").attr("selected", "selected");
-                            $("#buhcode_id").replaceWith(value.toString());
-                        }
-                        if(key==1)
-                            $('#contract').val(value.toString());
-                    });
-                    $("#contract").empty(); //очищаем от старых значений
-                    var firm = $("#search_firm").val();
-                    var org_id = $("#org_id option:selected").val();
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ route('findContract') }}',
-                        data: {'firm': firm, 'org_id': org_id},
-                        headers: {
-                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (res) {
-                            //alert(res);
-                            $("#contract").prepend($(res));
-                        }
-                    });
+        $(document).on ({
+            click: function() {
+                var id = $(this).parent().attr("id");
+                var comment  = $(this).parent().parent().prev().text();
+                var bacc_id = $(this).parent().parent().prevAll().eq(1).text();
+                var org = $(this).parent().parent().prevAll().eq(2).text();
+                var operation = $(this).parent().parent().prevAll().eq(3).text();
+                var firm = $(this).parent().parent().prevAll().eq(4).text();
+                var purpose = $(this).parent().parent().prevAll().eq(5).text();
+                var amount = $(this).parent().parent().prevAll().eq(6).text();
+                var direction = 'expense';
+                if(amount.length == 0){
+                    direction = 'coming';
+                    amount = $(this).parent().parent().prevAll().eq(7).text();
                 }
-            });
-        });
+                //сбрасываем все ранее выбранные элементы
+                $('#org_id option:selected').each(function(){
+                    this.removeAttr("selected");
+                });
+                $("#operation_id :contains("+operation+")").attr("selected", "selected");
+                $('#comment').val(comment);
+                $('#search_firm').val(firm);
+                $("#org_id :contains("+org+")").attr("selected", "selected");
+                $('#id_doc').val('new');
+                $('#direction').val(direction);
+                $('#bacc_id').val(bacc_id);
+                $('#amount').val(amount);
+                $('#purpose').val(purpose);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('ParamStatement') }}',
+                    data: {'id': id},
+                    headers: {
+                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (res) {
+                        //alert(res);
+                        var arr = jQuery.parseJSON(res);
+                        $.each(arr,function(key,value){
+                            if(key==0){
+                                //$("#buhcode_id :contains("+value.toString()+")").attr("selected", "selected");
+                                $("#buhcode_id").replaceWith(value.toString());
+                            }
+                            if(key==1)
+                                $('#contract').val(value.toString());
+                        });
+                        $("#contract").empty(); //очищаем от старых значений
+                        var firm = $("#search_firm").val();
+                        var orgid = $("#org_id option:selected").val();
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ route('findContract') }}',
+                            data: {'firm': firm, 'org_id': orgid},
+                            headers: {
+                                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (res) {
+                                //alert(res);
+                                $("#contract").prepend($(res));
+                            }
+                        });
+                    }
+                });
+            }
+        }, ".doc_clone" );
 
         $('#edit_btn').click(function(e){
             e.preventDefault();
@@ -472,40 +483,43 @@
                         if(res=='ERR')
                             alert('При обновлении данных возникла ошибка!');
                         else{
-                            if(id=='new')
-                                $('#datatable').append(res);
+                            window.location.reload();
+                            /*if(id=='new')
+                                $('#datatable').prepend(res);
                             else
-                                $('#'+id).replaceWith(res);
+                                $('#'+id).replaceWith(res);*/
                         }
                     }
                 });
             }
         });
 
-        $('.doc_delete').click(function(){
-            var id = $(this).parent().parent().parent().attr("id");
-            var x = confirm("Выбранная запись будет удалена. Продолжить (Да/Нет)?");
-            if (x) {
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('delStatement') }}',
-                    data: {'id':id},
-                    headers: {
-                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(res){
-                        //alert(res);
-                        if(res=='OK')
-                            $('#'+id).hide();
-                        if(res=='NO')
-                            alert('Выполнение операции запрещено!');
-                    }
-                });
+        $(document).on ({
+            click: function() {
+                var id = $(this).parent().attr("id");
+                var x = confirm("Выбранная запись будет удалена. Продолжить (Да/Нет)?");
+                if (x) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('delStatement') }}',
+                        data: {'id':id},
+                        headers: {
+                            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(res){
+                            //alert(res);
+                            if(res=='OK')
+                                $(this).parent().parent().parent().hide();
+                            if(res=='NO')
+                                alert('Выполнение операции запрещено!');
+                        }
+                    });
+                }
+                else {
+                    return false;
+                }
             }
-            else {
-                return false;
-            }
-        });
+        }, ".doc_delete" );
 
     </script>
 @endsection

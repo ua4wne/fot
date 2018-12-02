@@ -15,18 +15,8 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="/css/font-awesome.min.css" rel="stylesheet">
-    <!-- NProgress -->
-    <link href="/css/nprogress.css" rel="stylesheet">
-    <!-- iCheck -->
-    <link href="/css/green.css" rel="stylesheet">
-
-    <!-- bootstrap-progressbar -->
-    <link href="/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
-    <!-- JQVMap -->
-    <!--<link href="../vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
-    <!-- bootstrap-datetimepicker -->
-    <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
-
+    <!-- dataTables -->
+    <link href="/css/jquery.dataTables.min.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="/css/custom.min.css" rel="stylesheet">
 </head>
@@ -246,14 +236,8 @@
 <script src="/js/fastclick.js"></script>
 <!-- NProgress -->
 <script src="/js/nprogress.js"></script>
-<!-- Chart.js -->
-<!--<script src="../vendors/Chart.js/dist/Chart.min.js"></script>
-<!-- gauge.js -->
-<!--<script src="../vendors/gauge.js/dist/gauge.min.js"></script>
-<!-- bootstrap-progressbar
-<script src="/js/bootstrap-progressbar.min.js"></script> -->
 <!-- iCheck -->
-<script src="/js/icheck.min.js"></script>
+{{--<script src="/js/icheck.min.js"></script>--}}
 
 
 <!-- Custom Theme Scripts -->
