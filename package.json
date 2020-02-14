@@ -20,7 +20,7 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
-        "yarn": "^1.7.0",
+        "yarn": "^1.22.0",
         "yarn-install": "^1.0.0"
     }
 }
